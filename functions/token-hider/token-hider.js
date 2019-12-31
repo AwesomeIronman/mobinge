@@ -1,6 +1,6 @@
 const axios = require("axios")
 
-export function handler(event, context, callback) {
+exports.handler = function (event, context, callback) {
 
     // Get env var values defined in our Netlify site UI
     const {
@@ -18,6 +18,9 @@ export function handler(event, context, callback) {
     const pass = (body) => {
         callback(null, {
             statusCode: 200,
+			headers: {
+				'content-type': 'application/json'
+			},
             body: JSON.stringify(body)
         })
     }
@@ -31,7 +34,7 @@ export function handler(event, context, callback) {
             })
             .catch(err => pass(err))
     }
-    
+
     if (event.httpMethod == 'GET') {
         get()
     };

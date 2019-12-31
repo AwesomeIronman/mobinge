@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Movie/Series Guide</title>
-    
+
     <link rel="stylesheet" href="./resources/css/index.css">
-    <script type="text/javascript" src="./resources/js/index.js"></script>
+	
+    <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+    <script defer type="text/javascript" src="./resources/js/index.js"></script>
+	<!-- include the identity widget -->
+	<script defer type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <div class="title">Avengers: End Game</div>
+        <div class="get-info-button">
+            <button>Get Info</button>
+        </div>
+        
+        <div class="title">Movie title</div>
+        <div class="year">Year</div>
+        <div class="rated">Rated</div>
+        <div class="imdbRating">IMDB Rating</div>
+        <div class="imdbVotes">IMDB Votes</div>
         <div class="poster">Poster</div>
-        <div class="rating">IMDB 8.2/10</div>
+        <div class="genre">Genre</div>
+        <div class="director">Director</div>
+        <div class="actors">Actors</div>
+        <div class="plot">Plot</div>
+        <div class="runtime">Runtime</div>
+        <div class="imdbButton">Go to movies IMDB Page</div>
+        
     </div>
+	<!-- Add a simpler button:
+    Simple button that will open the modal.
+	-->
+	<div data-netlify-identity-button></div>
 </body>
+
 </html>

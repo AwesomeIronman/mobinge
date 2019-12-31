@@ -1,5 +1,8 @@
 [build]
-	base = "./"
-	command = "npm run build:lambda"
-	functions = "./dist/functions/"
-	publish = "./src/"
+	command = "npm run test"
+	functions = "functions/"
+	publish = "src/"
+
+[dev]
+	functions = "functions/"
+	publish = "src/"
