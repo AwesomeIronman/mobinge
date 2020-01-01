@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Movie/Series Guide</title>
 
+<<<<<<< HEAD
     <link rel="stylesheet" href="./resources/css/index.css">
 	
     <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
@@ -12,10 +13,23 @@
     <script defer type="text/javascript" src="./resources/js/index.js"></script>
 	<!-- include the identity widget -->
 	<script defer type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+=======
+    <!-- Custom CSS: -->
+    <link rel="stylesheet" href="./resources/css/index.css">
+    <!-- Themed Bootstrap CSS download: -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.css">
+
+    <!-- JQuery library download: -->
+    <script defer type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+    <!-- netlify identity user login library: -->
+    <script defer type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+>>>>>>> dev
 </head>
 
 <body>
     <div class="container">
+<<<<<<< HEAD
         <div class="get-info-button">
             <button>Get Info</button>
         </div>
@@ -38,6 +52,34 @@
     Simple button that will open the modal.
 	-->
 	<div data-netlify-identity-button></div>
+=======
+       <!-- Navbar: -->
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">Mobinge</a>
+                </div>
+                <!-- Add netlify sign up/login button: -->
+                <div data-netlify-identity-button></div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="jumbotron">
+                <h3 class="text-center">Search For Any Movie</h3>
+                <form id="searchForm">
+                    <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
+                </form>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="movies" class="row"></div>
+        </div>
+    </div>
+    <!-- Custom script: -->
+	<script defer type="text/javascript" src="./resources/js/index.js"></script>
+>>>>>>> dev
 </body>
 
 </html>

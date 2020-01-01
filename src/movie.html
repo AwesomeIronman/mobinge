@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Movie/Series Guide</title>
+
+    <link rel="stylesheet" href="./resources/css/index.css">
+    <link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.css">
+
+    <!-- JQuery library download: -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+    <!-- netlify identity user login library: -->
+    <script defer type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Navbar: -->
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.html">Mobinge</a>
+                </div>
+                <!-- Add netlify sign up/login button: -->
+                <div data-netlify-identity-button></div>
+            </div>
+        </nav>
+
+
+        <div class="container">
+            <div id="movie" class="well"></div>
+        </div>
+    </div>
+
+    <script defer src="./resources/js/index.js"></script>
+    <script>
+        $(document).ready(() => {
+            getTitleInfo();
+        });
+
+    </script>
+</body>
+
+</html>
