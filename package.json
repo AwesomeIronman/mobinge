@@ -4,7 +4,7 @@
     "description": "Movie/Series Guide",
     "main": "index.js",
     "scripts": {
-        "deploy": "cd functions/token-hider && npm install"
+        "deploy": "cd functions/ && npm install"
     },
     "repository": {
         "type": "git",
