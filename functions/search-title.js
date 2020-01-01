@@ -23,15 +23,9 @@ exports.handler = function (event, context, callback) {
     const pass = (body) => {
         callback(null, {
             statusCode: 200,
-<<<<<<< HEAD:functions/token-hider/token-hider.js
-			headers: {
-				'content-type': 'application/json'
-			},
-=======
             headers: {
                 'content-type': 'application/json'
             },
->>>>>>> dev:functions/search-title.js
             body: JSON.stringify(body)
         })
     }
@@ -46,11 +40,6 @@ exports.handler = function (event, context, callback) {
             .catch(err => pass(err))
     }
 
-<<<<<<< HEAD:functions/token-hider/token-hider.js
-    if (event.httpMethod == 'GET') {
-        get()
-    };
-=======
     if (event.httpMethod == 'POST') {
         get();
     } else {
@@ -58,5 +47,4 @@ exports.handler = function (event, context, callback) {
             statusCode: 405
         })
     }
->>>>>>> dev:functions/search-title.js
 };
