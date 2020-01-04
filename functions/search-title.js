@@ -43,7 +43,7 @@ exports.handler = function (event, context, callback) {
     if (event.httpMethod == 'POST') {
         get();
     } else {
-        callbac(null, {
+        callback(null, {
             statusCode: 405
         })
     }

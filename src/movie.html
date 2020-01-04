@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <title>Movie/Series Guide</title>
 
+    <!-- Custom CSS: -->
     <link rel="stylesheet" href="./resources/css/index.css">
-    <link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.css">
+    <!-- Bootstrap Cyborg CSS Theme: -->
+    <link rel="stylesheet" href="./resources/css/bootstrap-cyborg.css">
 
-    <!-- JQuery library download: -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
-    </script>
+    <!-- JQuery 3.4.1: -->
+    <script defer type="text/javascript" src="./resources/js/jquery.min.js"></script>
     <!-- netlify identity user login library: -->
     <script defer type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
@@ -34,7 +35,8 @@
         </div>
     </div>
 
-    <script defer src="./resources/js/index.js"></script>
+    <!-- Custom script: -->
+    <script defer type="text/javascript" src="./resources/js/index.js"></script>
     <script>
         $(document).ready(() => {
             getTitleInfo();

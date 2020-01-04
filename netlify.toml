@@ -1,8 +1,8 @@
 [build]
-	command = "npm run deploy"
-	functions = "functions/"
-	publish = "src/"
+	command = "npm run install-functions-dep"
+	functions = "functions"
+	publish = "src"
 
 [dev]
-	functions = "functions/"
-	publish = "src/"
+	functions = "functions"
+	publish = "src"

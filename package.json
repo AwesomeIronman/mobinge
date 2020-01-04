@@ -4,7 +4,7 @@
     "description": "Movie/Series Guide",
     "main": "index.js",
     "scripts": {
-        "deploy": "cd functions/ && npm install"
+        "install-functions-dep": "cd functions/ && npm install"
     },
     "repository": {
         "type": "git",
@@ -20,5 +20,6 @@
     "bugs": {
         "url": "https://github.com/AwesomeIronman/mobinge/issues"
     },
-    "homepage": "https://github.com/AwesomeIronman/mobinge#readme"
+    "homepage": "https://github.com/AwesomeIronman/mobinge#readme",
+    "dependencies": {}
 }

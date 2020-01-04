@@ -1,31 +1,31 @@
 console.log('JS is working!');
 
 $(document).ready(() => {
-    $('#searchForm').on('submit', (event) => {
-        event.preventDefault();
-        let searchText = $('#searchText').val();
-        getSearchData(searchText);
-    });
+  $('#searchForm').on('submit', (event) => {
+    event.preventDefault();
+    let searchText = $('#searchText').val();
+    getSearchData(searchText);
+  });
 });
 
 function getSearchData(searchText) {
-    $.ajax({
-            url: "/.netlify/functions/search-title",
-            type: "POST",
-            headers: {
-                title: searchText
-            }
-        })
-        .then((response) => {
-            console.log('getSearchData response titles: ', response);
+  $.ajax({
+    url: "/.netlify/functions/search-title",
+    type: "POST",
+    headers: {
+      title: searchText
+    }
+  })
+    .then((response) => {
+      console.log('getSearchData response titles: ', response);
 
-            if (response.Search) {
-                let movies = response.Search;
-				console.log('getSearchData movies: ', movies);
-                let output = '';
-                $.each(movies, (index, movie) => {
-                    if (movie.Poster !== "N/A") {
-                        output += `
+      if (response.Search) {
+        let movies = response.Search;
+        console.log('getSearchData movies: ', movies);
+        let output = '';
+        $.each(movies, (index, movie) => {
+          if (movie.Poster !== "N/A") {
+            output += `
           <div class="col-md-3">
             <div class="well text-center">
               <img src="${movie.Poster}">
@@ -34,41 +34,41 @@ function getSearchData(searchText) {
             </div>
           </div>
         `;
-                    }
-                });
-
-                $('#movies').html(output);
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            return false;
+          }
         });
+
+        $('#movies').html(output);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 }
 
 function titleSelected(id) {
-	let IMDBID = JSON.stringify(id);
-	console.debug('titleSelected IMDBID: ', IMDBID);
-    sessionStorage.setItem('titleID',IMDBID);
-    window.location = 'movie.html';
-    return false;
+  let IMDBID = JSON.stringify(id);
+  console.debug('titleSelected IMDBID: ', IMDBID);
+  sessionStorage.setItem('titleID', IMDBID);
+  window.location = 'movie.html';
+  return false;
 }
 
 function getTitleInfo() {
-    let title = JSON.parse(sessionStorage.getItem('titleID'));
-	console.debug('getTitleInfo storage title: ', title);
+  let title = JSON.parse(sessionStorage.getItem('titleID'));
+  console.debug('getTitleInfo storage title: ', title);
 
-    $.ajax({
-            url: "/.netlify/functions/get-title-info",
-            type: "POST",
-            headers: {
-                id: title
-            }
-        })
-        .then(movie => {
-            console.log('Title response: ', movie);
-            if (movie) {
-                let output = `
+  $.ajax({
+    url: "/.netlify/functions/get-title-info",
+    type: "POST",
+    headers: {
+      id: title
+    }
+  })
+    .then(movie => {
+      console.log('Title response: ', movie);
+      if (movie) {
+        let output = `
         <div class="row">
           <div class="col-md-4">
             <img src="${movie.Poster}" class="thumbnail">
@@ -97,11 +97,11 @@ function getTitleInfo() {
         </div>
       `;
 
-                $('#movie').html(output);
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            return false;
-        });
+        $('#movie').html(output);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 }
