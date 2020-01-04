@@ -13,14 +13,16 @@ function getSearchData(searchText) {
     url: "/.netlify/functions/search-title",
     type: "POST",
     headers: {
-      title: searchText
+      title: searchText,
+      Authorization: `Bearer ${ netlifyIdentity.currentUser().token }`
     }
   })
     .then((response) => {
-      console.log('getSearchData response titles: ', response);
+      console.log('getSearchData response: ', response);
+      console.log('getSearchData response clientContext: ', response.clientContext);
 
-      if (response.Search) {
-        let movies = response.Search;
+      if (response.data.Search) {
+        let movies = response.data.Search;
         console.log('getSearchData movies: ', movies);
         let output = '';
         $.each(movies, (index, movie) => {

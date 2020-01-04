@@ -26,7 +26,7 @@ exports.handler = function (event, context, callback) {
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify({ clientContext: context.clientContext, data: body })
         })
     }
 

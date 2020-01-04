@@ -15,7 +15,8 @@
   "author": "Netlify",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.0"
+    "axios": "^0.19.0",
+    "firebase-admin": "^8.9.0"
   },
   "repository": {
     "type": "git",
