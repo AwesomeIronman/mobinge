@@ -1,15 +1,13 @@
 const admin = require('firebase-admin')
-const serviceAccount = require('./serviceAccountKey.json')
 
 // Get env var values defined in our Netlify site UI
-const {
-   FIREBASE_DB_URL
-} = process.env
+const FIREBASE_DB_URL = JSON.parse(process.env.FIREBASE_DB_URL);
+const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG);
 
 
 // Initialize Firebase Cloud Firestore
 admin.initializeApp({
-   credential: admin.credential.cert(serviceAccount),
+   credential: admin.credential.cert(FIREBASE_CONFIG),
    databaseURL: FIREBASE_DB_URL
 })
 
@@ -37,7 +35,7 @@ exports.handler = async (event, context) => {
       if (!user.user_metadata) {
          return {
             statusCode: 401,
-            body: JSON.stringify( "User not logged in?" )
+            body: JSON.stringify("User not logged in?")
          }
       }
 
@@ -50,10 +48,10 @@ exports.handler = async (event, context) => {
       }
 
       try {
-         // Add a sample record
+         // Add a title to user's favourites list
          await db.collection('favourites').add({
             id: `${user.sub}`,
-            imdbid: `${user.user_metadata.full_name}`
+            imdbid: `${imdb}`
          })
 
          // Return OK response
@@ -61,7 +59,6 @@ exports.handler = async (event, context) => {
             statusCode: 200,
             body: JSON.stringify({
                data: 'Test data added successfully',
-               user
             })
          };
 

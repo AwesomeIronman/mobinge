@@ -14,7 +14,7 @@ function getSearchData(searchText) {
     type: "POST",
     headers: {
       title: searchText,
-      Authorization: `Bearer ${ netlifyIdentity.currentUser().token }`
+      Authorization: `Bearer ${await netlifyIdentity.currentUser().jwt()}`
     }
   })
     .then((response) => {
@@ -33,6 +33,7 @@ function getSearchData(searchText) {
               <img src="${movie.Poster}">
               <h5>${movie.Title}</h5>
               <a onclick="titleSelected('${movie.imdbID}')" class="btn btn-primary" href="#">Movie Details</a>
+              <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info" href="#">Add favourites</a>
             </div>
           </div>
         `;
@@ -64,7 +65,8 @@ function getTitleInfo() {
     url: "/.netlify/functions/get-title-info",
     type: "POST",
     headers: {
-      id: title
+      id: title,
+      Authorization: `Bearer ${await netlifyIdentity.currentUser().jwt()}`
     }
   })
     .then(movie => {
@@ -104,6 +106,28 @@ function getTitleInfo() {
     })
     .catch((err) => {
       console.log(err);
+      return false;
+    });
+}
+
+function addToFavourites(id) {
+
+  // Make request to function to add id to user's favourites
+
+  $.ajax({
+    url: "/.netlify/functions/add-favourites",
+    type: "POST",
+    headers: {
+      imdb: id,
+      Authorization: `Bearer ${await netlifyIdentity.currentUser().jwt()}`
+    }
+  })
+    .then(response => {
+      console.log('Successfully added to favourites: ', response);
+      return true;
+    })
+    .catch((err) => {
+      console.log('Failed to add to favourites: ', err);
       return false;
     });
 }
