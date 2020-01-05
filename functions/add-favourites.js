@@ -28,14 +28,14 @@ exports.handler = async (event, context) => {
    if (event.httpMethod === 'POST') {
 
       // Collect user information and required parameters
-      const user = context.clientContext.user;
+      const { user } = context.clientContext;
       const imdb = event.headers.imdb
 
       // Return error if user not logged in
-      if (user.user_metadata) {
+      if (!user) {
          return {
             statusCode: 401,
-            body: JSON.stringify("User is logged in, chill")
+            body: JSON.stringify("User not logged in?")
          }
       }
 
