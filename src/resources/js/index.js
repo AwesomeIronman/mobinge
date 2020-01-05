@@ -116,9 +116,9 @@ function showSearchResult(result) {
   }
 }
 
-function showTitleInfo(info) {
+function showTitleInfo(movie) {
   // Show received info to user
-  if (info) {
+  if (movie) {
     let output = `
         <div class="row">
           <div class="col-md-4">
