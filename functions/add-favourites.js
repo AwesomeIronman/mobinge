@@ -72,11 +72,9 @@ exports.handler = async (event, context) => {
       }
 
    } else {
-
       return {
          statusCode: 405
       }
-
    }
 
 }

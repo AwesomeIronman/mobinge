@@ -9,25 +9,87 @@ $(document).ready(() => {
 });
 
 function getSearchData(searchText) {
+
   $.ajax({
     url: "/.netlify/functions/search-title",
     type: "POST",
     headers: {
-      title: searchText,
-      Authorization: `Bearer ${await netlifyIdentity.currentUser().jwt()}`
+      title: searchText
     }
   })
+
     .then((response) => {
       console.log('getSearchData response: ', response);
-      console.log('getSearchData response clientContext: ', response.clientContext);
 
-      if (response.data.Search) {
-        let movies = response.data.Search;
-        console.log('getSearchData movies: ', movies);
-        let output = '';
-        $.each(movies, (index, movie) => {
-          if (movie.Poster !== "N/A") {
-            output += `
+      showSearchResult(response);
+    })
+
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+
+}
+
+function titleSelected(id) {
+  let IMDBID = JSON.stringify(id);
+  sessionStorage.setItem('titleID', IMDBID);
+  window.location = 'movie.html';
+  return false;
+}
+
+function getTitleInfo() {
+  // First get the stored/selected title IMDB ID
+  let title = JSON.parse(sessionStorage.getItem('titleID'));
+
+  $.ajax({
+    url: "/.netlify/functions/get-title-info",
+    type: "POST",
+    headers: {
+      id: title
+    }
+  })
+    .then(movie => {
+      console.log('Title response: ', movie);
+      showTitleInfo(info);
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+function addToFavourites(id) {
+  let user = netlifyIdentity.currentUser();
+  user = user.jwt();
+
+  // Make request to function to add id to user's favourites
+  $.ajax({
+    url: "/.netlify/functions/add-favourites",
+    type: "POST",
+    headers: {
+      imdb: id,
+      Authorization: `Bearer ${user}`
+    }
+  })
+    .then(response => {
+      console.log('Successfully added to favourites: ', response);
+      return true;
+    })
+    .catch((err) => {
+      console.log('Failed to add to favourites: ', err);
+      return false;
+    });
+}
+
+function showSearchResult(result) {
+  // Show received result of search query
+  let movies = result.data.Search;
+  if (movies) {
+    let output = '';
+    $.each(movies, (index, movie) => {
+      if (movie.Poster !== "N/A") {
+        output += `
           <div class="col-md-3">
             <div class="well text-center">
               <img src="${movie.Poster}">
@@ -37,42 +99,17 @@ function getSearchData(searchText) {
             </div>
           </div>
         `;
-          }
-        });
-
-        $('#movies').html(output);
       }
-    })
-    .catch((err) => {
-      console.log(err);
-      return false;
     });
+
+    $('#movies').html(output);
+  }
 }
 
-function titleSelected(id) {
-  let IMDBID = JSON.stringify(id);
-  console.debug('titleSelected IMDBID: ', IMDBID);
-  sessionStorage.setItem('titleID', IMDBID);
-  window.location = 'movie.html';
-  return false;
-}
-
-function getTitleInfo() {
-  let title = JSON.parse(sessionStorage.getItem('titleID'));
-  console.debug('getTitleInfo storage title: ', title);
-
-  $.ajax({
-    url: "/.netlify/functions/get-title-info",
-    type: "POST",
-    headers: {
-      id: title,
-      Authorization: `Bearer ${await netlifyIdentity.currentUser().jwt()}`
-    }
-  })
-    .then(movie => {
-      console.log('Title response: ', movie);
-      if (movie) {
-        let output = `
+function showTitleInfo(info) {
+  // Show received info to user
+  if (info) {
+    let output = `
         <div class="row">
           <div class="col-md-4">
             <img src="${movie.Poster}" class="thumbnail">
@@ -101,33 +138,6 @@ function getTitleInfo() {
         </div>
       `;
 
-        $('#movie').html(output);
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      return false;
-    });
-}
-
-function addToFavourites(id) {
-
-  // Make request to function to add id to user's favourites
-
-  $.ajax({
-    url: "/.netlify/functions/add-favourites",
-    type: "POST",
-    headers: {
-      imdb: id,
-      Authorization: `Bearer ${await netlifyIdentity.currentUser().jwt()}`
-    }
-  })
-    .then(response => {
-      console.log('Successfully added to favourites: ', response);
-      return true;
-    })
-    .catch((err) => {
-      console.log('Failed to add to favourites: ', err);
-      return false;
-    });
+    $('#movie').html(output);
+  }
 }
