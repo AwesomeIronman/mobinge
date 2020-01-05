@@ -1,7 +1,7 @@
 const admin = require('firebase-admin')
 
 // Get env var values defined in our Netlify site UI
-const FIREBASE_DB_URL = JSON.parse(process.env.FIREBASE_DB_URL);
+const FIREBASE_DB_URL = process.env.FIREBASE_DB_URL;
 const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG);
 
 
