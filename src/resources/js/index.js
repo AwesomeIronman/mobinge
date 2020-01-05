@@ -61,8 +61,8 @@ function getTitleInfo() {
 
 function addToFavourites(id) {
 
-  var user = netlifyIdentity.currentUser().token.access_token;
-  if (!user) {
+  let user = netlifyIdentity.currentUser().token.access_token;
+  if (user === undefined) {
     alert("You have to log-in first!");
   }
 
