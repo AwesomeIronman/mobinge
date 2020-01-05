@@ -60,8 +60,6 @@ function getTitleInfo() {
 }
 
 function addToFavourites(id) {
-  let user = netlifyIdentity.currentUser();
-  user = user.jwt();
 
   // Make request to function to add id to user's favourites
   $.ajax({
@@ -72,14 +70,17 @@ function addToFavourites(id) {
       Authorization: `Bearer ${user}`
     }
   })
+
     .then(response => {
       console.log('Successfully added to favourites: ', response);
       return true;
     })
+
     .catch((err) => {
       console.log('Failed to add to favourites: ', err);
       return false;
     });
+    
 }
 
 function showSearchResult(result) {

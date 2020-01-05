@@ -32,7 +32,7 @@ exports.handler = async (event, context) => {
       const imdb = event.headers.imdb
 
       // Return error if user not logged in
-      if (!user) {
+      if (!user.user_metadata) {
          return {
             statusCode: 401,
             body: JSON.stringify({ message: "User not logged in?", userObj: user})
@@ -49,7 +49,7 @@ exports.handler = async (event, context) => {
 
       try {
          // Add a title to user's favourites list
-         var cus = await db.collection('favourites').add({
+         await db.collection('favourites').add({
             id: `${user.sub}`,
             imdbid: `${imdb}`
          })
@@ -58,8 +58,7 @@ exports.handler = async (event, context) => {
          return {
             statusCode: 200,
             body: JSON.stringify({
-               data: 'Test data added successfully',
-               cus
+               data: 'Test data added successfully'
             })
          };
 
