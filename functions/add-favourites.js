@@ -35,7 +35,7 @@ exports.handler = async (event, context) => {
       if (!user) {
          return {
             statusCode: 401,
-            body: JSON.stringify("User not logged in?")
+            body: JSON.stringify({ message: "User not logged in?", userObj: user})
          }
       }
 
@@ -43,7 +43,7 @@ exports.handler = async (event, context) => {
       if (!imdb) {
          return {
             statusCode: 400,
-            body: JSON.stringify('Required parameter IMDB not found')
+            body: JSON.stringify({ message: 'Required parameter IMDB not found', imdbObj: imdb})
          }
       }
 
