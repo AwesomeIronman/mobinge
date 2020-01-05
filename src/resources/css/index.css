@@ -1,13 +1,22 @@
-#movies img, #movie img{
-  width:100%;
-}
-
-@media(min-width:960px){
-  #movies .col-md-3 .well{
+@media(min-width:960px) {
+  #movies .col-md-3 .well {
     height: 390px;
   }
 
-  #movies .col-md-3 img{
-    height:240px;
+  #movies .col-md-3 img {
+    height: 240px;
   }
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  background: url(../images/david.jpg) no-repeat center center fixed;
+  background-size: cover;
+}
+
+body {
+  min-width: 100vw;
+  min-height: 100vh;
+  color: #ffffff;
 }

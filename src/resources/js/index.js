@@ -79,6 +79,7 @@ function addToFavourites(id) {
   })
 
     .then(response => {
+      // If successfully added title to favourites, then reflect success message in HTML
       console.log('Successfully added to favourites: ', response);
       $(`.${id}`)[0].textContent = "Favourite"
       return true;
@@ -101,7 +102,7 @@ function showSearchResult(result) {
         output += `
           <div class="col-md-3">
             <div class="well text-center">
-              <img src="${movie.Poster}">
+              <img src="${movie.Poster}" class="img-fluid">
               <h5>${movie.Title}</h5>
               <a onclick="titleSelected('${movie.imdbID}')" class="btn btn-primary" href="#">Movie Details</a>
               <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info ${movie.imdbID}"  id="fav-btn" href="#">Add favourites</a>
