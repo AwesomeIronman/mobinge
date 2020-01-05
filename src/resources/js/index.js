@@ -61,6 +61,11 @@ function getTitleInfo() {
 
 function addToFavourites(id) {
 
+  var user = netlifyIdentity.currentUser().token.access_token;
+  if (!user) {
+    alert("You have to log-in first!");
+  }
+
   // Make request to function to add id to user's favourites
   $.ajax({
     url: "/.netlify/functions/add-favourites",
@@ -73,6 +78,7 @@ function addToFavourites(id) {
 
     .then(response => {
       console.log('Successfully added to favourites: ', response);
+      $("#fav-btn").textContent = "Favourite"
       return true;
     })
 
@@ -96,7 +102,7 @@ function showSearchResult(result) {
               <img src="${movie.Poster}">
               <h5>${movie.Title}</h5>
               <a onclick="titleSelected('${movie.imdbID}')" class="btn btn-primary" href="#">Movie Details</a>
-              <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info" href="#">Add favourites</a>
+              <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info" id="fav-btn" href="#">Add favourites</a>
             </div>
           </div>
         `;
