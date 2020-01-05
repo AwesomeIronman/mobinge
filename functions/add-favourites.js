@@ -28,14 +28,14 @@ exports.handler = async (event, context) => {
    if (event.httpMethod === 'POST') {
 
       // Collect user information and required parameters
-      const { user } = context.clientContext;
+      const user = context.clientContext.user;
       const imdb = event.headers.imdb
 
       // Return error if user not logged in
-      if (!user.user_metadata) {
+      if (user.user_metadata) {
          return {
             statusCode: 401,
-            body: JSON.stringify("User not logged in?")
+            body: JSON.stringify("User is logged in, chill")
          }
       }
 
@@ -49,7 +49,7 @@ exports.handler = async (event, context) => {
 
       try {
          // Add a title to user's favourites list
-         await db.collection('favourites').add({
+         var cus = await db.collection('favourites').add({
             id: `${user.sub}`,
             imdbid: `${imdb}`
          })
@@ -59,6 +59,7 @@ exports.handler = async (event, context) => {
             statusCode: 200,
             body: JSON.stringify({
                data: 'Test data added successfully',
+               cus
             })
          };
 
