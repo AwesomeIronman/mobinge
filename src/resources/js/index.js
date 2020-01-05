@@ -61,10 +61,12 @@ function getTitleInfo() {
 
 function addToFavourites(id) {
 
-  let user = netlifyIdentity.currentUser().token.access_token;
-  if (user === undefined) {
-    alert("You have to log-in first!");
+  let user = netlifyIdentity.currentUser();
+  if (!user) {
+    alert("You need to log-in first!");
+    return false;
   }
+  let token = user.token.access_token;
 
   // Make request to function to add id to user's favourites
   $.ajax({
@@ -72,7 +74,7 @@ function addToFavourites(id) {
     type: "POST",
     headers: {
       imdb: id,
-      Authorization: `Bearer ${user}`
+      Authorization: `Bearer ${token}`
     }
   })
 
