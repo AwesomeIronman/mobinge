@@ -49,8 +49,8 @@ function getTitleInfo() {
       id: title
     }
   })
-    .then(movie => {
-      console.log('Title response: ', movie);
+    .then(info => {
+      console.log('Title response: ', info);
       showTitleInfo(info);
     })
     .catch((err) => {
