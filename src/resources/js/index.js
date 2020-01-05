@@ -80,7 +80,7 @@ function addToFavourites(id) {
 
     .then(response => {
       console.log('Successfully added to favourites: ', response);
-      $("#fav-btn").textContent = "Favourite"
+      $(`.${id}`)[0].textContent = "Favourite"
       return true;
     })
 
@@ -88,7 +88,7 @@ function addToFavourites(id) {
       console.log('Failed to add to favourites: ', err);
       return false;
     });
-    
+
 }
 
 function showSearchResult(result) {
@@ -104,7 +104,7 @@ function showSearchResult(result) {
               <img src="${movie.Poster}">
               <h5>${movie.Title}</h5>
               <a onclick="titleSelected('${movie.imdbID}')" class="btn btn-primary" href="#">Movie Details</a>
-              <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info" id="fav-btn" href="#">Add favourites</a>
+              <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info ${movie.imdbID}"  id="fav-btn" href="#">Add favourites</a>
             </div>
           </div>
         `;
