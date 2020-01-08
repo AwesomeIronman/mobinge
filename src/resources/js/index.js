@@ -13,7 +13,7 @@ function getSearchData(searchText) {
   $.ajax({
     url: "/.netlify/functions/search-title",
     type: "POST",
-    headers: {
+    body: {
       title: searchText
     }
   })
