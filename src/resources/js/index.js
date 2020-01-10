@@ -92,18 +92,17 @@ function addToFavourites(id) {
 
 }
 
-function showSearchResult(result) {
-  // Show received result of search query
-  let movies = result.data.Search;
-  if (movies) {
+function showSearchResult(response) {
+
+  if (response.data.total_results > 0) {
     let output = '';
-    $.each(movies, (index, movie) => {
-      if (movie.Poster !== "N/A") {
+    $.each(results, (index, movie) => {
+      if (movie.poster_path !== "N/A" || movie.poster_path !== null || movie.poster_path !== undefined) {
         output += `
           <div class="col-md-3">
             <div class="well text-center">
-              <img src="${movie.Poster}" class="img-fluid">
-              <h5>${movie.Title}</h5>
+              <img src="http://image.tmdb.org/t/p${movie.poster_path}" class="img-fluid">
+              <h5>${movie.title || movie.original_title}</h5>
               <a onclick="titleSelected('${movie.imdbID}')" class="btn btn-primary" href="#">Movie Details</a>
               <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info ${movie.imdbID}"  id="fav-btn" href="#">Add favourites</a>
             </div>

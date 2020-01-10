@@ -1,32 +1,40 @@
-const mdb = require("moviedb")(process.env.TMDB_API_KEY);
+const axios = require("axios");
 const qs = require("qs");
 
-exports.handler = function (event, context, callback) {
+exports.handler = async function (event, context) {
 
+    // Get env var values defined in our Netlify site UI
+    const { TMDB_API_KEY, TMDB_API_URL } = process.env
     const title = qs.parse(event.body).title;
 
-    // Here's a function we'll use to define how our response will look like when we call callback
-    const pass = (body) => {
-        callback(null, {
-            statusCode: 200,
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({ data: body })
-        })
-    }
+    // In this example, the API Key needs to be passed in the params with a key of key.
+    // We're assuming that the ApiParams var will contain the initial ?
+    var URL = `${TMDB_API_URL}/search/multi?api_key=${TMDB_API_KEY}&language=en-US&page=1&include_adult=true`
 
-    if (event.httpMethod == 'POST') {
-        mdb.searchMulti({ query: title }, (err, res) => {
-            if (err === null) {
-                pass(res);
-            } else {
-                callback(err);
-            }
-        });
+    if (event.httpMethod === 'POST') {
+
+        URL = `${URL}&query=${title}`;
+
+        return axios.get(URL)
+            .then((response) => {
+
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify(response.data.results)
+                }
+
+            }, (error) => {
+                
+                return {
+                    statusCode: error.response.status,
+                    body: JSON.stringify(error.response.data)
+                }
+            });
+
     } else {
-        callback(null, {
-            statusCode: 405
-        })
+        return {
+            statusCode: 405,
+            body: JSON.stringify(`Method not allowed: ${event.httpMethod}`)
+        };
     }
-};
+}
