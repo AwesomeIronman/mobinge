@@ -17,7 +17,6 @@ exports.handler = async function (event, context) {
 
         return axios.get(URL)
             .then((response) => {
-
                 return {
                     statusCode: 200,
                     body: JSON.stringify(response.data.results)

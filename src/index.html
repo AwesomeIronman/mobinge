@@ -31,7 +31,7 @@
             </div>
         </nav>
 
-        <div class="container">
+        <div class="container" id="search-box">
             <div class="jumbotron">
                 <h3 class="text-center">Search For Any Movie</h3>
                 <form id="searchForm">
@@ -40,9 +40,44 @@
             </div>
         </div>
 
-        <div class="container">
+        <div class="container" id="search-result" style="display: none;">
             <div id="movies" class="row"></div>
         </div>
+
+        <!-- OPEN: Show full movie information -->
+        <div class="container" id="search-info" style="display: none;">
+            <div id="movie" class="well">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="" class="img-fluid">
+                    </div>
+                    <div class="col-md-8">
+                        <h2 id="title-name">${movie.Title}</h2>
+                        <ul class="list-group">
+                            <li id="title-genre" class="list-group-item"><strong>Genre:</strong> UNSET</li>
+                            <li id="title-" class="list-group-item"><strong>Released:</strong> UNSET</li>
+                            <li id="title-" class="list-group-item"><strong>Rated:</strong> UNSET</li>
+                            <li class="list-group-item"><strong>IMDB Rating:</strong> <span id="title-imdb-rating">UNSET</span></li>
+                            <li id="title-" class="list-group-item"><strong>Director:</strong> UNSET</li>
+                            <li id="title-" class="list-group-item"><strong>Writer:</strong> UNSET</li>
+                            <li id="title-" class="list-group-item"><strong>Actors:</strong> UNSET</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="well">
+                        <h3>Plot</h3>
+                            <span id="title-overview">UNSET</span>
+                        <hr>
+                        <a href="#" target="_blank" class="btn btn-primary">
+                            View IMDB
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- CLOSE: Show full movie information -->
+
     </div>
     <!-- Custom script: -->
     <script defer type="text/javascript" src="./resources/js/index.js"></script>

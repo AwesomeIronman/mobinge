@@ -1,11 +1,14 @@
 console.log('JS is working!');
 
 $(document).ready(() => {
+
+  // Add event listener to search on pressing enter in search box
   $('#searchForm').on('submit', (event) => {
     event.preventDefault();
     let searchText = $('#searchText').val();
     getSearchData(searchText);
   });
+
 });
 
 function getSearchData(searchText) {
@@ -13,7 +16,7 @@ function getSearchData(searchText) {
   $.ajax({
     url: "/.netlify/functions/search-title",
     type: "POST",
-    body: {
+    data: {
       title: searchText
     }
   })
@@ -31,122 +34,70 @@ function getSearchData(searchText) {
 
 }
 
-function titleSelected(id) {
-  let IMDBID = JSON.stringify(id);
-  sessionStorage.setItem('titleID', IMDBID);
-  window.location = 'movie.html';
-  return false;
+
+function showSearchResult(response) {
+  let movies = JSON.parse(response)
+  window.custom1 = movies // Variable declared in browser window for debugging
+
+  if (movies.length > 0) {
+    let output = '';
+
+    // Create a card/Show basic information of each search result
+    $.each(movies, (index, movie) => {
+      if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
+
+        output += `
+          <div class="col-md-3">
+            <div class="well text-center">
+              <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" class="img-fluid">
+              <h5>${movie.title ? movie.title : movie.name}</h5>
+              <a onclick="getTitleInfo('${movie.id}')" class="btn btn-primary" href="#">Movie Details</a>
+            </div>
+          </div>
+        `;
+      }
+    });
+    $('#movies').html(output);
+    $("#search-info").css("display", "none"); // Do not display selected title information
+    $("#search-result").css("display", "block"); // Display search results
+  }
 }
 
-function getTitleInfo() {
-  // First get the stored/selected title IMDB ID
-  let title = JSON.parse(sessionStorage.getItem('titleID'));
+function getTitleInfo(tmdbid) {
 
   $.ajax({
     url: "/.netlify/functions/get-title-info",
     type: "POST",
-    headers: {
-      id: title
+    data: {
+      id: tmdbid
     }
   })
-    .then(info => {
-      console.log('Title response: ', info);
-      showTitleInfo(info);
+
+    .then((response) => {
+      console.log('getTitleInfo response: ', response);
+
+      showTitleInfo(response);
     })
+
     .catch((err) => {
       console.log(err);
       return false;
     });
 }
 
-function addToFavourites(id) {
 
-  let user = netlifyIdentity.currentUser();
-  if (!user) {
-    alert("You need to log-in first!");
-    return false;
-  }
-  let token = user.token.access_token;
+function showTitleInfo(response) {
 
-  // Make request to function to add id to user's favourites
-  $.ajax({
-    url: "/.netlify/functions/add-favourites",
-    type: "POST",
-    headers: {
-      imdb: id,
-      Authorization: `Bearer ${token}`
-    }
-  })
+  let info = JSON.parse(response)
+  window.custom2 = info // Variable declared in browser window for debugging
 
-    .then(response => {
-      // If successfully added title to favourites, then reflect success message in HTML
-      console.log('Successfully added to favourites: ', response);
-      $(`.${id}`)[0].textContent = "Favourite"
-      return true;
-    })
+  $("#search-info #movie .row .img-fluid")[0].src = `https://image.tmdb.org/t/p/w400${info.poster_path}`;
+  $("#search-info #movie div:nth-child(2) #title-name")[0].textContent = info.title ? info.title : info.name;
+  $("#search-info #movie div:nth-child(2) #title-imdb-rating")[0].textContent = info.vote_average;
+  $("#search-info #movie #title-overview")[0].textContent = info.overview;
+  $("#search-info #movie div.row div.well a.btn.btn-primary")[0].href = `http://imdb.com/title/${info.imdb_id}`;
 
-    .catch((err) => {
-      console.log('Failed to add to favourites: ', err);
-      return false;
-    });
-
-}
-
-function showSearchResult(response) {
-
-  if (response.data.total_results > 0) {
-    let output = '';
-    $.each(results, (index, movie) => {
-      if (movie.poster_path !== "N/A" || movie.poster_path !== null || movie.poster_path !== undefined) {
-        output += `
-          <div class="col-md-3">
-            <div class="well text-center">
-              <img src="http://image.tmdb.org/t/p${movie.poster_path}" class="img-fluid">
-              <h5>${movie.title || movie.original_title}</h5>
-              <a onclick="titleSelected('${movie.imdbID}')" class="btn btn-primary" href="#">Movie Details</a>
-              <a onclick="addToFavourites('${movie.imdbID}')" class="btn btn-info ${movie.imdbID}"  id="fav-btn" href="#">Add favourites</a>
-            </div>
-          </div>
-        `;
-      }
-    });
-
-    $('#movies').html(output);
-  }
-}
-
-function showTitleInfo(movie) {
-  // Show received info to user
-  if (movie) {
-    let output = `
-        <div class="row">
-          <div class="col-md-4">
-            <img src="${movie.Poster}" class="thumbnail">
-          </div>
-          <div class="col-md-8">
-            <h2>${movie.Title}</h2>
-            <ul class="list-group">
-              <li class="list-group-item"><strong>Genre:</strong> ${movie.Genre}</li>
-              <li class="list-group-item"><strong>Released:</strong> ${movie.Released}</li>
-              <li class="list-group-item"><strong>Rated:</strong> ${movie.Rated}</li>
-              <li class="list-group-item"><strong>IMDB Rating:</strong> ${movie.imdbRating}</li>
-              <li class="list-group-item"><strong>Director:</strong> ${movie.Director}</li>
-              <li class="list-group-item"><strong>Writer:</strong> ${movie.Writer}</li>
-              <li class="list-group-item"><strong>Actors:</strong> ${movie.Actors}</li>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="well">
-            <h3>Plot</h3>
-            ${movie.Plot}
-            <hr>
-            <a href="http://imdb.com/title/${movie.imdbID}" target="_blank" class="btn btn-primary">View IMDB</a>
-            <a href="index.html" class="btn btn-default">Go Back To Search</a>
-          </div>
-        </div>
-      `;
-
-    $('#movie').html(output);
-  }
+  $("#search-box").css("display", "none"); // Do not display search box
+  $("#search-result").css("display", "none"); // Do not display search result div
+  $("#search-info").css("display", "block"); // Display selected titles information
 }

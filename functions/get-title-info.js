@@ -1,50 +1,38 @@
-const axios = require("axios")
+const axios = require("axios");
+const qs = require("qs");
 
-exports.handler = function (event, context, callback) {
+exports.handler = async function (event, context) {
 
     // Get env var values defined in our Netlify site UI
-    const {
-        API_TOKEN,
-        API_URL
-    } = process.env
+    const { TMDB_API_KEY, TMDB_API_URL } = process.env
+    const tmdb_id = qs.parse(event.body).id;
 
-    // construct a base URL for OMDB API usage,
-    // using set environment variables
-    var URL = `${API_URL}?apikey=${API_TOKEN}&`;
+    // In this example, the API Key needs to be passed in the params with a key of key.
+    // We're assuming that the ApiParams var will contain the initial ?
+    var URL = `${TMDB_API_URL}/movie/${tmdb_id}?api_key=${TMDB_API_KEY}&language=en-US`
 
-    var titleID = ''+event.headers.id;
+    if (event.httpMethod === 'POST') {
 
-    URL = URL + 'i=' + titleID + '&';
-
-    console.log('URL: ', URL)
-    console.log('Title: ', titleID)
-
-    // Here's a function we'll use to define how our response will look like when we call callback
-    const pass = (body) => {
-        callback(null, {
-            statusCode: 200,
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        })
-    }
-
-    // Perform the API call.
-    const get = () => {
-        axios.get(URL)
+        return axios.get(URL)
             .then((response) => {
-                console.log(response.data)
-                pass(response.data)
-            })
-            .catch(err => pass(err))
-    }
 
-    if (event.httpMethod == 'POST') {
-        get();
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify(response.data)
+                }
+
+            }, (error) => {
+
+                return {
+                    statusCode: error.status,
+                    body: JSON.stringify(error.data)
+                }
+            });
+
     } else {
-        callbac(null, {
-            statusCode: 405
-        })
+        return {
+            statusCode: 405,
+            body: JSON.stringify(`Method not allowed: ${event.httpMethod}`)
+        };
     }
-};
+}
