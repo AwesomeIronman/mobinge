@@ -1,33 +1,23 @@
-const axios = require("axios");
+const fetch = require('node-fetch');
 const qs = require("qs");
 
 exports.handler = async function (event, context) {
 
     // Get env var values defined in our Netlify site UI
     const { TMDB_API_KEY, TMDB_API_URL } = process.env
-    const tmdb_id = qs.parse(event.body).id;
+    const params = qs.parse(event.body);
 
-    // In this example, the API Key needs to be passed in the params with a key of key.
-    // We're assuming that the ApiParams var will contain the initial ?
-    var URL = `${TMDB_API_URL}/movie/${tmdb_id}?api_key=${TMDB_API_KEY}&language=en-US`
+    var URL = `${TMDB_API_URL}/movie/${params.id}?language=en-US&api_key=${TMDB_API_KEY}`
 
     if (event.httpMethod === 'POST') {
 
-        return axios.get(URL)
-            .then((response) => {
+        var resp = await fetch(URL)
+            .then(res => res.json())
 
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify(response.data)
-                }
-
-            }, (error) => {
-
-                return {
-                    statusCode: error.status,
-                    body: JSON.stringify(error.data)
-                }
-            });
+        return {
+            statusCode: 200,
+            body: JSON.stringify(resp)
+        }
 
     } else {
         return {

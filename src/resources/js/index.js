@@ -5,115 +5,102 @@ $(document).ready(() => {
   // Add event listener to search on pressing enter in search box
   $('#searchForm').on('submit', (event) => {
     event.preventDefault();
-    let searchText = $('#searchText').val();
-    getSearchData(searchText);
+    getSearchData($('#searchText').val());
   });
 
-  // Add event to show trending list
-  $('#btn-trending').on('click', (event) => {
+  // Add event listener to search on pressing any key
+  $("#searchText").keyup(event => {
     event.preventDefault();
+    getSearchData($('#searchText').val());
+  });
 
+  // Add event to show upcoming movies list
+  $('#btn-upcoming').on('click', (event) => {
+    event.preventDefault()
     if ($("#root-div").hasClass("align-root-div")) {
-      console.log('Hiding top list');
-
-      $("#root-div").removeClass("align-root-div");
-      $("#top-list").css("display", "none");
-
-
+      hideTopList()
     } else {
-      $.ajax({
-        url: "https://api.themoviedb.org/3/trending/movie/week?api_key=dbc3ca0ccc9427a3db20ed940f2e04aa",
-        type: "GET"
-      })
-        .then((response) => {
-          console.log('Trending response: ', response.results);
 
-          $("#root-div").addClass("align-root-div");
-          $("#top-list").css("display", "block");
-          populateTopList(response.results);
+      fetch('/.netlify/functions/token-hider',
+        { method: 'POST', body: 'type=upcoming' })
+        .then(res => res.json())
+        .then(resp => {
+          console.log('Upcoming movies response: ', resp);
+          handleData(resp)
         })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        .catch((error) => {
+          console.error('Error:', error);
         });
     }
+  });
 
+  // Add event to show now-playing list
+  $('#btn-now-playing').on('click', (event) => {
+    event.preventDefault()
+    if ($("#root-div").hasClass("align-root-div")) {
+      hideTopList()
+    } else {
+
+      fetch('/.netlify/functions/token-hider',
+        { method: 'POST', body: 'type=now-playing' })
+        .then(res => res.json())
+        .then(resp => {
+          console.log('Now playing response: ', resp);
+          handleData(resp)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
   });
 
   // Add event to show popular list
   $('#btn-popular').on('click', (event) => {
-    event.preventDefault();
-
+    event.preventDefault()
     if ($("#root-div").hasClass("align-root-div")) {
-      console.log('Hiding top list');
-
-      $("#root-div").removeClass("align-root-div");
-      $("#top-list").css("display", "none");
-
-
+      hideTopList()
     } else {
-      $.ajax({
-        url: "https://api.themoviedb.org/3/movie/popular?api_key=dbc3ca0ccc9427a3db20ed940f2e04aa&language=en-US&page=1&region=IN",
-        type: "GET"
-      })
-        .then((response) => {
-          console.log('Popular response: ', response.results);
 
-          $("#root-div").addClass("align-root-div");
-          $("#top-list").css("display", "block");
-          populateTopList(response.results);
+      fetch('/.netlify/functions/token-hider',
+        { method: 'POST', body: 'type=popular' })
+        .then(res => res.json())
+        .then(resp => {
+          console.log('Popular response: ', resp);
+          handleData(resp)
         })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        .catch((error) => {
+          console.error('Error:', error);
         });
     }
-
   });
 
-  // Add event to show upcoming list
-  $('#btn-upcoming').on('click', (event) => {
-    event.preventDefault();
-
+  // Add event to show trending list
+  $('#btn-trending').on('click', (event) => {
+    event.preventDefault()
     if ($("#root-div").hasClass("align-root-div")) {
-      console.log('Hiding top list');
-
-      $("#root-div").removeClass("align-root-div");
-      $("#top-list").css("display", "none");
-
-
+      hideTopList()
     } else {
-      $.ajax({
-        url: "https://api.themoviedb.org/3/movie/upcoming?api_key=dbc3ca0ccc9427a3db20ed940f2e04aa&language=en-US&page=1&region=IN",
-        type: "GET"
-      })
-        .then((response) => {
-          console.log('Upcoming movies response: ', response.results);
 
-          $("#root-div").addClass("align-root-div");
-          $("#top-list").css("display", "block");
-          populateTopList(response.results);
+      fetch('/.netlify/functions/token-hider',
+        { method: 'POST', body: 'type=trending' })
+        .then(res => res.json())
+        .then(resp => {
+          console.log('Trending response: ', resp);
+          handleData(resp)
         })
-        .catch((err) => {
-          console.log(err);
-          return false;
+        .catch((error) => {
+          console.error('Error:', error);
         });
     }
-
   });
 
 });
 // JQuery OnReady Close
 
 function getSearchData(searchText) {
-
-  $.ajax({
-    url: "/.netlify/functions/search-title",
-    type: "POST",
-    data: {
-      title: searchText
-    }
-  })
+  fetch('/.netlify/functions/token-hider',
+    { method: 'POST', body: `type=search&query=${searchText}` })
+    .then(res => res.json())
 
     .then((response) => {
       showSearchResult(response);
@@ -126,22 +113,17 @@ function getSearchData(searchText) {
 }
 
 
-function showSearchResult(response) {
-  let movies = JSON.parse(response)
-  window.custom1 = movies // Variable declared in browser window for debugging
+function showSearchResult(movies) {
+  let sampleNode = $('#sampleNode')[0].cloneNode(true); // Create a clone to edit and append each time
+  sampleNode.removeAttribute("id")
+  sampleNode.removeAttribute("style")
+
+  $('#partial-info .list-group')[0].innerHTML = ""; // Remove old search result
 
   if (movies.length > 0) {
-    let sampleNode = $('#sampleNode')[0].cloneNode(true); // Create a clone to edit and append each time
-    sampleNode.removeAttribute("id")
-    sampleNode.removeAttribute("style")
-
-    $('#partial-info .list-group')[0].innerHTML = ""; // Remove old search result
-
     // Show basic information of each search result
     $.each(movies, (index, movie) => {
       if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
-
-        console.log('title: ', movie.title, 'path: ', movie.poster_path);
 
         sampleNode.querySelector(".movie-poster img").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
         sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
@@ -154,24 +136,24 @@ function showSearchResult(response) {
 
     $("#search-info").css("display", "none"); // Do not display selected title information
     $("#partial-search-result").css("display", "block"); // Display search results
+
+  } else {
+
+    sampleNode.querySelector(".movie-poster img").src = "#";
+    sampleNode.querySelector(".movie-title").textContent = "Type movie/series title name";
+    sampleNode.querySelector(".movie-release").textContent = "";
+    sampleNode.querySelector(".movie-rating").textContent = "";
+
+    $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
   }
 }
 
 function getTitleInfo(tmdbid) {
 
-  $.ajax({
-    url: "/.netlify/functions/get-title-info",
-    type: "POST",
-    data: {
-      id: tmdbid
-    }
-  })
+  fetch('/.netlify/functions/get-title-info',
+    { method: "POST", body: `id=${tmdbid}` })
 
-    .then((response) => {
-      console.log('getTitleInfo response: ', response);
-
-      showTitleInfo(response);
-    })
+    .then(resp => showTitleInfo(resp))
 
     .catch((err) => {
       console.log(err);
@@ -216,4 +198,17 @@ function populateTopList(data) {
   });
 
   $("#top-list").css("display", "block"); // Display search results
+}
+
+function hideTopList() {
+  console.log('Hiding top list');
+
+  $("#root-div").removeClass("align-root-div");
+  $("#top-list").css("display", "none");
+}
+
+function handleData(data) {
+  $("#root-div").addClass("align-root-div");
+  $("#top-list").css("display", "block");
+  populateTopList(data);
 }

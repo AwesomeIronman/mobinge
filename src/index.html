@@ -3,15 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Movie/Series Guide</title>
 
+    
     <!-- Custom CSS: -->
     <link rel="stylesheet" href="./resources/css/index.css">
     <!-- Bootstrap Cyborg CSS Theme: -->
-    <link rel="stylesheet" href="./resources/css/bootstrap-cyborg.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="./resources/css/bootstrap-cyborg.css"> -->
 
     <!-- JQuery 3.4.1: -->
     <script defer type="text/javascript" src="./resources/js/jquery.min.js"></script>
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script defer src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -32,6 +39,12 @@
                     </li>
 
                     <li class="nav-link">
+                        <button id="btn-now-playing" class="btn btn-link">
+                            <a href="#">Now Playing</a>
+                        </button>
+                    </li>
+
+                    <li class="nav-link">
                         <button id="btn-popular" class="btn btn-link">
                             <a href="#">Popular</a>
                         </button>
@@ -47,7 +60,7 @@
         </nav>
 
         <div class="container" id="search-box">
-            <div class="jumbotron">
+            <!-- <div class="jumbotron"> -->
                 <h3 class="text-center">Search For Any Movie</h3>
                 <form id="searchForm">
                     <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
@@ -73,7 +86,7 @@
                     </div>
                 </div>
 
-            </div>
+            <!-- </div> -->
         </div>
 
         <!-- SHOW: full search results -->
