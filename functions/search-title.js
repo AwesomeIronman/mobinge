@@ -23,6 +23,9 @@ exports.handler = async function (event, context) {
                 }
 
             }, (error) => {
+
+                console.log("---------------- ERROR ----------------------");
+                console.log(error);
                 
                 return {
                     statusCode: error.response.status,

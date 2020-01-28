@@ -12,3 +12,16 @@ body {
   min-width: 100vw;
   min-height: 100vh;
 }
+
+#partial-search-result {
+	width: 100%;
+}
+
+#partial-info .list-group .list-group-item span[class^="movie-"] {
+  margin-right: 1em;
+}
+
+#partial-info .list-group .list-group-item .movie-poster img {
+  width: 8%;
+  height: 16%;
+}

@@ -12,8 +12,6 @@
 
     <!-- JQuery 3.4.1: -->
     <script defer type="text/javascript" src="./resources/js/jquery.min.js"></script>
-    <!-- netlify identity user login library: -->
-    <script defer type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
 </head>
 
@@ -26,8 +24,6 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="index.html">Mobinge</a>
                 </div>
-                <!-- Add netlify sign up/login button: -->
-                <div data-netlify-identity-button></div>
             </div>
         </nav>
 
@@ -37,9 +33,31 @@
                 <form id="searchForm">
                     <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
                 </form>
+                
+                <!-- SHOW: partial search results -->
+				<div id="partial-search-result" style=""> <!-- TODO: Hide -->
+					<div id="partial-info" class="">
+						<ul class="list-group">
+							<!-- Add all the basic search result output here through JavaScript -->
+                        </ul>
+
+                        <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                        <li id="sampleNode" class="list-group-item" style="display: none;">
+                            <span class="movie-poster">
+                                <img src="" class="">
+                            </span>
+                            <span class="movie-title">Movie name</span>
+                            <span class="movie-release">Released Year</span>
+                            <span class="movie-rating">Rating</span>
+                        </li>
+
+					</div>
+				</div>
+		
             </div>
         </div>
 
+        <!-- SHOW: full search results -->
         <div class="container" id="search-result" style="display: none;">
             <div id="movies" class="row"></div>
         </div>
