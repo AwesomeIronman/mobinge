@@ -16,14 +16,33 @@
 </head>
 
 <body>
-    <div class="container">
+    <div id="root-div" class="container">
 
         <!-- Navbar: -->
         <nav class="navbar navbar-default">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="index.html">Mobinge</a>
-                </div>
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html">Mobinge</a>
+                <ul class="nav navbar">
+                    <li class="nav-link"><a href="#">Calendar</a></li>
+                    
+                    <li class="nav-link">
+                        <button id="btn-upcoming" class="btn btn-link">
+                            <a href="#">Upcoming</a>
+                        </button>
+                    </li>
+
+                    <li class="nav-link">
+                        <button id="btn-popular" class="btn btn-link">
+                            <a href="#">Popular</a>
+                        </button>
+                    </li>
+
+                    <li class="nav-link">
+                        <button id="btn-trending" class="btn btn-link">
+                            <a href="#">Trending</a>
+                        </button>
+                    </li>
+                </ul>
             </div>
         </nav>
 
@@ -33,12 +52,12 @@
                 <form id="searchForm">
                     <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
                 </form>
-                
+
                 <!-- SHOW: partial search results -->
-				<div id="partial-search-result" style=""> <!-- TODO: Hide -->
-					<div id="partial-info" class="">
-						<ul class="list-group">
-							<!-- Add all the basic search result output here through JavaScript -->
+                <div id="partial-search-result" style=""> <!-- TODO: Hide -->
+                    <div id="partial-info" class="">
+                        <ul class="list-group">
+                            <!-- Add all the basic search result output here through JavaScript -->
                         </ul>
 
                         <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
@@ -51,9 +70,9 @@
                             <span class="movie-rating">Rating</span>
                         </li>
 
-					</div>
-				</div>
-		
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -75,7 +94,8 @@
                             <li id="title-genre" class="list-group-item"><strong>Genre:</strong> UNSET</li>
                             <li id="title-" class="list-group-item"><strong>Released:</strong> UNSET</li>
                             <li id="title-" class="list-group-item"><strong>Rated:</strong> UNSET</li>
-                            <li class="list-group-item"><strong>IMDB Rating:</strong> <span id="title-imdb-rating">UNSET</span></li>
+                            <li class="list-group-item"><strong>IMDB Rating:</strong> <span
+                                    id="title-imdb-rating">UNSET</span></li>
                             <li id="title-" class="list-group-item"><strong>Director:</strong> UNSET</li>
                             <li id="title-" class="list-group-item"><strong>Writer:</strong> UNSET</li>
                             <li id="title-" class="list-group-item"><strong>Actors:</strong> UNSET</li>
@@ -85,7 +105,7 @@
                 <div class="row">
                     <div class="well">
                         <h3>Plot</h3>
-                            <span id="title-overview">UNSET</span>
+                        <span id="title-overview">UNSET</span>
                         <hr>
                         <a href="#" target="_blank" class="btn btn-primary">
                             View IMDB
@@ -97,6 +117,15 @@
         <!-- CLOSE: Show full movie information -->
 
     </div>
+    <!-- Close Root Div -->
+
+    <!-- Side div to show top lists -->
+    <div class="container" id="top-list" style="display: none;">
+        <ul class="list-group">
+            <!-- Add all the basic search result output here through JavaScript -->
+        </ul>
+    </div>
+
     <!-- Custom script: -->
     <script defer type="text/javascript" src="./resources/js/index.js"></script>
 
