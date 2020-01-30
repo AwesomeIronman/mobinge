@@ -7,7 +7,7 @@
 
     <title>Movie/Series Guide</title>
 
-    
+
     <!-- Custom CSS: -->
     <link rel="stylesheet" href="./resources/css/index.css">
     <!-- Bootstrap Cyborg CSS Theme: -->
@@ -31,7 +31,7 @@
                 <a class="navbar-brand" href="index.html">Mobinge</a>
                 <ul class="nav navbar">
                     <li class="nav-link"><a href="#">Calendar</a></li>
-                    
+
                     <li class="nav-link">
                         <button id="btn-upcoming" class="btn btn-link">
                             <a href="#">Upcoming</a>
@@ -61,30 +61,38 @@
 
         <div class="container" id="search-box">
             <!-- <div class="jumbotron"> -->
-                <h3 class="text-center">Search For Any Movie</h3>
-                <form id="searchForm">
+            <h3 class="text-center">Search For Any Movie</h3>
+            <form id="searchForm">
+                <div class="input-group">
                     <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
-                </form>
-
-                <!-- SHOW: partial search results -->
-                <div id="partial-search-result" style=""> <!-- TODO: Hide -->
-                    <div id="partial-info" class="">
-                        <ul class="list-group">
-                            <!-- Add all the basic search result output here through JavaScript -->
-                        </ul>
-
-                        <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                        <li id="sampleNode" class="list-group-item" style="display: none;">
-                            <span class="movie-poster">
-                                <img src="" class="">
-                            </span>
-                            <span class="movie-title">Movie name</span>
-                            <span class="movie-release">Released Year</span>
-                            <span class="movie-rating">Rating</span>
-                        </li>
-
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">Search</span>
                     </div>
                 </div>
+            </form>
+
+            <!-- SHOW: partial search results -->
+            <div id="partial-search-result">
+                <!-- TODO: Hide -->
+                <div id="partial-info" class="">
+                    <ul class="list-group">
+                        <!-- Add all the basic search result output here through JavaScript -->
+                    </ul>
+
+                    <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                    <li id="sampleNode" class="list-group-item" style="display: none;">
+                        <span class="movie-poster">
+                            <img src="" class="">
+                        </span>
+                        <span class="movie-title">
+                            <a href="#" class="movie-title-link" onclick="">Movie name</a>
+                        </span>
+                        <span class="movie-release">Released Year</span>
+                        <span class="movie-rating">Rating</span>
+                    </li>
+
+                </div>
+            </div>
 
             <!-- </div> -->
         </div>

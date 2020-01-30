@@ -118,6 +118,8 @@ function showSearchResult(movies) {
   sampleNode.removeAttribute("id")
   sampleNode.removeAttribute("style")
 
+  window.custom = sampleNode
+
   $('#partial-info .list-group')[0].innerHTML = ""; // Remove old search result
 
   if (movies.length > 0) {
@@ -126,7 +128,8 @@ function showSearchResult(movies) {
       if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
 
         sampleNode.querySelector(".movie-poster img").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
-        sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
+        sampleNode.querySelector(".movie-title .movie-title-link").textContent = movie.title ? movie.title : movie.name;
+        sampleNode.querySelector(".movie-title .movie-title-link").setAttribute("onclick", `getTitleInfo('${movie.id}')`);
         sampleNode.querySelector(".movie-release").textContent = movie.release_date ? movie.release_date : "UNSET";
         sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? movie.vote_average : "UNSET";
 
@@ -153,6 +156,7 @@ function getTitleInfo(tmdbid) {
   fetch('/.netlify/functions/get-title-info',
     { method: "POST", body: `id=${tmdbid}` })
 
+    .then(resp => resp.json())
     .then(resp => showTitleInfo(resp))
 
     .catch((err) => {
@@ -162,10 +166,7 @@ function getTitleInfo(tmdbid) {
 }
 
 
-function showTitleInfo(response) {
-
-  let info = JSON.parse(response)
-  window.custom2 = info // Variable declared in browser window for debugging
+function showTitleInfo(info) {
 
   $("#search-info #movie .row .img-fluid")[0].src = `https://image.tmdb.org/t/p/w400${info.poster_path}`;
   $("#search-info #movie div:nth-child(2) #title-name")[0].textContent = info.title ? info.title : info.name;
@@ -173,6 +174,7 @@ function showTitleInfo(response) {
   $("#search-info #movie #title-overview")[0].textContent = info.overview;
   $("#search-info #movie div.row div.well a.btn.btn-primary")[0].href = `http://imdb.com/title/${info.imdb_id}`;
 
+  hideTopList();
   $("#search-box").css("display", "none"); // Do not display search box
   $("#search-result").css("display", "none"); // Do not display search result div
   $("#search-info").css("display", "block"); // Display selected titles information
@@ -187,9 +189,10 @@ function populateTopList(data) {
 
   $.each(data, (index, movie) => {
     if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
-
+      
       sampleNode.querySelector(".movie-poster img").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
-      sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
+      sampleNode.querySelector(".movie-title .movie-title-link").textContent = movie.title ? movie.title : movie.name;
+      sampleNode.querySelector(".movie-title .movie-title-link").setAttribute("onclick", `getTitleInfo('${movie.id}')`);
       sampleNode.querySelector(".movie-release").textContent = movie.release_date ? movie.release_date : "UNSET";
       sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? movie.vote_average : "UNSET";
 
