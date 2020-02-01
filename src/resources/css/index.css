@@ -20,8 +20,8 @@ body {
 	width: 100%;
 }
 
-#partial-info .list-group .list-group-item span[class^="movie-"] {
-  margin-right: 1em;
+#search-btn, li.list-group-item, #full-info > div {
+  cursor: pointer;
 }
 
 /* Movie poster size */

@@ -78,12 +78,12 @@ exports.handler = async function (event, context) {
             };
         }
     } catch (error) {
-        console.log("Error occurred while processing request!");
+        console.log(`Error occurred while processing request! ${params.type}:${params.query}`);
         console.log(error);
 
         return {
             statusCode: 500,
-            body: JSON.stringify(`Error occurred while processing request!`)
+            body: JSON.stringify(`Error occurred while processing request! ${params.type}:${params.query}`)
         };
     }
 }

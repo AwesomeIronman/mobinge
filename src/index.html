@@ -66,7 +66,7 @@
                 <div class="input-group">
                     <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
                     <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">Search</span>
+                        <span class="input-group-text" id="search-btn">Search</span>
                     </div>
                 </div>
             </form>
@@ -80,14 +80,9 @@
                     </ul>
 
                     <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                    <li id="sampleNode" class="list-group-item" style="display: none;">
-                        <span class="movie-poster">
-                            <img src="" class="">
-                        </span>
-                        <span class="movie-title">
-                            <a href="#" class="movie-title-link" onclick="">Movie name</a>
-                        </span>
-                        <span class="movie-release">Released Year</span>
+                    <li id="partialSample" class="list-group-item" style="display: none;">
+                        <span class="movie-title">Movie name</span>
+                        <span class="movie-release-year">Released Year</span>
                         <span class="movie-rating">Rating</span>
                     </li>
 
@@ -98,9 +93,23 @@
         </div>
 
         <!-- SHOW: full search results -->
-        <div class="container" id="search-result" style="display: none;">
-            <div id="movies" class="row"></div>
+        <div class="container" id="full-search-result" style="display: none;">
+            <div id="full-info" class="row"></div>
+
+            <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+            <div id="fullSample" style="display: none;">
+                <div class="col-md-3">
+                    <div class="well text-center">
+                        <img src="" class="img-fluid">
+                        <span class="movie-title">Movie name</span>
+                        <span class="movie-release-year">Released Year</span>
+                        <span class="movie-rating">Rating</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
+        <!-- Close - SHOW: full search results -->
 
         <!-- OPEN: Show full movie information -->
         <div class="container" id="search-info" style="display: none;">
