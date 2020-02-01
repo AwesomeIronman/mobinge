@@ -120,8 +120,8 @@ async function partialSearch(event) {
 
 async function fullSearch(event) {
   event.preventDefault()
-  $("body").focus()
-  $("body").select()
+
+  $("#searchText").blur()  // Lose search box focus to stop keypress events from getting triggered
 
   let search = $('#searchText').val()
 
@@ -279,7 +279,7 @@ function populateTopList(data) {
     if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
 
       sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}')`);
-      sampleNode.querySelector(".well img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
+      sampleNode.querySelector(".well > img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
       sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
       sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
       sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";

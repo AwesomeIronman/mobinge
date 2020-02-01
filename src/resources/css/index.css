@@ -20,7 +20,7 @@ body {
 	width: 100%;
 }
 
-#search-btn, li.list-group-item, #full-info > div {
+#search-btn, li.list-group-item, .col-md-3 > .well {
   cursor: pointer;
 }
 
