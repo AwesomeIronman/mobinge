@@ -56,7 +56,7 @@ exports.handler = async function (event, context) {
                 }
             } else if (params.type === "search" && params.query !== "" && params.query !== undefined) {
 
-                var resp = await fetch(`${urls["search"]}api_key=${TMDB_API_KEY}&query=${params.query}`)
+                var resp = await fetch(`${urls["search"]}api_key=${TMDB_API_KEY}&query='${params.query}'`)
                 .then(res => res.json())
 
                 return {
