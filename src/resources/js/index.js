@@ -1,5 +1,3 @@
-console.log('JS is working!');
-
 $(document).ready(() => {
 
   // Add event listener to search on pressing any key
@@ -22,7 +20,6 @@ $(document).ready(() => {
         { method: 'POST', body: 'type=upcoming' })
         .then(res => res.json())
         .then(resp => {
-          console.info('Upcoming movies response: ', resp);
           handleData(resp)
         })
         .catch((error) => {
@@ -42,7 +39,6 @@ $(document).ready(() => {
         { method: 'POST', body: 'type=now-playing' })
         .then(res => res.json())
         .then(resp => {
-          console.info('Now playing response: ', resp);
           handleData(resp)
         })
         .catch((error) => {
@@ -62,7 +58,6 @@ $(document).ready(() => {
         { method: 'POST', body: 'type=popular' })
         .then(res => res.json())
         .then(resp => {
-          console.info('Popular response: ', resp);
           handleData(resp)
         })
         .catch((error) => {
@@ -82,7 +77,6 @@ $(document).ready(() => {
         { method: 'POST', body: 'type=trending' })
         .then(res => res.json())
         .then(resp => {
-          console.info('Trending response: ', resp);
           handleData(resp)
         })
         .catch((error) => {
@@ -110,7 +104,6 @@ async function partialSearch(event) {
     let result = await getSearchData(search)
 
     if (Array.isArray(result)) {
-      console.info('Partial search: ', result);
       
       showPartialResult(result)
     }
@@ -129,7 +122,6 @@ async function fullSearch(event) {
     let result = await getSearchData(search)
 
     if (Array.isArray(result)) {
-      console.info('Full search: ', result);
 
       showFullResult(result)  
     }
@@ -248,7 +240,7 @@ function getTitleInfo(tmdbid) {
     .then(resp => showTitleInfo(resp))
 
     .catch((err) => {
-      console.log(err);
+      console.error(err);
       return false;
     });
 }
