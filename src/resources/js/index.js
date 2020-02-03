@@ -88,9 +88,9 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-async function getSearchData(searchText) {
+async function getSearchData(searchText, searchType) {
   return await fetch('/.netlify/functions/token-hider',
-    { method: 'POST', body: `type=search&query=${searchText}` })
+    { method: 'POST', body: `type=search&query=${searchText}&searchType=${searchType}` })
 
     .then(res => res.json())
 
@@ -100,8 +100,10 @@ async function getSearchData(searchText) {
 async function partialSearch(event) {
   event.preventDefault()
   let search = $('#searchText').val()
+  let searchType = $('#searchType')[0].value
+  
   if (search !== "") {  // Search only if user had typed something
-    let result = await getSearchData(search)
+    let result = await getSearchData(search, searchType)
 
     if (Array.isArray(result)) {
       
@@ -117,9 +119,10 @@ async function fullSearch(event) {
   $("#searchText").blur()  // Lose search box focus to stop keypress events from getting triggered
 
   let search = $('#searchText').val()
+  let searchType = $('#searchType')[0].value
 
   if (search !== "") {  // Search only if user had typed something
-    let result = await getSearchData(search)
+    let result = await getSearchData(search, searchType)
 
     if (Array.isArray(result)) {
 

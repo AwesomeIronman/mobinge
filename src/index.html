@@ -66,83 +66,89 @@
                 <div class="input-group">
                     <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
                     <div class="input-group-append">
+                        <select class="custom-select input-group-text" id="searchType">
+                            <option selected value="all">All</option>
+                            <option value="movies">Movies</option>
+                            <option value="tv-show">Series</option>
+                        </select>
                         <span class="input-group-text" id="search-btn">Search</span>
                     </div>
                 </div>
             </form>
-
-            <!-- SHOW: partial search results -->
-            <div id="partial-search-result">
-                <!-- TODO: Hide -->
-                <div id="partial-info" class="">
-                    <ul class="list-group">
-                        <!-- Add all the basic search result output here through JavaScript -->
-                    </ul>
-
-                    <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                    <li id="partialSample" class="list-group-item" style="display: none;">
-                        <span class="movie-title">Movie name</span>
-                        <span class="movie-release-year">Released Year</span>
-                        <span class="movie-rating">Rating</span>
-                    </li>
-
-                </div>
-            </div>
-
-            <!-- </div> -->
         </div>
 
-        <!-- SHOW: full search results -->
-        <div class="container" id="full-search-result" style="display: none;">
-            <div id="full-info" class="row"></div>
+        <!-- SHOW: partial search results -->
+        <div id="partial-search-result">
+            <!-- TODO: Hide -->
+            <div id="partial-info" class="">
+                <ul class="list-group">
+                    <!-- Add all the basic search result output here through JavaScript -->
+                </ul>
 
-            <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-            <div id="fullSample" style="display: none;" class="col-md-3">
-                <div class="well text-center">
-                    <img src="" class="img-fluid">
+                <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                <li id="partialSample" class="list-group-item" style="display: none;">
                     <span class="movie-title">Movie name</span>
                     <span class="movie-release-year">Released Year</span>
                     <span class="movie-rating">Rating</span>
-                </div>
-            </div>
+                </li>
 
-        </div>
-        <!-- Close - SHOW: full search results -->
-
-        <!-- OPEN: Show full movie information -->
-        <div class="container" id="search-info" style="display: none;">
-            <div id="movie" class="well">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="" class="img-fluid">
-                    </div>
-                    <div class="col-md-8">
-                        <h2 id="title-name">${movie.Title}</h2>
-                        <ul class="list-group">
-                            <li id="title-genre" class="list-group-item"><strong>Genre:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Released:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Rated:</strong> UNSET</li>
-                            <li class="list-group-item"><strong>IMDB Rating:</strong> <span
-                                    id="title-imdb-rating">UNSET</span></li>
-                            <li id="title-" class="list-group-item"><strong>Director:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Writer:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Actors:</strong> UNSET</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="well">
-                        <h3>Plot</h3>
-                        <span id="title-overview">UNSET</span>
-                        <hr>
-                        <a href="#" target="_blank" class="btn btn-primary">
-                            View IMDB
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
-        <!-- CLOSE: Show full movie information -->
+
+        <!-- </div> -->
+    </div>
+
+    <!-- SHOW: full search results -->
+    <div class="container" id="full-search-result" style="display: none;">
+        <div id="full-info" class="row"></div>
+
+        <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+        <div id="fullSample" style="display: none;" class="col-md-3">
+            <div class="well text-center">
+                <img src="" class="img-fluid">
+                <span class="movie-title">Movie name</span>
+                <span class="movie-release-year">Released Year</span>
+                <span class="movie-rating">Rating</span>
+            </div>
+        </div>
+
+    </div>
+    <!-- Close - SHOW: full search results -->
+
+    <!-- OPEN: Show full movie information -->
+    <div class="container" id="search-info" style="display: none;">
+        <div id="movie" class="well">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="" class="img-fluid">
+                </div>
+                <div class="col-md-8">
+                    <h2 id="title-name">${movie.Title}</h2>
+                    <ul class="list-group">
+                        <li id="title-genre" class="list-group-item"><strong>Genre:</strong> UNSET</li>
+                        <li id="title-" class="list-group-item"><strong>Released:</strong> UNSET</li>
+                        <li id="title-" class="list-group-item"><strong>Rated:</strong> UNSET</li>
+                        <li class="list-group-item"><strong>IMDB Rating:</strong> <span
+                                id="title-imdb-rating">UNSET</span></li>
+                        <li id="title-" class="list-group-item"><strong>Director:</strong> UNSET</li>
+                        <li id="title-" class="list-group-item"><strong>Writer:</strong> UNSET</li>
+                        <li id="title-" class="list-group-item"><strong>Actors:</strong> UNSET</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="well">
+                    <h3>Plot</h3>
+                    <span id="title-overview">UNSET</span>
+                    <hr>
+                    <a href="#" target="_blank" class="btn btn-primary">
+                        View IMDB
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CLOSE: Show full movie information -->
 
     </div>
     <!-- Close Root Div -->
