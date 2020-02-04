@@ -12,7 +12,7 @@ $(document).ready(() => {
   // Add event to show upcoming movies list
   $('#btn-upcoming').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div").hasClass("align-root-div")) {
+    if ($("#root-div > #search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -31,7 +31,7 @@ $(document).ready(() => {
   // Add event to show now-playing list
   $('#btn-now-playing').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div").hasClass("align-root-div")) {
+    if ($("#root-div > #search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -50,7 +50,7 @@ $(document).ready(() => {
   // Add event to show popular list
   $('#btn-popular').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div").hasClass("align-root-div")) {
+    if ($("#root-div > #search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -69,7 +69,7 @@ $(document).ready(() => {
   // Add event to show trending list
   $('#btn-trending').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div").hasClass("align-root-div")) {
+    if ($("#root-div > #search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -287,13 +287,18 @@ function populateTopList(data) {
 }
 
 function hideTopList() {
+  console.log('Hiding top list');
+  
   $("#top-list .list-group").empty();
-  $("#root-div").removeClass("align-root-div");
+  $("#root-div > #search-box").removeClass("col-md-9");
+  $("#root-div > #search-box").addClass("col-md-12");
   $("#top-list").css("display", "none");
 }
 
 function handleData(data) {
-  $("#root-div").addClass("align-root-div");
-  $("#top-list").css("display", "block");
+  console.log('Data: ', data);
+  
+  $("#root-div > #search-box").removeClass("col-md-12");
+  $("#root-div > #search-box").addClass("col-md-9");
   populateTopList(data);
 }
