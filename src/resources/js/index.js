@@ -34,7 +34,7 @@ $(document).ready(() => {
   // Add event to show upcoming movies list
   $('#btn-upcoming').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div > #search-box").hasClass("col-md-9")) {
+    if ($("#search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -53,7 +53,7 @@ $(document).ready(() => {
   // Add event to show now-playing list
   $('#btn-now-playing').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div > #search-box").hasClass("col-md-9")) {
+    if ($("#search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -72,7 +72,7 @@ $(document).ready(() => {
   // Add event to show popular list
   $('#btn-popular').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div > #search-box").hasClass("col-md-9")) {
+    if ($("#search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -91,7 +91,7 @@ $(document).ready(() => {
   // Add event to show trending list
   $('#btn-trending').on('click', (event) => {
     event.preventDefault()
-    if ($("#root-div > #search-box").hasClass("col-md-9")) {
+    if ($("#search-box").hasClass("col-md-9")) {
       hideTopList()
     } else {
 
@@ -313,15 +313,22 @@ function hideTopList() {
   console.log('Hiding top list');
 
   $("#top-list .list-group").empty();
-  $("#root-div > #search-box").removeClass("col-md-9");
-  $("#root-div > #search-box").addClass("col-md-12");
+  
+  $("#search-box").removeClass("col-md-9");
+  $("#search-box").addClass("col-md-12");
+  $("#carousel-effect").removeClass("col-md-9");
+  $("#carousel-effect").addClass("col-md-12");
+
   $("#top-list").css("display", "none");
 }
 
 function handleData(data) {
   console.log('Data: ', data);
 
-  $("#root-div > #search-box").removeClass("col-md-12");
-  $("#root-div > #search-box").addClass("col-md-9");
+  $("#search-box").removeClass("col-md-12");
+  $("#search-box").addClass("col-md-9");
+  $("#carousel-effect").removeClass("col-md-12");
+  $("#carousel-effect").addClass("col-md-9");
+
   populateTopList(data);
 }

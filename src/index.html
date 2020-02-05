@@ -25,6 +25,8 @@
 <body>
     <div id="root-div" class="container">
 
+
+
         <!-- Navbar: -->
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -59,123 +61,135 @@
             </div>
         </nav>
 
-        <div class="col-md-12" id="search-box">
-            <h3 class="text-center">Search For Any Movie</h3>
-            <form id="searchForm">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
-                    <div class="input-group-append">
-                        <select class="custom-select input-group-text" id="searchType">
-                            <option selected value="all">All</option>
-                            <option value="movies">Movies</option>
-                            <option value="tv-show">Series</option>
-                        </select>
-                        <span class="input-group-text" id="search-btn">Search</span>
+        <div class="row">
+
+            <div class="col-12 order-1" id="search-box">
+                <h3 class="text-center">Search For Any Movie</h3>
+                <form id="searchForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
+                        <div class="input-group-append">
+                            <select class="custom-select input-group-text" id="searchType">
+                                <option selected value="all">All</option>
+                                <option value="movies">Movies</option>
+                                <option value="tv-show">Series</option>
+                            </select>
+                            <span class="input-group-text" id="search-btn">Search</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <div class="w-100"></div>
+            
+            
+            <!-- SHOW: carousel now playing movies -->
+            <div class="col-md-12 order-1" id="carousel-effect">
+                <div class="image-rotator hi-slide">
+            
+                    <div class="hi-prev "></div>
+            
+                    <div class="hi-next "></div>
+            
+                    <h3>Now in theaters:</h3>
+            
+                    <ul>
+                        <!-- <li><img class="img-fluid" alt="testing" src="./resources/images/1.jpg" /></li> -->
+                    </ul>
+            
+                </div>
+            </div>
+            <!-- CLOSE: carousel now playing movies -->
+
+
+
+            <!-- SHOW: partial search results -->
+            <div class="col-md-12" id="partial-search-result">
+                <!-- TODO: Hide -->
+                <div id="partial-info" class="">
+                    <ul class="list-group">
+                        <!-- Add all the basic search result output here through JavaScript -->
+                    </ul>
+
+                    <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                    <li id="partialSample" class="list-group-item" style="display: none;">
+                        <span class="movie-title">Movie name</span>
+                        <span class="movie-release-year">Released Year</span>
+                        <span class="movie-rating">Rating</span>
+                    </li>
+                </div>
+            </div>
+            <!-- CLOSE: partial search results -->
+
+            <!-- SHOW: full search results -->
+            <div class="col-md-12" id="full-search-result" style="display: none;">
+                <div id="full-info" class="row"></div>
+
+                <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                <div id="fullSample" style="display: none;" class="col-md-3">
+                    <div class="well text-center">
+                        <img src="" class="img-fluid">
+                        <span class="movie-title">Movie name</span>
+                        <span class="movie-release-year">Released Year</span>
+                        <span class="movie-rating">Rating</span>
                     </div>
                 </div>
-            </form>
-        </div>
 
-        <!-- SHOW: partial search results -->
-        <div class="col-md-12" id="partial-search-result">
-            <!-- TODO: Hide -->
-            <div id="partial-info" class="">
+            </div>
+            <!-- CLOSE: full search results -->
+
+            <!-- OPEN: Show full movie information -->
+            <div class="col-md-12" id="search-info" style="display: none;">
+                <div id="movie" class="well">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="" class="img-fluid">
+                        </div>
+                        <div class="col-md-8">
+                            <h2 id="title-name">${movie.Title}</h2>
+                            <ul class="list-group">
+                                <li id="title-genre" class="list-group-item"><strong>Genre:</strong> UNSET</li>
+                                <li id="title-" class="list-group-item"><strong>Released:</strong> UNSET</li>
+                                <li id="title-" class="list-group-item"><strong>Rated:</strong> UNSET</li>
+                                <li class="list-group-item"><strong>IMDB Rating:</strong> <span
+                                        id="title-imdb-rating">UNSET</span></li>
+                                <li id="title-" class="list-group-item"><strong>Director:</strong> UNSET</li>
+                                <li id="title-" class="list-group-item"><strong>Writer:</strong> UNSET</li>
+                                <li id="title-" class="list-group-item"><strong>Actors:</strong> UNSET</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="well">
+                            <h3>Plot</h3>
+                            <span id="title-overview">UNSET</span>
+                            <hr>
+                            <a href="#" target="_blank" class="btn btn-primary">
+                                View IMDB
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CLOSE: Show full movie information -->
+
+
+            <!-- Side div to show top lists -->
+            <div class="col-3 order-12" id="top-list" style="display: none;">
                 <ul class="list-group">
                     <!-- Add all the basic search result output here through JavaScript -->
                 </ul>
-
-                <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                <li id="partialSample" class="list-group-item" style="display: none;">
-                    <span class="movie-title">Movie name</span>
-                    <span class="movie-release-year">Released Year</span>
-                    <span class="movie-rating">Rating</span>
-                </li>
             </div>
-        </div>
-        <!-- CLOSE: partial search results -->
+            <!-- CLOSE: Side div to show top lists -->
 
-        <!-- SHOW: full search results -->
-        <div class="col-md-12" id="full-search-result" style="display: none;">
-            <div id="full-info" class="row"></div>
-    
-            <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-            <div id="fullSample" style="display: none;" class="col-md-3">
-                <div class="well text-center">
-                    <img src="" class="img-fluid">
-                    <span class="movie-title">Movie name</span>
-                    <span class="movie-release-year">Released Year</span>
-                    <span class="movie-rating">Rating</span>
-                </div>
-            </div>
-    
         </div>
-        <!-- CLOSE: full search results -->
-    
-        <!-- OPEN: Show full movie information -->
-        <div class="col-md-12" id="search-info" style="display: none;">
-            <div id="movie" class="well">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="" class="img-fluid">
-                    </div>
-                    <div class="col-md-8">
-                        <h2 id="title-name">${movie.Title}</h2>
-                        <ul class="list-group">
-                            <li id="title-genre" class="list-group-item"><strong>Genre:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Released:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Rated:</strong> UNSET</li>
-                            <li class="list-group-item"><strong>IMDB Rating:</strong> <span
-                                    id="title-imdb-rating">UNSET</span></li>
-                            <li id="title-" class="list-group-item"><strong>Director:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Writer:</strong> UNSET</li>
-                            <li id="title-" class="list-group-item"><strong>Actors:</strong> UNSET</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="well">
-                        <h3>Plot</h3>
-                        <span id="title-overview">UNSET</span>
-                        <hr>
-                        <a href="#" target="_blank" class="btn btn-primary">
-                            View IMDB
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- CLOSE: Show full movie information -->
-
-    
-        <!-- Side div to show top lists -->
-        <div class="col-md-3" id="top-list" style="display: none;">
-            <ul class="list-group">
-                <!-- Add all the basic search result output here through JavaScript -->
-            </ul>
-        </div>
-        <!-- CLOSE: Side div to show top lists -->
-
-
-        <!-- SHOW: carousel now playing movies -->
-        <div class="col-md-12">
-            <div class="image-rotator hi-slide">
-                
-                <div class="hi-prev "></div>
-                
-                <div class="hi-next "></div>
-
-                <h3>Now in theaters:</h3>
-                
-                <ul>
-                    <!-- <li><img class="img-fluid" alt="testing" src="./resources/images/1.jpg" /></li> -->
-                </ul>
-                
-            </div>
-        </div>
-        <!-- CLOSE: carousel now playing movies -->
+        <!-- CLOSE: row div -->
 
 
     </div>
+    <!-- CLOSE: root div -->
+
 
     <!-- Custom script: -->
     <script defer type="text/javascript" src="./resources/js/jquery.hislide.min.js"></script>
