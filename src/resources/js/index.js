@@ -291,6 +291,7 @@ function populateTopList(data) {
   let sampleNode = $('#fullSample')[0].cloneNode(true); // Create a clone to edit and append each time
   sampleNode.removeAttribute("id")
   sampleNode.removeAttribute("style")
+  sampleNode.removeAttribute("class")
 
   $.each(data, (index, movie) => {
     if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
