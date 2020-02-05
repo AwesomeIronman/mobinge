@@ -1,5 +1,27 @@
 $(document).ready(() => {
 
+  // Add now playing data to carousel images
+  fetch('/.netlify/functions/token-hider',
+    { method: 'POST', body: 'type=now-playing' })
+    .then(res => res.json())
+    .then(resp => {
+      console.debug('Now-Playing Carousel data: ', resp);
+      $.each(resp, (index, movie) => {
+        $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
+        src="https://image.tmdb.org/t/p/w400${movie.poster_path}" /></li>`
+      });
+
+      // Enable carousel effect
+      $('.image-rotator').hiSlide({
+        interval: 2000,
+        speed: 700
+      });
+
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+
   // Add event listener to search on pressing any key
   $("#searchText").keyup(event => partialSearch(event));
 
@@ -101,12 +123,12 @@ async function partialSearch(event) {
   event.preventDefault()
   let search = $('#searchText').val()
   let searchType = $('#searchType')[0].value
-  
+
   if (search !== "") {  // Search only if user had typed something
     let result = await getSearchData(search, searchType)
 
     if (Array.isArray(result)) {
-      
+
       showPartialResult(result)
     }
 
@@ -126,9 +148,9 @@ async function fullSearch(event) {
 
     if (Array.isArray(result)) {
 
-      showFullResult(result)  
+      showFullResult(result)
     }
-    
+
   }
 }
 
@@ -288,7 +310,7 @@ function populateTopList(data) {
 
 function hideTopList() {
   console.log('Hiding top list');
-  
+
   $("#top-list .list-group").empty();
   $("#root-div > #search-box").removeClass("col-md-9");
   $("#root-div > #search-box").addClass("col-md-12");
@@ -297,7 +319,7 @@ function hideTopList() {
 
 function handleData(data) {
   console.log('Data: ', data);
-  
+
   $("#root-div > #search-box").removeClass("col-md-12");
   $("#root-div > #search-box").addClass("col-md-9");
   populateTopList(data);
