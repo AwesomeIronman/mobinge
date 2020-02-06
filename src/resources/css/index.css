@@ -58,6 +58,14 @@ body {
   box-sizing: border-box;
 }
 
+#search-box {
+  margin-top: 15%;
+}
+
+#search-box > h3 {
+  margin-bottom: 2rem;
+}
+
 #partial-search-result {
 	width: 100%;
 }
