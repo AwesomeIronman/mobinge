@@ -169,7 +169,7 @@ function showPartialResult(result) {
         sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
         sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
         sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-        sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}')`);
+        sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
 
         $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
       }
@@ -202,7 +202,7 @@ function showFullResult(result) {
         sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
         sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
         sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-        sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}')`);
+        sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
 
         $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
       }
@@ -234,7 +234,7 @@ function showSearchResult(movies) {
 
         sampleNode.querySelector(".movie-poster img").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
         sampleNode.querySelector(".movie-title .movie-title-link").textContent = movie.title ? movie.title : movie.name;
-        sampleNode.querySelector(".movie-title .movie-title-link").setAttribute("onclick", `getTitleInfo('${movie.id}')`);
+        sampleNode.querySelector(".movie-title .movie-title-link").setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type}')`);
         sampleNode.querySelector(".movie-release").textContent = movie.release_date ? movie.release_date : "UNSET";
         sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? movie.vote_average : "UNSET";
 
@@ -256,10 +256,10 @@ function showSearchResult(movies) {
   }
 }
 
-function getTitleInfo(tmdbid) {
+function getTitleInfo(tmdbid, title_type) {
 
   fetch('/.netlify/functions/get-title-info',
-    { method: "POST", body: `id=${tmdbid}` })
+    { method: "POST", body: `id=${tmdbid}&type=${title_type}` })
 
     .then(resp => resp.json())
     .then(resp => showTitleInfo(resp))
@@ -296,7 +296,7 @@ function populateTopList(data) {
   $.each(data, (index, movie) => {
     if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
 
-      sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}')`);
+      sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type}')`);
       sampleNode.querySelector(".well > img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
       sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
       sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";

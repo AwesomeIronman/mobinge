@@ -67,12 +67,12 @@ exports.handler = async function (event, context) {
                     resp = await fetch(`${urls["search"]}api_key=${TMDB_API_KEY}&query=${params.query}`)
                         .then(res => res.json())
 
-                } else if (params.searchType === "movies") {
+                } else if (params.searchType === "movie") {
 
                     resp = await fetch(`${urls["searchMovies"]}api_key=${TMDB_API_KEY}&query=${params.query}`)
                         .then(res => res.json())
 
-                } else if (params.searchType === "tv-show") {
+                } else if (params.searchType === "tv") {
 
                     resp = await fetch(`${urls["searchTvShows"]}api_key=${TMDB_API_KEY}&query=${params.query}`)
                         .then(res => res.json())
