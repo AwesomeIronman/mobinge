@@ -23,42 +23,41 @@
 </head>
 
 <body>
-    <div id="root-div" class="container">
-
+    <div id="root-div" class="container-fluid">
 
 
         <!-- Navbar: -->
         <nav class="navbar navbar-default navbar-dark fixed-top bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="index.html">Mobinge</a>
-                <ul class="nav navbar">
-                    <li class="nav-link"><a href="#" class="fancy-link">Calendar</a></li>
 
-                    <li class="nav-link">
-                        <button id="btn-upcoming" class="btn btn-link">
-                            <a href="#" class="fancy-link">Upcoming</a>
-                        </button>
-                    </li>
+            <a class="navbar-brand" href="index.html">Mobinge</a>
+            <ul class="nav navbar">
+                <li class="nav-link"><a href="#" class="fancy-link">Calendar</a></li>
 
-                    <li class="nav-link">
-                        <button id="btn-now-playing" class="btn btn-link">
-                            <a href="#" class="fancy-link">Now Playing</a>
-                        </button>
-                    </li>
+                <li class="nav-link">
+                    <button id="btn-upcoming" class="btn btn-link">
+                        <a href="#" class="fancy-link">Upcoming</a>
+                    </button>
+                </li>
 
-                    <li class="nav-link">
-                        <button id="btn-popular" class="btn btn-link">
-                            <a href="#" class="fancy-link">Popular</a>
-                        </button>
-                    </li>
+                <li class="nav-link">
+                    <button id="btn-now-playing" class="btn btn-link">
+                        <a href="#" class="fancy-link">Now Playing</a>
+                    </button>
+                </li>
 
-                    <li class="nav-link">
-                        <button id="btn-trending" class="btn btn-link">
-                            <a href="#" class="fancy-link">Trending</a>
-                        </button>
-                    </li>
-                </ul>
-            </div>
+                <li class="nav-link">
+                    <button id="btn-popular" class="btn btn-link">
+                        <a href="#" class="fancy-link">Popular</a>
+                    </button>
+                </li>
+
+                <li class="nav-link">
+                    <button id="btn-trending" class="btn btn-link">
+                        <a href="#" class="fancy-link">Trending</a>
+                    </button>
+                </li>
+            </ul>
+
         </nav>
 
         <div class="row">
@@ -135,11 +134,11 @@
 
 
             <!-- Side div to show top lists -->
-            <div class="col-3 order-12" id="top-list" style="display: none;">
+            <aside class="col-3 order-12" id="top-list" style="display: none; top: -250px;">
                 <ul class="list-group">
                     <!-- Add all the basic search result output here through JavaScript -->
                 </ul>
-            </div>
+            </aside>
             <!-- CLOSE: Side div to show top lists -->
 
 
