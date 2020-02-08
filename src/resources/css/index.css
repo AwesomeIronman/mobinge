@@ -77,11 +77,16 @@ body {
 #partial-search-result {
   width: 100%;
   max-height: 50vh;
-  overflow-y: scroll;
+  margin-top: 0.125rem;
+  overflow-y: auto;
+}
+
+#partial-info .list-group .list-group-item:first-child {
+  border-top-right-radius: 0px;
 }
 
 /* Partial search result font color */
-.list-group-item > span[class^="movie"] {
+.list-group-item > span[class^="movie"], option {
   color: black;
 }
 
