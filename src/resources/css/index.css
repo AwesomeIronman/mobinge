@@ -1,3 +1,7 @@
+* {
+  color: white;
+}
+
 @media(min-width:960px) {
   #movies .col-md-3 .well {
     height: 390px;
@@ -51,8 +55,8 @@ body {
 }
 
 body {
-  min-width: 100vw;
-  min-height: 100vh;
+  min-width: 100%;
+  min-height: 100%;
 
   margin: 0;
   box-sizing: border-box;
@@ -67,7 +71,17 @@ body {
 }
 
 #partial-search-result {
-	width: 100%;
+  width: 100%;
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+
+span[class^="movie"] {
+  color: black;
+}
+
+#partial-info .list-group-item:hover {
+  background-color: lightgray;
 }
 
 #search-btn, li.list-group-item, .col-md-3 > .well {
