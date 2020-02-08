@@ -63,20 +63,23 @@
         <div class="row">
 
             <div class="col-12 order-1" id="search-box">
-                <h3 class="text-center">Search For Any Movie</h3>
-                <form id="searchForm">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
-                        <div class="input-group-append">
-                            <select class="custom-select input-group-text" id="searchType">
-                                <option selected value="all">All</option>
-                                <option value="movie">Movies</option>
-                                <option value="tv">Series</option>
-                            </select>
-                            <span class="input-group-text" id="search-btn">Search</span>
+                <div class="container">
+                    <h3 class="text-center">Search For Any Movie</h3>
+                    <form id="searchForm">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
+                            <div class="input-group-append">
+                                <select class="custom-select input-group-text" id="searchType">
+                                    <option selected value="all">All</option>
+                                    <option value="movie">Movies</option>
+                                    <option value="tv">Series</option>
+                                </select>
+                                <span class="input-group-text" id="search-btn">Search</span>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+
+                </div>
 
                 <!-- SHOW: partial search results -->
                 <div class="col-md-12" id="partial-search-result">
