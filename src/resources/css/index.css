@@ -70,13 +70,18 @@ body {
   margin-bottom: 2rem;
 }
 
+#search-btn, li.list-group-item, .col-md-3 > .well {
+  cursor: pointer;
+}
+
 #partial-search-result {
   width: 100%;
   max-height: 50vh;
   overflow-y: scroll;
 }
 
-span[class^="movie"] {
+/* Partial search result font color */
+.list-group-item > span[class^="movie"] {
   color: black;
 }
 
@@ -84,14 +89,14 @@ span[class^="movie"] {
   background-color: lightgray;
 }
 
-#search-btn, li.list-group-item, .col-md-3 > .well {
-  cursor: pointer;
-}
-
 /* Movie poster size */
 #partial-info .list-group .list-group-item .movie-poster img, #top-list .list-group .movie-poster img {
   width: 8%;
   height: 16%;
+}
+
+#full-info > div {
+  margin-top: 2rem;
 }
 
 /* right-side top trending popular lists */
