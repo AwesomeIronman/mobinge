@@ -1,5 +1,4 @@
 $(document).ready(() => {
-
   // Show Now Playing movies with carousel effect
   showNowPlayingCarousel()
 
@@ -27,14 +26,6 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-async function getSearchData(searchText, searchType) {
-  return await fetch('/.netlify/functions/token-hider',
-    { method: 'POST', body: `type=search&query=${searchText}&searchType=${searchType}` })
-
-    .then(res => res.json())
-
-    .catch((err) => console.debug('debug: ', err))
-}
 
 async function partialSearch(event) {
   event.preventDefault()
@@ -42,11 +33,15 @@ async function partialSearch(event) {
   let searchType = $('#searchType')[0].value
 
   if (search !== "") {  // Search only if user had typed something
-    let result = await getSearchData(search, searchType)
+    let response = await getResponse({
+      path: `search/${searchType}`,
+      query_params: `language=en-US&region=IN&include_adult=true&query=${search}&page=1`
+    })
 
-    if (Array.isArray(result)) {
-
-      showPartialResult(result)
+    if (Array.isArray(response.results)) {
+      showPartialResult(response.results)
+    } else {
+      console.debug('Testing:partial-search-result: ', response);
     }
 
   }
@@ -61,11 +56,16 @@ async function fullSearch(event) {
   let searchType = $('#searchType')[0].value
 
   if (search !== "") {  // Search only if user had typed something
-    let result = await getSearchData(search, searchType)
 
-    if (Array.isArray(result)) {
+    let response = await getResponse({
+      path: `search/${searchType}`,
+      query_params: `language=en-US&region=IN&include_adult=true&query=${search}&page=1`
+    })
 
-      showFullResult(result)
+    if (Array.isArray(response.results)) {
+      showFullResult(response.results)
+    } else {
+      console.debug('Testing:full-search-result: ', response);
     }
 
   }
@@ -93,7 +93,6 @@ function showPartialResult(result) {
     });
 
   } else {
-
     sampleNode.innerHTML = "No result found!";
 
     $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
@@ -126,7 +125,6 @@ function showFullResult(result) {
     });
 
   } else {
-
     sampleNode.innerHTML = "No result found!";
 
     $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
@@ -137,59 +135,19 @@ function showFullResult(result) {
 }
 
 
-function showSearchResult(movies) {
-  let sampleNode = $('#sampleNode')[0].cloneNode(true); // Create a clone to edit and append each time
-  sampleNode.removeAttribute("id")
-  sampleNode.removeAttribute("style")
+async function getTitleInfo(tmdbid, title_type) {
+  let titleData = await getResponse({
+    path: `${title_type}/${tmdbid}`,
+    query_params: "language=en-US&append_to_response=videos,images"
+  })
 
-  $('#partial-info .list-group')[0].innerHTML = ""; // Remove old search result
+  console.log('Testing:title-info: ', titleData)
 
-  if (movies.length > 0) {
-    // Show basic information of each search result
-    $.each(movies, (index, movie) => {
-      if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
-
-        sampleNode.querySelector(".movie-poster img").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
-        sampleNode.querySelector(".movie-title .movie-title-link").textContent = movie.title ? movie.title : movie.name;
-        sampleNode.querySelector(".movie-title .movie-title-link").setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type}')`);
-        sampleNode.querySelector(".movie-release").textContent = movie.release_date ? movie.release_date : "UNSET";
-        sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? movie.vote_average : "UNSET";
-
-        $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-      }
-    });
-
-    $("#search-info").css("display", "none"); // Do not display selected title information
-    $("#partial-search-result").css("display", "block"); // Display search results
-
-  } else {
-
-    sampleNode.querySelector(".movie-poster img").src = "#";
-    sampleNode.querySelector(".movie-title").textContent = "Type movie/series title name";
-    sampleNode.querySelector(".movie-release").textContent = "";
-    sampleNode.querySelector(".movie-rating").textContent = "";
-
-    $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-  }
-}
-
-function getTitleInfo(tmdbid, title_type) {
-
-  fetch('/.netlify/functions/get-title-info',
-    { method: "POST", body: `id=${tmdbid}&type=${title_type}` })
-
-    .then(resp => resp.json())
-    .then(resp => showTitleInfo(resp))
-
-    .catch((err) => {
-      console.error(err);
-      return false;
-    });
+  showTitleInfo(titleData)
 }
 
 
 function showTitleInfo(info) {
-
   $("#search-info #movie .row .img-fluid")[0].src = `https://image.tmdb.org/t/p/w400${info.poster_path}`;
   $("#search-info #movie div:nth-child(2) #title-name")[0].textContent = info.title ? info.title : info.name;
   $("#search-info #movie div:nth-child(2) #title-imdb-rating")[0].textContent = info.vote_average;
@@ -296,7 +254,6 @@ async function showUpcomingMovies(event) {
     console.log('Testing:upcoming: ', data)
 
     handleData(data.results)
-
   }
 }
 
@@ -314,7 +271,6 @@ async function showNowPlayingMovies(event) {
     console.log('Testing:now-playing: ', data)
 
     handleData(data.results)
-
   }
 }
 
@@ -332,7 +288,6 @@ async function showPopularMovies(event) {
     console.log('Testing:now-playing: ', data)
 
     handleData(data.results)
-
   }
 }
 
@@ -350,6 +305,5 @@ async function showTrendingMovies(event) {
     console.log('Testing:now-playing: ', data)
 
     handleData(data.results)
-
   }
 }
