@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 exports.handler = async function (event, context) {
 
-    console.log('Testing: -+-+-+-+------+-----------+-------------+---------------+----------------+-');
+    console.log('Testing: +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-');
 
     // Get env var values defined in our Netlify site UI
     const { TMDB_API_KEY, TMDB_API_URL } = process.env
@@ -45,7 +45,7 @@ exports.handler = async function (event, context) {
 
         let data = await fetch(URL, options).then(res => res.json())
 
-        console.log('Testing: ', data.total_results);
+        console.log('Testing:no of items in result: ', Object.keys(data).length);
 
         return {
             statusCode: 200,
