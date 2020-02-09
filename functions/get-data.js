@@ -43,13 +43,27 @@ exports.handler = async function (event, context) {
             }
         }
 
-        let data = await fetch(URL, options).then(res => res.json())
+        let status;
+        let data = await fetch(URL, options)
+            .then((res) => {
+                status = res.status;
+                return res.json();
+            })
 
+        console.log('Testing:status: ', status);
         console.log('Testing:no of items in result: ', Object.keys(data).length);
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify(data)
+        // Send data only if response is OK
+        if (status === 200) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify(data)
+            }
+        } else {
+            return {
+                statusCode: 500,
+                body: JSON.stringify('Error occurred while fetching data')
+            }
         }
     }
 }
