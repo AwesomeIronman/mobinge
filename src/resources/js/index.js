@@ -1,111 +1,28 @@
 $(document).ready(() => {
 
-  // Add now playing data to carousel images
-  fetch('/.netlify/functions/token-hider',
-    { method: 'POST', body: 'type=now-playing' })
-    .then(res => res.json())
-    .then(resp => {
-      console.debug('Now-Playing Carousel data: ', resp);
-      $.each(resp, (index, movie) => {
-        $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
-        src="https://image.tmdb.org/t/p/w400${movie.poster_path}" /></li>`
-      });
-
-      // Enable carousel effect
-      $('.image-rotator').hiSlide({
-        interval: 2000,
-        speed: 700
-      });
-
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+  // Show Now Playing movies with carousel effect
+  showNowPlayingCarousel()
 
   // Add event listener to search on pressing any key
   $("#searchText").keyup(event => partialSearch(event));
 
-  // Add event listener to search on pressing any key
+  // Add event listener to search on pressing Enter key
   $("#searchForm").on('submit', event => fullSearch(event));
 
   // Add event listener to search on pressing search button
   $("#search-btn").on('click', event => fullSearch(event));
 
   // Add event to show upcoming movies list
-  $('#btn-upcoming').on('click', (event) => {
-    event.preventDefault()
-    if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-    } else {
-
-      fetch('/.netlify/functions/token-hider',
-        { method: 'POST', body: 'type=upcoming' })
-        .then(res => res.json())
-        .then(resp => {
-          handleData(resp)
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-  });
+  $('#btn-upcoming').on('click', { event: event }, showUpcomingMovies);
 
   // Add event to show now-playing list
-  $('#btn-now-playing').on('click', (event) => {
-    event.preventDefault()
-    if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-    } else {
-
-      fetch('/.netlify/functions/token-hider',
-        { method: 'POST', body: 'type=now-playing' })
-        .then(res => res.json())
-        .then(resp => {
-          handleData(resp)
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-  });
+  $('#btn-now-playing').on('click', { event: event }, showNowPlayingMovies);
 
   // Add event to show popular list
-  $('#btn-popular').on('click', (event) => {
-    event.preventDefault()
-    if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-    } else {
-
-      fetch('/.netlify/functions/token-hider',
-        { method: 'POST', body: 'type=popular' })
-        .then(res => res.json())
-        .then(resp => {
-          handleData(resp)
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-  });
+  $('#btn-popular').on('click', { event: event }, showPopularMovies);
 
   // Add event to show trending list
-  $('#btn-trending').on('click', (event) => {
-    event.preventDefault()
-    if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-    } else {
-
-      fetch('/.netlify/functions/token-hider',
-        { method: 'POST', body: 'type=trending' })
-        .then(res => res.json())
-        .then(resp => {
-          handleData(resp)
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-  });
+  $('#btn-trending').on('click', { event: event }, showTrendingMovies);
 
 });
 // JQuery OnReady Close
@@ -282,6 +199,7 @@ function showTitleInfo(info) {
   hideTopList();
   $("#search-box").css("display", "none"); // Hide search-box along with partial-search-result
   $("#full-search-result").css("display", "none"); // Hide full-search-result
+  $("#carousel-effect").css("display", "none"); // Hide now-playing carousel effect
   $("#search-info").css("display", "block"); // Display selected titles information
 }
 
@@ -313,7 +231,7 @@ function hideTopList() {
   console.log('Hiding top list');
 
   $("#top-list .list-group").empty();
-  
+
   $("#search-box").removeClass("col-md-9");
   $("#search-box").addClass("col-md-12");
   $("#carousel-effect").removeClass("col-md-9");
@@ -331,4 +249,107 @@ function handleData(data) {
   $("#carousel-effect").addClass("col-md-9");
 
   populateTopList(data);
+}
+
+async function getResponse(request) {
+  return await fetch('/.netlify/functions/get-data',
+    { method: 'POST', body: JSON.stringify(request) }
+  )
+    .then(res => res.json())
+
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+async function showNowPlayingCarousel() {
+  let nowPlayingData = await getResponse({
+    path: "movie/now_playing",
+    query_params: "language=en-US&page=1&region=IN"
+  })
+
+  console.log('Testing:now-playing-carousel: ', nowPlayingData)
+
+  $.each(nowPlayingData.results, (index, movie) => {
+    $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
+        src="https://image.tmdb.org/t/p/w185${movie.poster_path}" /></li>`
+  });
+
+  // Enable carousel effect
+  $('.image-rotator').hiSlide({
+    interval: 2000,
+    speed: 700
+  });
+}
+
+async function showUpcomingMovies(event) {
+  event.preventDefault()
+  if ($("#search-box").hasClass("col-md-9")) {
+    hideTopList()
+  } else {
+
+    let data = await getResponse({
+      path: "movie/upcoming",
+      query_params: "language=en-US&page=1&region=IN"
+    })
+
+    console.log('Testing:upcoming: ', data)
+
+    handleData(data.results)
+
+  }
+}
+
+async function showNowPlayingMovies(event) {
+  event.preventDefault()
+  if ($("#search-box").hasClass("col-md-9")) {
+    hideTopList()
+  } else {
+
+    let data = await getResponse({
+      path: "movie/now_playing",
+      query_params: "language=en-US&page=1&region=IN"
+    })
+
+    console.log('Testing:now-playing: ', data)
+
+    handleData(data.results)
+
+  }
+}
+
+async function showPopularMovies(event) {
+  event.preventDefault()
+  if ($("#search-box").hasClass("col-md-9")) {
+    hideTopList()
+  } else {
+
+    let data = await getResponse({
+      path: "movie/popular",
+      query_params: "language=en-US&page=1&region=IN"
+    })
+
+    console.log('Testing:now-playing: ', data)
+
+    handleData(data.results)
+
+  }
+}
+
+async function showTrendingMovies(event) {
+  event.preventDefault()
+  if ($("#search-box").hasClass("col-md-9")) {
+    hideTopList()
+  } else {
+
+    let data = await getResponse({
+      path: "trending/movie/week",
+      query_params: ""
+    })
+
+    console.log('Testing:now-playing: ', data)
+
+    handleData(data.results)
+
+  }
 }
