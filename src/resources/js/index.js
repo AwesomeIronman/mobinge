@@ -225,19 +225,26 @@ async function showNowPlayingCarousel() {
     path: "movie/now_playing",
     query_params: "language=en-US&page=1&region=IN"
   })
-
   console.log('Testing:now-playing-carousel: ', nowPlayingData)
 
-  $.each(nowPlayingData.results, (index, movie) => {
-    $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
-        src="https://image.tmdb.org/t/p/w185${movie.poster_path}" /></li>`
-  });
+  // Act only if we receive data
+  if (nowPlayingData && nowPlayingData.results) {
 
-  // Enable carousel effect
-  $('.image-rotator').hiSlide({
-    interval: 2000,
-    speed: 700
-  });
+    $.each(nowPlayingData.results, (index, movie) => {
+      $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
+          src="https://image.tmdb.org/t/p/w185${movie.poster_path}" /></li>`
+    });
+
+    // Enable carousel effect
+    $('.image-rotator').hiSlide({
+      interval: 3000,
+      speed: 900
+    });
+
+  } else {
+    console.log('Carousel: Didn\'t receive any data!');
+    console.log('Carousel:data: ' + nowPlayingData);
+  }
 }
 
 async function showUpcomingMovies(event) {
