@@ -210,7 +210,7 @@ function handleData(data) {
 }
 
 async function getResponse(request) {
-  return await fetch('/.netlify/functions/get-data',
+  return await fetch('/.netlify/functions/tmdb-data',
     { method: 'POST', body: JSON.stringify(request) }
   )
     .then(res => res.json())

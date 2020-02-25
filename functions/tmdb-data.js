@@ -8,17 +8,9 @@ exports.handler = async function (event, context) {
     const { TMDB_API_KEY, TMDB_API_URL } = process.env
     const params = JSON.parse(event.body);
 
-    // var data;
-
-
     if (event.httpMethod === 'POST') {
 
         let URL = `${TMDB_API_URL}/${params.path}?api_key=${TMDB_API_KEY}&${params.query_params}`
-
-        console.log('Testing:URL: ', URL);
-        console.log('Testing:method: ', params.method);
-        console.log('Testing:body: ', params.body);
-        console.log('Testing:header: ', params.headers);
 
         var options;
 
