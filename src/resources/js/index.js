@@ -151,6 +151,9 @@ function showTitleInfo(info) {
   $("#search-info #movie .row .img-fluid")[0].src = `https://image.tmdb.org/t/p/w400${info.poster_path}`;
   $("#search-info #movie div:nth-child(2) #title-name")[0].textContent = info.title ? info.title : info.name;
   $("#search-info #movie div:nth-child(2) #title-imdb-rating")[0].textContent = info.vote_average;
+  $("#search-info #movie div:nth-child(2) #title-release-date")[0].textContent = info.release_date;
+  $("#search-info #movie div:nth-child(2) #title-runtime")[0].textContent = info.runtime + ' minutes';
+  $("#search-info #movie div:nth-child(2) #title-tagline")[0].textContent = info.tagline ? info.tagline : "UNSET";
   $("#search-info #movie #title-overview")[0].textContent = info.overview;
   $("#search-info #movie div.row div.well a.btn.btn-primary")[0].href = `http://imdb.com/title/${info.imdb_id}`;
 
