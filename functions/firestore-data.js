@@ -9,7 +9,7 @@ exports.handler = async function (event, context) {
     const FIRESTORE_ADMIN_SDK = JSON.parse(process.env.FIRESTORE_ADMIN_SDK)
     const FIRESTORE_DB_URL = process.env.FIRESTORE_DB_URL
 
-    const { userID, titleID } = JSON.parse(event.body)
+    const { userID, operation, titleType, titleID } = JSON.parse(event.body)
 
     if (!admin.apps.length) {
         admin.initializeApp({
@@ -22,18 +22,27 @@ exports.handler = async function (event, context) {
 
     if (event.httpMethod === 'POST') {
 
-        let docRef = db.collection('users').doc(userID);
+        if (operation === "add-to-favourites") {
+            let docRef = db.collection('users').doc(userID);
 
-        let resp = await docRef.update(
-            {
-                favourites: admin.firestore.FieldValue.arrayUnion(titleID)
-            }
-        );
+            await docRef.update(
+                {
+                    favourites: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                }
+            )
+        } else if (operation === "remove-from-favourites") {
+            let docRef = db.collection('users').doc(userID);
 
-        console.log(resp);
+            await docRef.update(
+                {
+                    favourites: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                }
+            );
+        }
+
         return {
             statusCode: 200,
-            body: JSON.stringify('ok response')
+            body: JSON.stringify('action complete')
         }
 
 
