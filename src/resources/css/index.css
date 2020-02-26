@@ -69,7 +69,7 @@ body {
   border-radius: 0.5rem;
 }
 
-#search-box, #root-div > .row > .container > #search-info {
+#search-box {
   margin-top: 15%;
 }
 
@@ -115,8 +115,20 @@ body {
   color: black;
 }
 
+#root-div > .row > .container > #search-info {
+  margin-top: 10%;
+}
+
 /* right-side top trending popular lists */
 #top-list {
   width: 20%; height: 100%;
   overflow-y: scroll;
+}
+
+button#add-to-favourites * {
+  color: white;
+  background-color: #a90329;
+  padding: 0.5rem 2rem;
+  border: 0;
+  border-radius: 0.5rem;
 }

@@ -154,6 +154,33 @@ function showTitleInfo(info) {
   $("#search-info #movie div:nth-child(2) #title-release-date")[0].textContent = info.release_date;
   $("#search-info #movie div:nth-child(2) #title-runtime")[0].textContent = info.runtime + ' minutes';
   $("#search-info #movie div:nth-child(2) #title-tagline")[0].textContent = info.tagline ? info.tagline : "UNSET";
+
+
+  $("#search-info #movie #add-to-favourites").data("titleType", "movie")
+  $("#search-info #movie #add-to-favourites").data("titleID", info.id)
+
+  $("#search-info #movie #add-to-favourites").on('click', function () {
+
+    console.log($(this).data("titleType"));
+    console.log($(this).data("titleID"));
+
+    fetch('/.netlify/functions/firestore-data',
+      {
+        method: 'POST', body: JSON.stringify({
+          userID: netlifyIdentity.currentUser().id,
+          operation: "add-to-favourites",
+          titleType: $(this).data("titleType"),
+          titleID: $(this).data("titleID")
+        })
+      }
+    )
+      .then($("#search-info #movie #add-to-favourites").text("Added to favourites"))
+
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  });
+
   $("#search-info #movie #title-overview")[0].textContent = info.overview;
   $("#search-info #movie div.row div.well a.btn.btn-primary")[0].href = `http://imdb.com/title/${info.imdb_id}`;
 
