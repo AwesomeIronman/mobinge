@@ -143,11 +143,11 @@ async function getTitleInfo(tmdbid, title_type) {
 
   console.log('Testing:title-info: ', titleData)
 
-  showTitleInfo(titleData)
+  showTitleInfo(titleData, title_type)
 }
 
 
-function showTitleInfo(info) {
+function showTitleInfo(info, title_type) {
   $("#search-info #movie .row .img-fluid")[0].src = `https://image.tmdb.org/t/p/w400${info.poster_path}`;
   $("#search-info #movie div:nth-child(2) #title-name")[0].textContent = info.title ? info.title : info.name;
   $("#search-info #movie div:nth-child(2) #title-imdb-rating")[0].textContent = info.vote_average;
@@ -156,7 +156,7 @@ function showTitleInfo(info) {
   $("#search-info #movie div:nth-child(2) #title-tagline")[0].textContent = info.tagline ? info.tagline : "UNSET";
 
 
-  $("#search-info #movie #add-to-favourites").data("titleType", "movie")
+  $("#search-info #movie #add-to-favourites").data("titleType", title_type)
   $("#search-info #movie #add-to-favourites").data("titleID", info.id)
 
   $("#search-info #movie #add-to-favourites").on('click', { event: event }, toggleFavourite);
@@ -336,7 +336,12 @@ async function toggleFavourite(event) {
   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
 
   // search for given title ID in localstorage
-  let title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
+  let title_local_index
+  if (titleType === "movie") {
+    title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
+  } else {
+    title_local_index = localFavourites.findIndex(fav => fav.tv === titleID)
+  }
 
   // If it is already favourite
   if (title_local_index > -1) {
