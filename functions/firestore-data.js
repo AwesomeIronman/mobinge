@@ -27,27 +27,44 @@ exports.handler = async function (event, context) {
         if (operation === "add-to-favourites") {
             let docRef = db.collection('users').doc(userID);
 
-            await docRef.update(
+            let response = await docRef.update(
                 {
                     favourites: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
                 }
             );
+
+            console.log('add-to-favourites: ',response);
+
         } else if (operation === "remove-from-favourites") {
             let docRef = db.collection('users').doc(userID);
 
-            await docRef.update(
+            let response = await docRef.update(
                 {
                     favourites: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
                 }
             );
-        } else if (operation === "get-favourites") {
-            let docRef = db.collection('users').doc(userID);
+            console.log('remove-from-favourites: ', response);
 
-            let favourites_data = await docRef.get().then(snapshot => snapshot.data().favourites);
-            
-            return {
-                statusCode: 200,
-                body: JSON.stringify(favourites_data)
+        } else if (operation === "get-data") {
+
+            let docRef = db.collection('users').doc(userID);
+            docRef.set({}, { merge: true });
+
+            let data = await docRef.get()
+                .then(snapshot => snapshot.data());
+
+            console.log('get-data: ', data);
+
+            if (data) {
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify(data)
+                }
+            } else {
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify({ favourites: [] })
+                }
             }
 
         }

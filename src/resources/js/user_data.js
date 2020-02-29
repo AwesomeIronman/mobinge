@@ -1,4 +1,5 @@
 $(document).ready(() => {
+   removeStoredFavourites()
 
    netlifyIdentity.on('login', storeFavourites);
    netlifyIdentity.on('logout', removeStoredFavourites);
@@ -13,24 +14,28 @@ $(document).ready(() => {
 async function storeFavourites() {
    console.log('Gettings stored favourites from firestore');
 
-   fetch('/.netlify/functions/firestore-data',
+   let user_data = await fetch('/.netlify/functions/firestore-data',
       {
          method: 'POST', body: JSON.stringify({
             userID: netlifyIdentity.currentUser().id,
-            operation: "get-favourites"
+            operation: "get-data"
          })
       }
    )
       .then(res => res.json())
-      .then(res => localStorage.setItem("user_favourites", JSON.stringify(res)))
 
       .catch(error => {
          console.error('Error:', error);
       });
+
+   console.log('StoreFavourites():user_data: ', user_data);
+
+   localStorage.setItem("user_favourites", JSON.stringify(user_data.favourites))
+   
 }
 
 async function removeStoredFavourites() {
-   console.log('Removed favourites from localstorage');
+   console.log('Removing favourites from localstorage');
 
-   localStorage.removeItem("user_favourites")
+   localStorage.setItem("user_favourites", JSON.stringify([]))
 }
