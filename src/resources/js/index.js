@@ -159,27 +159,7 @@ function showTitleInfo(info) {
   $("#search-info #movie #add-to-favourites").data("titleType", "movie")
   $("#search-info #movie #add-to-favourites").data("titleID", info.id)
 
-  $("#search-info #movie #add-to-favourites").on('click', function () {
-
-    console.log($(this).data("titleType"));
-    console.log($(this).data("titleID"));
-
-    fetch('/.netlify/functions/firestore-data',
-      {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
-          operation: "add-to-favourites",
-          titleType: $(this).data("titleType"),
-          titleID: $(this).data("titleID")
-        })
-      }
-    )
-      .then($("#search-info #movie #add-to-favourites").text("Added to favourites"))
-
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  });
+  $("#search-info #movie #add-to-favourites").on('click', { event: event }, toggleFavourite);
 
   $("#search-info #movie #title-overview")[0].textContent = info.overview;
   $("#search-info #movie div.row div.well a.btn.btn-primary")[0].href = `http://imdb.com/title/${info.imdb_id}`;
@@ -343,4 +323,69 @@ async function showTrendingMovies(event) {
 
     handleData(data.results)
   }
+}
+
+async function toggleFavourite(event) {
+  let titleType = $(this).data("titleType")
+  let titleID = $(this).data("titleID")
+
+  console.log(titleType);
+  console.log(titleID);
+
+  // Get favourites from localstorage
+  let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
+
+  // search for given title ID in localstorage
+  let title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
+
+  // If it is already favourite
+  if (title_local_index > -1) {
+    console.log('Removing from favourites');
+
+    fetch('/.netlify/functions/firestore-data',
+      {
+        method: 'POST', body: JSON.stringify({
+          userID: netlifyIdentity.currentUser().id,
+          operation: "remove-from-favourites",
+          titleType: $(this).data("titleType"),
+          titleID: $(this).data("titleID")
+        })
+      }
+    )
+      .then($("#search-info #movie #add-to-favourites").text("Favourite"))
+
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+    localFavourites.splice(title_local_index, 1);
+
+    localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
+
+
+  } else {
+    console.log('Adding to favourites');
+
+    fetch('/.netlify/functions/firestore-data',
+      {
+        method: 'POST', body: JSON.stringify({
+          userID: netlifyIdentity.currentUser().id,
+          operation: "add-to-favourites",
+          titleType: $(this).data("titleType"),
+          titleID: $(this).data("titleID")
+        })
+      }
+    )
+      .then($("#search-info #movie #add-to-favourites").text("Added to favourites"))
+
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+    localFavourites.push({ [titleType]: titleID })
+
+    localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
+  }
+
+
 }
