@@ -1,7 +1,3 @@
-* {
-  color: white;
-}
-
 /* Fancy effect on navbar links: */
 .fancy-link {
   text-decoration: none;
@@ -56,6 +52,10 @@ body {
   background-color: #a90329;
   padding: 0.5rem 2rem;
   border-radius: 0.5rem;
+}
+
+#full-info > div {
+  margin-top: 2rem;
 }
 
 .card >.overlay {

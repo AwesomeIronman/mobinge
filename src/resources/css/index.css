@@ -96,10 +96,6 @@ body {
   height: 16%;
 }
 
-#full-info > div {
-  margin-top: 2rem;
-}
-
 .card >.overlay {
   position: absolute;
   top: 0;

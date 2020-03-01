@@ -1,4 +1,51 @@
 $(document).ready(() => {
+  let calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    plugins: ['bootstrap', 'interaction', 'dayGrid', 'list'],
+    themeSystem: 'bootstrap',
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,dayGridWeek,dayGridDay,listMonth'
+    },
+    defaultDate: '2020-02-12',
+    weekNumbers: false,
+    navLinks: true, // can click day/week names to navigate views
+    editable: true,
+    eventLimit: true, // allow "more" link when too many events
+    events: [
+      {
+        title: 'All Day Event',
+        start: '2020-03-01'
+      },
+      {
+        title: 'Lunch',
+        start: '2020-02-12'
+      },
+      {
+        title: 'Click for Google',
+        url: 'http://google.com/',
+        start: '2020-02-28'
+      }
+    ],
+    dateClick: function (e) {
+      alert('a day has been clicked!');
+      console.log(e);
+    },
+    eventClick: function (info) {
+      info.jsEvent.preventDefault(); // don't let the browser navigate
+
+      if (info.event.url) {
+        window.open(info.event.url);
+      }
+    }
+  });
+
+  calendar.render();
+
+  $("#calendar-container").css("margin-top", "15%");
+
   // Add event to show upcoming movies list
   $('#btn-upcoming').on('click', { event: event }, showUpcomingMovies);
 
