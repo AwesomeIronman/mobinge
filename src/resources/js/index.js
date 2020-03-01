@@ -3,7 +3,7 @@ $(document).ready(() => {
   showNowPlayingCarousel()
 
   // Add event listener to search on pressing any key
-  $("#searchText").bindWithDelay('keyup', { event: event }, partialSearch, 500);
+  $("#searchText").on('keyup', event => delay(partialSearch, 1000)(event));
 
   // Add event listener to search on pressing Enter key
   $("#searchForm").on('submit', event => fullSearch(event));
@@ -26,9 +26,8 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-
 async function partialSearch(event) {
-  event.preventDefault()
+  event.preventDefault();
   let search = $('#searchText').val()
   let searchType = $('#searchType')[0].value
 
@@ -114,11 +113,12 @@ function showFullResult(result) {
     $.each(result, (index, movie) => {
       if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
 
-        sampleNode.querySelector(".well img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
+        sampleNode.querySelector("img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
         sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
         sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
         sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-        sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
+        sampleNode.querySelector(".overlay > .movie > a")
+          .setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
 
         $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
       }
@@ -393,4 +393,12 @@ async function toggleFavourite(event) {
   }
 
 
+}
+
+function delay(fn, ms = 0) {
+  let timer = 0;
+  return function (...args) {
+    clearTimeout(timer)
+    timer = setTimeout(fn.bind(this, ...args), ms)
+  }
 }
