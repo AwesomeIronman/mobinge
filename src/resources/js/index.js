@@ -3,7 +3,7 @@ $(document).ready(() => {
   showNowPlayingCarousel()
 
   // Add event listener to search on pressing any key
-  $("#searchText").keyup(event => partialSearch(event));
+  $("#searchText").bindWithDelay('keyup', { event: event }, partialSearch, 500);
 
   // Add event listener to search on pressing Enter key
   $("#searchForm").on('submit', event => fullSearch(event));
