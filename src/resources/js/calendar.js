@@ -1,16 +1,4 @@
 $(document).ready(() => {
-  // Show Now Playing movies with carousel effect
-  showNowPlayingCarousel()
-
-  // Add event listener to search on pressing any key
-  $("#searchText").on('keyup', event => delay(partialSearch, 1000)(event));
-
-  // Add event listener to search on pressing Enter key
-  $("#searchForm").on('submit', event => fullSearch(event));
-
-  // Add event listener to search on pressing search button
-  $("#search-btn").on('click', event => fullSearch(event));
-
   // Add event to show upcoming movies list
   $('#btn-upcoming').on('click', { event: event }, showUpcomingMovies);
 
@@ -25,81 +13,6 @@ $(document).ready(() => {
 
 });
 // JQuery OnReady Close
-
-async function partialSearch(event) {
-  event.preventDefault();
-  let search = $('#searchText').val()
-  let searchType = $('#searchType')[0].value
-
-  if (search !== "") {  // Search only if user had typed something
-    let response = await getResponse({
-      path: `search/${searchType}`,
-      query_params: `language=en-US&region=IN&include_adult=true&query=${search}&page=1`
-    })
-
-    if (Array.isArray(response.results)) {
-      showPartialResult(response.results)
-    } else {
-      console.debug('Testing:partial-search-result: ', response);
-    }
-
-  }
-}
-
-async function fullSearch(event) {
-  event.preventDefault()
-
-  $("#searchText").blur()  // Lose search box focus to stop keypress events from getting triggered
-
-  let search = $('#searchText').val()
-  let searchType = $('#searchType')[0].value
-
-  if (search !== "") {  // Search only if user had typed something
-
-    let response = await getResponse({
-      path: `search/${searchType}`,
-      query_params: `language=en-US&region=IN&include_adult=true&query=${search}&page=1`
-    })
-
-    if (Array.isArray(response.results)) {
-      showFullResult(response.results)
-    } else {
-      console.debug('Testing:full-search-result: ', response);
-    }
-
-  }
-}
-
-function showPartialResult(result) {
-  let sampleNode = $('#partialSample')[0].cloneNode(true); // Create a clone to edit and append each time
-  sampleNode.removeAttribute("id")
-  sampleNode.removeAttribute("style")
-
-  $('#partial-info .list-group')[0].innerHTML = ""; // Remove old search result
-
-  if (result !== undefined && result.length > 0) {
-    // Show basic information of each search result
-    $.each(result, (index, movie) => {
-      if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
-
-        sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
-        sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
-        sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-        sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
-
-        $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-      }
-    });
-
-  } else {
-    sampleNode.innerHTML = "No result found!";
-
-    $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-  }
-
-  $("#full-search-result").css("display", "none");
-  $("#partial-search-result").css("display", "block");
-}
 
 function showFullResult(result) {
   let sampleNode = $('#fullSample')[0].cloneNode(true); // Create a clone to edit and append each time
@@ -133,7 +46,6 @@ function showFullResult(result) {
   $("#partial-search-result").css("display", "none");
   $("#full-search-result").css("display", "block");
 }
-
 
 async function getTitleInfo(tmdbid, title_type) {
   let titleData = await getResponse({
@@ -228,33 +140,6 @@ async function getResponse(request) {
     .catch(error => {
       console.error('Error:', error);
     });
-}
-
-async function showNowPlayingCarousel() {
-  let nowPlayingData = await getResponse({
-    path: "movie/now_playing",
-    query_params: "language=en-US&page=1&region=IN"
-  })
-  console.log('Testing:now-playing-carousel: ', nowPlayingData)
-
-  // Act only if we receive data
-  if (nowPlayingData && nowPlayingData.results) {
-
-    $.each(nowPlayingData.results, (index, movie) => {
-      $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
-          src="https://image.tmdb.org/t/p/w185${movie.poster_path}" onclick="getTitleInfo('${movie.id}', 'movie')"  /></li>`
-    });
-
-    // Enable carousel effect
-    $('.image-rotator').hiSlide({
-      interval: 3000,
-      speed: 900
-    });
-
-  } else {
-    console.log('Carousel: Didn\'t receive any data!');
-    console.log('Carousel:data: ' + nowPlayingData);
-  }
 }
 
 async function showUpcomingMovies(event) {
@@ -393,12 +278,4 @@ async function toggleFavourite(event) {
   }
 
 
-}
-
-function delay(fn, ms = 0) {
-  let timer = 0;
-  return function (...args) {
-    clearTimeout(timer)
-    timer = setTimeout(fn.bind(this, ...args), ms)
-  }
 }

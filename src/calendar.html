@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <title>Movie/Series Guide</title>
+
+
+   <!-- Bootstrap CSS: -->
+   <link rel="stylesheet" href="./resources/css/bootstrap.css">
+
+   <!-- JQuery 3.4.1: -->
+   <script type="text/javascript" src="./resources/js/jquery.js"></script>
+
+</head>
+
+<body>
+   <div id="root-div" class="container-fluid">
+
+
+      <!-- Navbar: -->
+      <nav class="navbar navbar-default navbar-dark fixed-top bg-dark">
+
+         <a class="navbar-brand" href="index">Mobinge</a>
+         <ul class="nav navbar">
+            <li class="nav-link">
+               <a href="/calendar" class="fancy-link">Calendar</a>
+            </li>
+
+            <li class="nav-link">
+               <button id="btn-upcoming" class="btn btn-link">
+                  <a href="#" class="fancy-link">Upcoming</a>
+               </button>
+            </li>
+
+            <li class="nav-link">
+               <button id="btn-now-playing" class="btn btn-link">
+                  <a href="#" class="fancy-link">Now Playing</a>
+               </button>
+            </li>
+
+            <li class="nav-link">
+               <button id="btn-popular" class="btn btn-link">
+                  <a href="#" class="fancy-link">Popular</a>
+               </button>
+            </li>
+
+            <li class="nav-link">
+               <button id="btn-trending" class="btn btn-link">
+                  <a href="#" class="fancy-link">Trending</a>
+               </button>
+            </li>
+
+            <div class="nav-link">
+               <div class="btn-ntl-login" data-netlify-identity-button></div>
+            </div>
+         </ul>
+
+      </nav>
+
+      <div class="row">
+
+         <div class="col-12 order-1">
+            <div class="container">
+
+
+
+            </div>
+         </div>
+
+
+         <!-- Side div to show top lists -->
+         <aside class="col-3 order-12" id="top-list" style="display: none; top: -250px;">
+            <ul class="list-group">
+               <!-- Add all the basic search result output here through JavaScript -->
+            </ul>
+         </aside>
+         <!-- CLOSE: Side div to show top lists -->
+
+      </div>
+      <!-- CLOSE: row div -->
+
+
+   </div>
+   <!-- CLOSE: root div -->
+
+
+   <!-- Custom CSS and JS: -->
+   <link rel="stylesheet" href="./resources/css/calendar.css">
+   <script type="text/javascript" src="./resources/js/calendar.js"></script>
+
+   <!-- netlify identity user login library: -->
+   <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+   <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
+</body>
+
+</html>
