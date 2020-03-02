@@ -1,48 +1,5 @@
 $(document).ready(() => {
-  let calendarEl = document.getElementById('calendar');
-
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: ['bootstrap', 'interaction', 'dayGrid', 'list'],
-    themeSystem: 'bootstrap',
-    header: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,dayGridWeek,dayGridDay,listMonth'
-    },
-    defaultDate: '2020-02-12',
-    weekNumbers: false,
-    navLinks: true, // can click day/week names to navigate views
-    editable: true,
-    eventLimit: true, // allow "more" link when too many events
-    events: [
-      {
-        title: 'All Day Event',
-        start: '2020-03-01'
-      },
-      {
-        title: 'Lunch',
-        start: '2020-02-12'
-      },
-      {
-        title: 'Click for Google',
-        url: 'http://google.com/',
-        start: '2020-02-28'
-      }
-    ],
-    dateClick: function (e) {
-      alert('a day has been clicked!');
-      console.log(e);
-    },
-    eventClick: function (info) {
-      info.jsEvent.preventDefault(); // don't let the browser navigate
-
-      if (info.event.url) {
-        window.open(info.event.url);
-      }
-    }
-  });
-
-  calendar.render();
+  initCalendar()
 
   $("#calendar-container").css("margin-top", "15%");
 
@@ -325,4 +282,65 @@ async function toggleFavourite(event) {
   }
 
 
+}
+
+async function getInTheatorMovies() {
+  // Get all upcoming, now-playing-in-theator movies from serverless function
+  return await fetch('/.netlify/functions/tmdb-all-in-theators', { method: 'POST' })
+    .then(res => res.json())
+
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+async function filterTitles(data) {
+  // Remove regional movies
+  return data.filter(movie => movie.original_language === "en" || movie.original_language === "hi")
+}
+
+async function getReleaseEvents(filteredMovies) {
+  // Create an array of objects containing data for fullCalendar libraries event source
+  let arr = []
+
+  Array.prototype.forEach.call(filteredMovies, movie => {
+    arr = [...arr, {
+      title: movie.title.substr(0, 32),
+      start: moment(movie.release_date).format("YYYY-MM-DD"),
+      allDay: true,
+      id: movie.id
+    }];
+  });
+
+  return arr;
+}
+
+async function initCalendar() {
+  let calendarEl = document.getElementById('calendar');
+
+  let filteredMovies = await getInTheatorMovies().then(data => filterTitles(data))
+
+  let eventData = await getReleaseEvents(filteredMovies)
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    plugins: ['bootstrap', 'interaction', 'dayGrid', 'list'],
+    themeSystem: 'bootstrap',
+    header: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,dayGridWeek,dayGridDay,listMonth'
+    },
+    events: eventData,
+    editable: false,
+    eventStartEditable: false,
+    eventLimit: true, // allow "more" link when too many events
+    dateClick: function (e) {
+      console.log(e);
+    },
+    eventClick: function (info) {
+      getTitleInfo(info.event.id, "movie")
+    }
+  });
+
+  calendar.render();
 }

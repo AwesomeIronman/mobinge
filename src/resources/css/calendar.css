@@ -54,10 +54,6 @@ body {
   border-radius: 0.5rem;
 }
 
-#full-info > div {
-  margin-top: 2rem;
-}
-
 .card >.overlay {
   position: absolute;
   top: 0;
@@ -103,10 +99,6 @@ body {
   color: black;
 }
 
-#root-div > .row > .container > #search-info {
-  margin-top: 10%;
-}
-
 /* right-side top trending popular lists */
 #top-list {
   width: 20%; height: 100%;
@@ -119,4 +111,31 @@ button#add-to-favourites * {
   padding: 0.5rem 2rem;
   border: 0;
   border-radius: 0.5rem;
+}
+
+#calendar-container {
+  max-width: 50vw;
+  max-height: 60vh;
+}
+
+#day-title-info {
+  max-width: 45vw;
+  max-height: 60vh;
+}
+
+#calendar {
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+
+}
+
+#mega {
+  max-width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+#day-title-info {
+  margin-top: 15%;
 }

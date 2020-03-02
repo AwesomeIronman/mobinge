@@ -62,17 +62,47 @@
 
       <div class="row">
 
-         <div class="col-12 order-1">
-            <div class="container">
+         <div class="card" id="calendar-container">
+            <div id='calendar'></div>
+         </div>
 
-               <div class="card" id="calendar-container">
-
-                  <div id='calendar'></div>
-
+         <div class="card" id="day-title-info">
+            <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+            <div id="mega">
+               <div class="card">
+                  <img src="" class="rounded img-fluid"
+                     onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
+                  <div class="overlay rounded">
+                     <div class="movie p-2">
+                        <p><span class="movie-title">Movie name</span></p>
+                        <p><span class="movie-rating">Rating</span></p>
+                        <p><span class="movie-release-year">Released Year</span></p>
+                        <a onclick="" href="#">Details</a>
+                     </div>
+                  </div>
                </div>
 
             </div>
          </div>
+
+
+         <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+         <div id="fullSample" class="col-md-3" style="display: none;">
+            <div class="card">
+               <img src="" class="rounded img-fluid"
+                  onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
+               <div class="overlay rounded">
+                  <div class="movie p-2">
+                     <p><span class="movie-title">Movie name</span></p>
+                     <p><span class="movie-rating">Rating</span></p>
+                     <p><span class="movie-release-year">Released Year</span></p>
+                     <a onclick="" href="#">Details</a>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+
 
 
          <!-- Side div to show top lists -->
@@ -94,6 +124,8 @@
    <!-- Custom CSS and JS: -->
    <link rel="stylesheet" href="./resources/css/calendar.css">
    <script type="text/javascript" src="./resources/js/calendar.js"></script>
+
+   <script type="text/javascript" src="./resources/js/moment.js"></script>
 
    <link href='./resources/css/fontawesome-all.min.css' rel='stylesheet' />
 
