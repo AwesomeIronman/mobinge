@@ -27,7 +27,7 @@ body {
 }
 
 nav.fixed-top {
-  z-index: unset;
+  z-index: 1;
 }
 
 ul.navbar-right {
