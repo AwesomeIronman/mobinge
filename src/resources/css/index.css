@@ -2,36 +2,9 @@
   color: white;
 }
 
-/* Fancy effect on navbar links: */
-.fancy-link {
-  text-decoration: none;
-  position: relative;
+a, a:hover {
+  color: white;
 }
-
-.fancy-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background: currentColor;
-  -webkit-transform: scaleX(0);
-          transform: scaleX(0);
-  -webkit-transform-origin: right;
-          transform-origin: right;
-  transition: -webkit-transform 250ms ease-in;
-  transition: transform 250ms ease-in;
-  transition: transform 250ms ease-in, -webkit-transform 250ms ease-in;
-}
-
-.fancy-link:hover::after {
-  -webkit-transform: scaleX(1);
-          transform: scaleX(1);
-  -webkit-transform-origin: left;
-          transform-origin: left;
-}
-
 
 /* Set background: */
 body {
@@ -43,12 +16,22 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
+/* navbar is fixed to the top */
 body {
-  min-width: 100%;
-  min-height: 100%;
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
 
-  margin: 0;
-  box-sizing: border-box;
+.navbar {
+  padding: 0rem 0rem 0rem 2rem;
+}
+
+nav.fixed-top {
+  z-index: unset;
+}
+
+ul.navbar-right {
+  padding: 0rem 2rem 0rem 0rem;
 }
 
 .btn-ntl-login * {
@@ -59,7 +42,7 @@ body {
 }
 
 #search-box {
-  margin-top: 15%;
+  margin-top: 10%;
 }
 
 #search-box > h3 {

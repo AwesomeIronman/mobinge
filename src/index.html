@@ -19,44 +19,53 @@
 <body>
     <div id="root-div" class="container-fluid">
 
-
         <!-- Navbar: -->
-        <nav class="navbar navbar-default navbar-dark fixed-top bg-dark">
+        <nav class="nav navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 
-            <a class="navbar-brand" href="index.html">Mobinge</a>
-            <ul class="nav navbar">
-                <li class="nav-link">
-                    <a href="/calendar" class="fancy-link">Calendar</a>
-                </li>
+            <a class="navbar-brand" href="index">Mobinge</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar navbar-nav mr-auto">
+                    <li class="nav-link">
+                        <div class="btn btn-link">
+                            <a href="/calendar" class="fancy-link">Calendar</a>
+                        </div>
+                    </li>
 
-                <li class="nav-link">
-                    <button id="btn-upcoming" class="btn btn-link">
-                        <a href="#" class="fancy-link">Upcoming</a>
-                    </button>
-                </li>
+                    <li class="nav-link">
+                        <button id="btn-upcoming" class="btn btn-link">
+                            <a href="#" class="fancy-link">Upcoming</a>
+                        </button>
+                    </li>
 
-                <li class="nav-link">
-                    <button id="btn-now-playing" class="btn btn-link">
-                        <a href="#" class="fancy-link">Now Playing</a>
-                    </button>
-                </li>
+                    <li class="nav-link">
+                        <button id="btn-now-playing" class="btn btn-link">
+                            <a href="#" class="fancy-link">Now Playing</a>
+                        </button>
+                    </li>
 
-                <li class="nav-link">
-                    <button id="btn-popular" class="btn btn-link">
-                        <a href="#" class="fancy-link">Popular</a>
-                    </button>
-                </li>
+                    <li class="nav-link">
+                        <button id="btn-popular" class="btn btn-link">
+                            <a href="#" class="fancy-link">Popular</a>
+                        </button>
+                    </li>
 
-                <li class="nav-link">
-                    <button id="btn-trending" class="btn btn-link">
-                        <a href="#" class="fancy-link">Trending</a>
-                    </button>
-                </li>
+                    <li class="nav-link">
+                        <button id="btn-trending" class="btn btn-link">
+                            <a href="#" class="fancy-link">Trending</a>
+                        </button>
+                    </li>
+                </ul>
 
-                <div class="nav-link">
-                    <div class="btn-ntl-login" data-netlify-identity-button></div>
-                </div>
-            </ul>
+                <ul class="navbar-nav navbar-right">
+                    <li class="nav-link">
+                        <div class="btn-ntl-login" data-netlify-identity-button></div>
+                    </li>
+                </ul>
+            </div>
 
         </nav>
 
@@ -221,6 +230,8 @@
     <!-- Custom script: -->
     <script type="text/javascript" src="./resources/js/jquery.hislide.js"></script>
     <link rel="stylesheet" href="./resources/css/jquery.hislide.min.css" />
+
+    <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
 
     <!-- Custom CSS and JS: -->
     <link rel="stylesheet" href="./resources/css/index.css">
