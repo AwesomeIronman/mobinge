@@ -289,8 +289,9 @@ async function getInTheatorMovies() {
   return await fetch('/.netlify/functions/tmdb-all-in-theators', { method: 'POST' })
     .then(res => res.json())
 
-    .catch(error => {
-      console.error('Error:', error);
+    .catch(err => {
+      console.log(err);
+      return err;
     });
 }
 
@@ -338,7 +339,7 @@ async function initCalendar() {
       console.log(e);
     },
     eventClick: function (info) {
-      getTitleInfo(info.event.id, "movie")
+      console.log(info.event.id, "movie");
     }
   });
 

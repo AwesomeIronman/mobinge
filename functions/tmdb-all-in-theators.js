@@ -1,54 +1,58 @@
 const fetch = require('node-fetch');
 
-exports.handler = async function (event, context) {
+// Get env var values defined in our Netlify site UI
+const { TMDB_API_KEY, TMDB_API_URL } = process.env
 
+exports.handler = async function (event, context) {
     console.log('TMDB_ALL-MOVIES-IN-THEATORS: +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-');
 
-    // Get env var values defined in our Netlify site UI
-    const { TMDB_API_KEY, TMDB_API_URL } = process.env
+    var result = [];
+    var sub_urls = [];
 
     if (event.httpMethod === 'POST') {
 
-        let URL = `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&page=1&region=IN`
+        let urls = [
+            `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=1`,
+            `${TMDB_API_URL}/movie/upcoming?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=1`
+        ];
 
-        let status, data, result;
+        // map every url to the promise of the fetch
+        let requests = urls.map(url => fetch_data(url));
 
-        data = await fetch(URL)
-            .then((res) => {
-                status = res.status;
-                return res.json();
+        // Promise.all waits until all jobs are resolved
+        await Promise.all(requests)
+            .then(responses => {
+
+                responses.forEach(response => {
+                    // If we received movies list/result add it to the final result array we would
+                    // be returning to the user
+                    result = [...result, ...response.results];
+
+                    console.log('No of movies added: ', response.results.length);
+
+                    for (let i = ++(response.page); i <= response.total_pages; i++) {
+                        sub_urls.push(
+                            `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=${i}`
+                        )
+                    }
+                })
             })
-            .catch((error) => {
-                console.log('Error: ', error.code);
+
+        // map every url to the promise of the fetch
+        let sub_requests = sub_urls.map(url => fetch_data(url));
+
+        await Promise.all(sub_requests)
+            .then(responses => {
+
+                // If we received movies list/result add it to the final result array we would
+                // be returning to the user
+                responses.forEach(response => {
+                    result = [...result, ...response.results];
+                    console.log('No of movies added: ', response.results.length);
+                })
             })
 
-        // Send data only if response is OK
-        if (status === 200 && data.total_pages > 1) {
-            
-            let total_pages = data.total_pages;
-            result = [...data.results];
-
-            for (let index = 2; index <= total_pages; index++) {
-                URL = `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&page=${index}&region=IN`
-
-                data = await fetch(URL)
-                    .then((res) => {
-                        status = res.status;
-                        return res.json();
-                    })
-                    .catch((error) => {
-                        console.log('Error: ', error.code);
-                        index--;
-                    })
-
-                if (status === 200) {
-                    result = [...result, ...data.results];
-                }
-
-
-            }
-
-        }
+        console.log('Total no of movies: ', result.length);
 
         return {
             statusCode: 200,
@@ -57,4 +61,15 @@ exports.handler = async function (event, context) {
 
 
     }
+}
+
+async function fetch_data(URL) {
+    return await fetch(URL)
+        .then((res) => {
+            return res.json();
+        })
+        .catch((error) => {
+            console.log('fetch-data: ', error.code);
+            return error;
+        })
 }
