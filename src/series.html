@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Movie/Series Guide</title>
+
+    <!-- Bootstrap CSS: -->
+    <link rel="stylesheet" href="./resources/css/bootstrap.css">
+
+    <!-- JQuery 3.4.1: -->
+    <script type="text/javascript" src="./resources/js/jquery.js"></script>
+
+</head>
+
+<body>
+    <div id="root-div" class="container-fluid">
+
+        <!-- Navbar: -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+        
+            <a class="navbar-brand" href="search">Mobinge</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="/search" class="nav-link">Search</a>
+                    </li>
+        
+                    <li class="nav-item">
+                        <a href="/calendar" class="nav-link">Calendar</a>
+                    </li>
+        
+                    <li class="nav-item">
+                        <a href="#" id="btn-upcoming" class="nav-link">Upcoming</a>
+                    </li>
+        
+                    <li class="nav-item">
+                        <a href="#" id="btn-now-playing" class="nav-link">Now Playing</a>
+                    </li>
+        
+                    <li class="nav-item">
+                        <a href="#" id="btn-popular" class="nav-link">Popular</a>
+                    </li>
+        
+                    <li class="nav-item">
+                        <a href="#" id="btn-trending" class="nav-link">Trending</a>
+                    </li>
+                </ul>
+        
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <div class="btn-ntl-login" data-netlify-identity-button></div>
+                    </li>
+                </ul>
+            </div>
+        
+        </nav>
+
+        <div class="row">
+
+
+            <!-- Side div to show top lists -->
+            <aside class="col-3 order-12" id="top-list" style="display: none; top: -250px;">
+                <ul class="list-group">
+                    <!-- Add all the basic search result output here through JavaScript -->
+                </ul>
+            </aside>
+            <!-- CLOSE: Side div to show top lists -->
+
+
+            <!-- OPEN: Show full movie information -->
+            <div class="container">
+                <div class="col-md-12" id="search-info" style="display: none;">
+                    <div id="movie" class="well">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="" class="img-fluid">
+                            </div>
+                            <div class="col-md-8">
+                                <h2 id="title-name">${movie.Title}</h2>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <strong>Genre:</strong>
+                                        <span id="title-genre">UNSET</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Released:</strong>
+                                        <span id="title-release-date">UNSET</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Runtime:</strong>
+                                        <span id="title-runtime">UNSET</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>IMDB Rating:</strong>
+                                        <span id="title-imdb-rating">UNSET</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <strong>Tagline:</strong>
+                                        <span id="title-tagline">UNSET</span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <button id="add-to-favourites">
+                                            Favourite
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="well">
+                                <h3>Plot</h3>
+                                <span id="title-overview">UNSET</span>
+                                <hr>
+                                <a href="#" target="_blank" class="btn btn-primary">
+                                    View IMDB
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- CLOSE: Show full movie information -->
+
+        </div>
+        <!-- CLOSE: row div -->
+
+
+    </div>
+    <!-- CLOSE: root div -->
+
+
+    <!-- Custom script: -->
+    <link rel="stylesheet" href="./resources/css/main.css">
+
+    <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
+
+    <!-- Custom CSS and JS: -->
+    <link rel="stylesheet" href="./resources/css/index.css">
+    <script type="text/javascript" src="./resources/js/index.js"></script>
+
+    <!-- netlify identity user login library: -->
+    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
+</body>
+
+</html>

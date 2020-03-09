@@ -20,48 +20,42 @@
     <div id="root-div" class="container-fluid">
 
         <!-- Navbar: -->
-        <nav class="nav navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
 
-            <a class="navbar-brand" href="index">Mobinge</a>
+            <a class="navbar-brand" href="search">Mobinge</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="navbar navbar-nav mr-auto">
-                    <li class="nav-link">
-                        <div class="btn btn-link">
-                            <a href="/calendar" class="fancy-link">Calendar</a>
-                        </div>
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="/search" class="nav-link active">Search</a>
                     </li>
 
-                    <li class="nav-link">
-                        <button id="btn-upcoming" class="btn btn-link">
-                            <a href="#" class="fancy-link">Upcoming</a>
-                        </button>
+                    <li class="nav-item">
+                        <a href="/calendar" class="nav-link">Calendar</a>
                     </li>
 
-                    <li class="nav-link">
-                        <button id="btn-now-playing" class="btn btn-link">
-                            <a href="#" class="fancy-link">Now Playing</a>
-                        </button>
+                    <li class="nav-item">
+                        <a href="#" id="btn-upcoming" class="nav-link">Upcoming</a>
                     </li>
 
-                    <li class="nav-link">
-                        <button id="btn-popular" class="btn btn-link">
-                            <a href="#" class="fancy-link">Popular</a>
-                        </button>
+                    <li class="nav-item">
+                        <a href="#" id="btn-now-playing" class="nav-link">Now Playing</a>
                     </li>
 
-                    <li class="nav-link">
-                        <button id="btn-trending" class="btn btn-link">
-                            <a href="#" class="fancy-link">Trending</a>
-                        </button>
+                    <li class="nav-item">
+                        <a href="#" id="btn-popular" class="nav-link">Popular</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" id="btn-trending" class="nav-link">Trending</a>
                     </li>
                 </ul>
 
-                <ul class="navbar navbar-nav navbar-right">
-                    <li class="nav-link">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
                         <div class="btn-ntl-login" data-netlify-identity-button></div>
                     </li>
                 </ul>
@@ -230,6 +224,8 @@
     <!-- Custom script: -->
     <script type="text/javascript" src="./resources/js/jquery.hislide.js"></script>
     <link rel="stylesheet" href="./resources/css/jquery.hislide.min.css" />
+
+    <link rel="stylesheet" href="./resources/css/main.css">
 
     <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
 

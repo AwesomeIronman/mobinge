@@ -21,42 +21,46 @@
 
 
       <!-- Navbar: -->
-      <nav class="navbar navbar-default navbar-dark fixed-top bg-dark">
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
 
-         <a class="navbar-brand" href="index">Mobinge</a>
-         <ul class="nav navbar">
-            <li class="nav-link">
-               <a href="/calendar" class="fancy-link">Calendar</a>
-            </li>
+         <a class="navbar-brand" href="search">Mobinge</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav mr-auto">
+               <li class="nav-item">
+                  <a href="/search" class="nav-link">Search</a>
+               </li>
 
-            <li class="nav-link">
-               <button id="btn-upcoming" class="btn btn-link">
-                  <a href="#" class="fancy-link">Upcoming</a>
-               </button>
-            </li>
+               <li class="nav-item">
+                  <a href="/calendar" class="nav-link active">Calendar</a>
+               </li>
 
-            <li class="nav-link">
-               <button id="btn-now-playing" class="btn btn-link">
-                  <a href="#" class="fancy-link">Now Playing</a>
-               </button>
-            </li>
+               <li class="nav-item">
+                  <a href="#" id="btn-upcoming" class="nav-link">Upcoming</a>
+               </li>
 
-            <li class="nav-link">
-               <button id="btn-popular" class="btn btn-link">
-                  <a href="#" class="fancy-link">Popular</a>
-               </button>
-            </li>
+               <li class="nav-item">
+                  <a href="#" id="btn-now-playing" class="nav-link">Now Playing</a>
+               </li>
 
-            <li class="nav-link">
-               <button id="btn-trending" class="btn btn-link">
-                  <a href="#" class="fancy-link">Trending</a>
-               </button>
-            </li>
+               <li class="nav-item">
+                  <a href="#" id="btn-popular" class="nav-link">Popular</a>
+               </li>
 
-            <div class="nav-link">
-               <div class="btn-ntl-login" data-netlify-identity-button></div>
-            </div>
-         </ul>
+               <li class="nav-item">
+                  <a href="#" id="btn-trending" class="nav-link">Trending</a>
+               </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+               <li class="nav-item">
+                  <div class="btn-ntl-login" data-netlify-identity-button></div>
+               </li>
+            </ul>
+         </div>
 
       </nav>
 
@@ -122,7 +126,9 @@
 
 
    <!-- Custom CSS and JS: -->
+   <link rel="stylesheet" href="./resources/css/main.css">
    <link rel="stylesheet" href="./resources/css/calendar.css">
+
    <script type="text/javascript" src="./resources/js/calendar.js"></script>
 
    <script type="text/javascript" src="./resources/js/moment.js"></script>

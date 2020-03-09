@@ -6,3 +6,9 @@
 [dev]
 	functions = "functions"
 	publish = "src"
+
+[[redirects]]
+	from = "/"
+	to = "/search.html"
+	status = 200
+	force = true
