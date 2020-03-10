@@ -19,11 +19,6 @@ body {
   padding: 0rem 0rem 0rem 2rem;
 }
 
-/* To make the netlify login form visible */
-nav.fixed-top {
-  z-index: 1;
-}
-
 
 /* ------------ Login button ------------- */
 .netlify-identity-button {
