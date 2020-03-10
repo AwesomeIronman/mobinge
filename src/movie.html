@@ -20,7 +20,7 @@
 
         <!-- Navbar: -->
         <nav class="navbar navbar-expand-md navbar-dark fixed-top">
-        
+
             <a class="navbar-brand" href="search">Mobinge</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,102 +31,145 @@
                     <li class="nav-item">
                         <a href="/search" class="nav-link">Search</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="/calendar" class="nav-link">Calendar</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="#" id="btn-upcoming" class="nav-link">Upcoming</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="#" id="btn-now-playing" class="nav-link">Now Playing</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="#" id="btn-popular" class="nav-link">Popular</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="#" id="btn-trending" class="nav-link">Trending</a>
                     </li>
                 </ul>
-        
+
                 <ul class="nav navbar-nav navbar-right">
                     <li class="nav-item">
                         <div class="btn-ntl-login" data-netlify-identity-button></div>
                     </li>
                 </ul>
             </div>
-        
+
         </nav>
 
-        <div class="row">
+        <div class="row justify-content-md-center">
+
+            <div id="movieInfoContainer" class="col-md-9 rounded">
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <img id="poster_image" class="img-fluid rounded" src="#" alt="Movie Poster">
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="border-bottom p-3">
+                                    <div class="d-flex card-title">
+                                        <!-- show movie title/name -->
+                                        <h4 id="movie_title" class="mr-auto">Loading...</h4>
+
+                                        <!-- show rating -->
+                                        <h5 id="movie_rating" class="align-self-end">
+                                            <i class="fas fa-star" style="color: #FFCA28;"></i>
+                                            <span class="text-muted">Loading...</span>
+                                        </h5>
+                                    </div>
+
+                                    <div class="d-flex card-title">
+                                        <!-- show release date -->
+                                        <h6 id="movie_release_date" class="mr-auto">
+                                            <span id="release_status" class="text-muted mr-2">Loading...</span>
+                                            <i class="fas fa-calendar" style="color: #6c757d;"></i>
+                                            <span id="release_date" class="text-muted">Loading...</span>
+                                        </h6>
+
+                                        <!-- show release date -->
+                                        <h6 id="movie_runtime" class="align-self-end">
+                                            <span class="text-muted mr-2">Movie Runtime: </span>
+                                            <i class="fas fa-hourglass-end" style="color: #6c757d;"></i>
+                                            <span id="runtime" class="text-muted">Loading...</span>
+                                        </h6>
+                                    </div>
 
 
-            <!-- Side div to show top lists -->
-            <aside class="col-3 order-12" id="top-list" style="display: none; top: -250px;">
-                <ul class="list-group">
-                    <!-- Add all the basic search result output here through JavaScript -->
-                </ul>
-            </aside>
-            <!-- CLOSE: Side div to show top lists -->
+                                    <div class="d-flex card-title">
+                                        <!-- show movie genres -->
+                                        <h6 id="movie_genres" class="mr-auto">
+                                            <span class="text-muted mr-2">Genres: </span>
+                                            <span id="genres" class="text-muted">Loading...</span>
+                                        </h6>
 
 
-            <!-- OPEN: Show full movie information -->
-            <div class="container">
-                <div class="col-md-12" id="search-info" style="display: none;">
-                    <div id="movie" class="well">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img src="" class="img-fluid">
-                            </div>
-                            <div class="col-md-8">
-                                <h2 id="title-name">${movie.Title}</h2>
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <strong>Genre:</strong>
-                                        <span id="title-genre">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Released:</strong>
-                                        <span id="title-release-date">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Runtime:</strong>
-                                        <span id="title-runtime">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>IMDB Rating:</strong>
-                                        <span id="title-imdb-rating">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Tagline:</strong>
-                                        <span id="title-tagline">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <button id="add-to-favourites">
-                                            Favourite
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="well">
-                                <h3>Plot</h3>
-                                <span id="title-overview">UNSET</span>
-                                <hr>
-                                <a href="#" target="_blank" class="btn btn-primary">
-                                    View IMDB
-                                </a>
+                                    </div>
+
+                                    <!-- show movie tagline -->
+                                    <div class="d-flex card-subtitle">
+                                        <h6 id="movie_tagline" class="text-muted mr-auto"></h6>
+                                    </div>
+                                </div>
+
+                                <!-- movie brief overview text -->
+                                <div id="movie_overview" class="card-text m-2">Loading...</div>
+
+                                <!-- movie IMDB link button -->
+                                <a id="imdb_button" href="#" class="btn btn-warning m-2">View More on IMDB</a>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
-            <!-- CLOSE: Show full movie information -->
+
+
+
+            <!-- <img id="backdrop_img" src="#" alt="Movie Backdrop" width="100%" height="auto">
+            
+            <div>
+                <ul id="movie_genres" class="list-group">
+                    <li class="list-group-item">Genres: </li>
+                </ul>
+            </div>
+            
+            <div>
+                <button id="imdb_button" type="button" class="btn btn-warning">
+                    <a href="#">Visit on IMDB</a>
+                </button>
+            </div>
+            
+            <div id="movie_title">
+                <ul class="list-group">
+            
+                </ul>
+            </div>
+            
+            <div id="movie_overview" class="card">
+                <div class="card-body"></div>
+            </div>
+            
+            <img id="poster_image" class="img-fluid" src="#" alt="Movie Poster">
+            
+            <div id="movie_release_date" class="bg-white"></div>
+            <div id="movie_runtime" class="bg-white"></div>
+            <div id="movie_tagline" class="bg-white"></div>
+            <div id="movie_vote_average" class="bg-white"></div> -->
+
+
+
+
+
 
         </div>
         <!-- CLOSE: row div -->
@@ -136,14 +179,13 @@
     <!-- CLOSE: root div -->
 
 
-    <!-- Custom script: -->
-    <link rel="stylesheet" href="./resources/css/main.css">
-
+    <link rel="stylesheet" href="./resources/fontawesome/css/all.css">
     <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
 
     <!-- Custom CSS and JS: -->
-    <link rel="stylesheet" href="./resources/css/index.css">
-    <script type="text/javascript" src="./resources/js/index.js"></script>
+    <link rel="stylesheet" href="./resources/css/main.css">
+    <link rel="stylesheet" href="./resources/css/movie.css">
+    <script type="text/javascript" src="./resources/js/movie.js"></script>
 
     <!-- netlify identity user login library: -->
     <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>

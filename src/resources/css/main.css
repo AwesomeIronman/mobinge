@@ -8,14 +8,10 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a90329', endColorstr='#6d0019',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 
-body {
-  min-width: 100%;
-  min-height: 100%;
-}
-
 /* navbar is fixed to the top */
 body {
-  min-height: 75rem;
+  min-width: 100%;
+  min-height: 100vh;
   padding-top: 40px;
 }
 
