@@ -1,16 +1,17 @@
 $(document).ready(() => {
+
   let tmdbid = JSON.parse(localStorage.getItem("info_to_open"));
-  let movie_info = fetch_data(tmdbid.id, "movie")
+
+  let movie_info = fetch_movie_info(tmdbid.id, "movie")
     .then(data => {
       console.log('Data: ', data);
       showMovieInfo(data);
     });
 
-
 });
 // JQuery OnReady Close
 
-async function fetch_data(tmdbid, title_type) {
+async function fetch_movie_info(tmdbid, title_type) {
   return await fetch('/.netlify/functions/tmdb-data',
     {
       method: "POST",
