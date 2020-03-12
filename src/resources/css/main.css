@@ -15,6 +15,10 @@ body {
   padding-top: 40px;
 }
 
+nav {
+  background: radial-gradient(ellipse at center, #a90329 0%,#8f0222 44%,#6d0019 100%);
+}
+
 .navbar {
   padding: 0rem 0rem 0rem 2rem;
 }
