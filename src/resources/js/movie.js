@@ -27,19 +27,12 @@ async function fetch_movie_info(tmdbid, title_type) {
 function showMovieInfo(movieData) {
   // $("#backdrop_img")[0].src = `https://image.tmdb.org/t/p/w1280${movieData.backdrop_path}`;
 
-  let genres = "";
-  (movieData.genres).forEach(element => {
-    genres += `${element.name}, `;
-  });
-  $("#movie_genres > span#genres")[0].textContent = genres;
-
-  // $("#imdb_button > a")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
+  $("#poster_image")[0].src = `https://image.tmdb.org/t/p/w342${movieData.poster_path}`;
 
   $("#movie_title")[0].textContent = movieData.title ? movieData.title : movieData.name;
 
-  $("#movie_overview")[0].textContent = movieData.overview ? movieData.overview : "Unavailable";
-
-  $("#poster_image")[0].src = `https://image.tmdb.org/t/p/w342${movieData.poster_path}`;
+  // Movie vote/rating
+  $("#movie_rating > span")[0].textContent = `${movieData.vote_average}/10`;
 
   // To create date string in format: 30th April 2008
   var monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -53,12 +46,30 @@ function showMovieInfo(movieData) {
   // Movie runtime
   let hours = Math.floor(movieData.runtime / 60);
   let minutes = movieData.runtime % 60;
-  $("#movie_runtime > span#runtime")[0].textContent = `${hours} hours and ${minutes} minutes`
+  $("#movie_runtime > span#runtime")[0].textContent = `${hours} hours and ${minutes} minutes`;
+
+  // Generate movie string i.e. add "," and "." from genres array
+  let genres = "";
+  (movieData.genres).forEach(function (i, idx, array) {
+    if (idx === array.length - 1) {
+      genres += `${i.name}.`;
+    } else {
+      genres += `${i.name}, `;
+    }
+  });
+  $("#movie_genres > span#genres")[0].textContent = genres;
 
   // Movie tagline
   $("#movie_tagline")[0].textContent = `Tagline: ${movieData.tagline}`;
-  // Movie vote/rating
-  $("#movie_rating > span")[0].textContent = `${movieData.vote_average}/10`;
+
+  $("#movie_overview")[0].textContent = movieData.overview ? movieData.overview : "Unavailable";
+
+  $("#imdb_button")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
+
+  $("#movie_favourite > button").data("title_type", "movie");
+  $("#movie_favourite > button").data("titleID", movieData.id);
+  $("#movie_favourite > button").on('click', { event: event }, toggleFavourite)
+
 }
 
 function populateTopList(data) {
@@ -97,10 +108,8 @@ function handleData(data) {
 }
 
 async function toggleFavourite(event) {
-  let titleType = $(this).data("titleType")
-  let titleID = $(this).data("titleID")
-
-  console.log(titleType);
+  let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
+  console.log(title_type);
   console.log(titleID);
 
   // Get favourites from localstorage
@@ -108,13 +117,13 @@ async function toggleFavourite(event) {
 
   // search for given title ID in localstorage
   let title_local_index
-  if (titleType === "movie") {
+  if (title_type === "movie") {
     title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
   } else {
     title_local_index = localFavourites.findIndex(fav => fav.tv === titleID)
   }
 
-  // If it is already favourite
+  // Remove from favourites, if it is already favourite
   if (title_local_index > -1) {
     console.log('Removing from favourites');
 
@@ -123,12 +132,17 @@ async function toggleFavourite(event) {
         method: 'POST', body: JSON.stringify({
           userID: netlifyIdentity.currentUser().id,
           operation: "remove-from-favourites",
-          titleType: $(this).data("titleType"),
-          titleID: $(this).data("titleID")
+          titleType: title_type,
+          titleID: titleID
         })
       }
     )
-      .then($("#search-info #movie #add-to-favourites").text("Favourite"))
+
+      .then(res => {
+        $("#fav_status")[0].textContent = "Add to favourites";
+        console.log("movie-favourite: ");
+        console.log(res);
+      })
 
       .catch(error => {
         console.error('Error:', error);
@@ -147,23 +161,24 @@ async function toggleFavourite(event) {
         method: 'POST', body: JSON.stringify({
           userID: netlifyIdentity.currentUser().id,
           operation: "add-to-favourites",
-          titleType: $(this).data("titleType"),
-          titleID: $(this).data("titleID")
+          titleType: title_type,
+          titleID: titleID
         })
       }
     )
-      .then($("#search-info #movie #add-to-favourites").text("Added to favourites"))
+      .then(res => {
+        console.log('movie-favourite: ');
+        console.log(res);
+        $("#fav_status")[0].textContent = "Added to favourites";
+        $("#movie_favourite > button > i")[0].style = "color: pink";
+      })
 
-      .catch(error => {
-        console.error('Error:', error);
-      });
+      .catch(error => { console.log('Error:'); console.error(error); });
 
-    localFavourites.push({ [titleType]: titleID })
+    localFavourites.push({ [title_type]: titleID })
 
     localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
   }
-
-
 }
 
 async function openMovieInfo(tmdbid, title_type) {

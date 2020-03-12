@@ -72,70 +72,79 @@
                     </div>
 
                     <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-body">
+                        <div class="card p-3">
+                            <div class="card-header">
 
-                                <div class="border-bottom p-3">
-                                    <div class="d-flex card-title">
-                                        <!-- show movie title/name -->
-                                        <h4 id="movie_title" class="mr-auto">Loading...</h4>
+                                <div class="d-flex">
+                                    <!-- show movie title/name -->
+                                    <h4 id="movie_title">Loading...</h4>
 
-                                        <!-- show rating -->
-                                        <h5 id="movie_rating" class="align-self-end">
-                                            <i class="fas fa-star" style="color: #FFCA28;"></i>
-                                            <span class="text-muted">Loading...</span>
-                                        </h5>
-                                    </div>
-
-                                    <div class="d-flex card-title">
-                                        <!-- show release date -->
-                                        <h6 id="movie_release_date" class="mr-auto">
-                                            <span id="release_status" class="text-muted mr-2">Loading...</span>
-                                            <i class="fas fa-calendar" style="color: #6c757d;"></i>
-                                            <span id="release_date" class="text-muted">Loading...</span>
-                                        </h6>
-
-                                        <!-- show release date -->
-                                        <h6 id="movie_runtime" class="align-self-end">
-                                            <span class="text-muted mr-2">Movie Runtime: </span>
-                                            <i class="fas fa-hourglass-end" style="color: #6c757d;"></i>
-                                            <span id="runtime" class="text-muted">Loading...</span>
-                                        </h6>
-                                    </div>
-
-
-                                    <div class="d-flex card-title">
-                                        <!-- show movie genres -->
-                                        <h6 id="movie_genres" class="mr-auto">
-                                            <span class="text-muted mr-2">Genres: </span>
-                                            <span id="genres" class="text-muted">Loading...</span>
-                                        </h6>
-
-
-                                    </div>
-
-                                    <!-- show movie tagline -->
-                                    <div class="d-flex card-subtitle">
-                                        <h6 id="movie_tagline" class="text-muted mr-auto"></h6>
-                                    </div>
+                                    <!-- show rating -->
+                                    <h4 id="movie_rating" class="ml-3">
+                                        <i class="fas fa-star align-text-bottom" style="color: #FFCA28;"></i>
+                                        <span class="text-muted">Loading...</span>
+                                    </h4>
                                 </div>
 
+                                <div class="d-flex">
+                                    <!-- show release date -->
+                                    <h6 id="movie_release_date">
+                                        <span id="release_status" class="text-muted mr-2">Loading...</span>
+                                        <i class="fas fa-calendar" style="color: #6c757d;"></i>
+                                        <span id="release_date" class="text-muted">Loading...</span>
+                                    </h6>
+
+                                    <!-- show release date -->
+                                    <h6 id="movie_runtime" class="ml-3">
+                                        <span class="text-muted mr-2">Movie Runtime: </span>
+                                        <i class="fas fa-hourglass-end" style="color: #6c757d;"></i>
+                                        <span id="runtime" class="text-muted">Loading...</span>
+                                    </h6>
+                                </div>
+
+                                <div class="d-flex">
+                                    <!-- show movie genres -->
+                                    <h6 id="movie_genres">
+                                        <span class="text-muted mr-2">Genres: </span>
+                                        <span id="genres" class="text-muted">Loading...</span>
+                                    </h6>
+
+                                    <!-- Favourite movie button -->
+                                    <h6 id="movie_favourite" class="ml-3">
+                                        <button class="rounded px-2 py-1" style="background-color: #6c757d;">
+                                            <i class="fas fa-heart" style="color: white;"></i>
+                                            <span id="fav_status">Loading...</span>
+                                        </button>
+                                    </h6>
+                                </div>
+
+                                <div class="d-flex">
+                                    <!-- show movie tagline -->
+                                    <h6 id="movie_tagline" class="text-muted"></h6>
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-body">
                                 <!-- movie brief overview text -->
                                 <div id="movie_overview" class="card-text m-2">Loading...</div>
 
                                 <!-- movie IMDB link button -->
-                                <a id="imdb_button" href="#" class="btn btn-warning m-2">View More on IMDB</a>
+                                <a id="imdb_button" href="#" target="_blank" class="btn btn-warning m-2">View More on IMDB</a>
                             </div>
+
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
 
         </div>
-        <!-- CLOSE: row div -->
+
+
+    </div>
+    <!-- CLOSE: row div -->
 
 
     </div>
