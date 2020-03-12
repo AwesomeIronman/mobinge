@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Movie/Series Guide</title>
+
+
+    <!-- Bootstrap CSS: -->
+    <link rel="stylesheet" href="./resources/css/bootstrap.css">
+
+    <!-- JQuery 3.4.1: -->
+    <script type="text/javascript" src="./resources/js/jquery.js"></script>
+
+</head>
+
+<body>
+    <div id="root-div" class="container-fluid">
+
+        <!-- Navbar: -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+
+            <a class="navbar-brand" href="search">Mobinge</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a href="/search" class="nav-link">Search</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/calendar" class="nav-link">Calendar</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" id="btn-upcoming" class="nav-link">Upcoming</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" id="btn-now-playing" class="nav-link">Now Playing</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" id="btn-popular" class="nav-link">Popular</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" id="btn-trending" class="nav-link">Trending</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="/favourites" class="nav-link active">Favourites</a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item">
+                        <div class="btn-ntl-login" data-netlify-identity-button></div>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+
+        <div class="row justify-content-center">
+
+            <div class="col-9 round">
+
+                <h2>My Favourites</h2>
+
+                <div id="favourites_container" class="row"></div>
+
+                <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                <div id="fullSample" class="col-md-3" style="display: none;">
+                    <div class="card">
+                        <img src="" class="rounded img-fluid"
+                            onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
+                        <div class="overlay rounded">
+                            <div class="movie p-2">
+                                <p><span class="movie-title">Movie name</span></p>
+                                <p><span class="movie-rating">Rating</span></p>
+                                <p><span class="movie-release-year">Released Year</span></p>
+                                <a onclick="" href="#">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Side div to show top lists -->
+            <aside class="col-3 order-12" id="top-list" style="display: none; top: -250px;">
+                <ul class="list-group">
+                    <!-- Add all the basic search result output here through JavaScript -->
+                </ul>
+            </aside>
+            <!-- CLOSE: Side div to show top lists -->
+
+
+        </div>
+        <!-- CLOSE: row div -->
+
+
+    </div>
+    <!-- CLOSE: root div -->
+
+
+    <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
+
+    <!-- netlify identity user login library: -->
+    <script type="text/javascript" src="./resources/js/netlify-identity-widget.js"></script>
+
+    <!-- Custom CSS and JS: -->
+    <link rel="stylesheet" href="./resources/css/main.css">
+    <!-- <link rel="stylesheet" href="./resources/css/search_page.css"> -->
+    <script type="text/javascript" src="./resources/js/favourites.js"></script>
+    <!-- <script type="text/javascript" src="./resources/js/user_data.js"></script> -->
+</body>
+
+</html>

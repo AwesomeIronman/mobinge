@@ -14,7 +14,7 @@ $(document).ready(() => {
 async function storeFavourites() {
    console.log('Gettings stored favourites from firestore');
 
-   let user_data = await fetch('/.netlify/functions/firestore-data',
+   await fetch('/.netlify/functions/firestore-data',
       {
          method: 'POST', body: JSON.stringify({
             userID: netlifyIdentity.currentUser().id,
@@ -24,14 +24,20 @@ async function storeFavourites() {
    )
       .then(res => res.json())
 
+      .then(res => {
+         console.log('StoreFavourites():retrieved: '); console.log(res);
+
+         if (Array.isArray(res.favourites)) {
+            localStorage.setItem("user_favourites", JSON.stringify(res.favourites));
+         } else {
+            localStorage.setItem("user_favourites", JSON.stringify([]));
+         }
+
+      })
+
       .catch(error => {
-         console.error('Error:', error);
+         console.error('Error:'); console.error(error);
       });
-
-   console.log('StoreFavourites():user_data: ', user_data);
-
-   localStorage.setItem("user_favourites", JSON.stringify(user_data.favourites))
-   
 }
 
 async function removeStoredFavourites() {
