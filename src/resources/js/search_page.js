@@ -3,7 +3,8 @@ $(document).ready(() => {
    showNowPlayingCarousel()
 
    // Add event listener to search on pressing any key
-   $("#searchText").on('keyup', event => partialSearch(event));
+   // Delay and search only once per 750ms
+   $("#searchText").on('keyup', event => delay(partialSearch, 750)(event));
 
    // Add event listener to search on pressing Enter key
    $("#searchForm").on('submit', event => fullSearch(event));
@@ -26,8 +27,10 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
+window.timer = 0
+
 async function partialSearch(event) {
-   event.preventDefault();
+   event.preventDefault();   
 
    let search = $('#searchText').val()
    let searchType = $('#searchType')[0].value
@@ -49,6 +52,7 @@ async function partialSearch(event) {
 
 async function fullSearch(event) {
    event.preventDefault();
+   clearTimeout(window.timer)
 
    $("#searchText").blur()  // Lose search box focus to stop keypress events from getting triggered
 
@@ -369,5 +373,13 @@ async function openMovieInfo(tmdbid, title_type) {
       window.location.href = "/series"
    } else {
       window.location.href = "/movie"
+   }
+}
+
+function delay(fn, ms) {
+   
+   return function (...args) {
+      clearTimeout(window.timer)
+      window.timer = setTimeout(fn.bind(this, ...args), ms || 0)
    }
 }
