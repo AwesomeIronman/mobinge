@@ -3,7 +3,7 @@ $(document).ready(() => {
    showNowPlayingCarousel()
 
    // Add event listener to search on pressing any key
-   $("#searchText").on('keyup', event => delay(partialSearch, 1000)(event));
+   $("#searchText").on('keyup', event => partialSearch(event));
 
    // Add event listener to search on pressing Enter key
    $("#searchForm").on('submit', event => fullSearch(event));
@@ -28,6 +28,7 @@ $(document).ready(() => {
 
 async function partialSearch(event) {
    event.preventDefault();
+
    let search = $('#searchText').val()
    let searchType = $('#searchType')[0].value
 
@@ -40,14 +41,14 @@ async function partialSearch(event) {
       if (Array.isArray(response.results)) {
          showPartialResult(response.results)
       } else {
-         console.debug('Testing:partial-search-result: ', response);
+         console.debug('partial-search-result: ', response);
       }
 
    }
 }
 
 async function fullSearch(event) {
-   event.preventDefault()
+   event.preventDefault();
 
    $("#searchText").blur()  // Lose search box focus to stop keypress events from getting triggered
 
@@ -118,7 +119,7 @@ function showFullResult(result) {
             sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
             sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
             sampleNode.querySelector(".overlay > .movie > a")
-               .setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
+               .setAttribute("onclick", `openMovieInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
 
             $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
          }
@@ -135,42 +136,6 @@ function showFullResult(result) {
 }
 
 
-async function getTitleInfo(tmdbid, title_type) {
-   let titleData = await getResponse({
-      path: `${title_type}/${tmdbid}`,
-      query_params: "language=en-US&append_to_response=videos,images"
-   })
-
-   console.log('Testing:title-info: ', titleData)
-
-   showTitleInfo(titleData, title_type)
-}
-
-
-function showTitleInfo(info, title_type) {
-   $("#search-info #movie .row .img-fluid")[0].src = `https://image.tmdb.org/t/p/w400${info.poster_path}`;
-   $("#search-info #movie div:nth-child(2) #title-name")[0].textContent = info.title ? info.title : info.name;
-   $("#search-info #movie div:nth-child(2) #title-imdb-rating")[0].textContent = info.vote_average;
-   $("#search-info #movie div:nth-child(2) #title-release-date")[0].textContent = info.release_date;
-   $("#search-info #movie div:nth-child(2) #title-runtime")[0].textContent = info.runtime + ' minutes';
-   $("#search-info #movie div:nth-child(2) #title-tagline")[0].textContent = info.tagline ? info.tagline : "UNSET";
-
-
-   $("#search-info #movie #add-to-favourites").data("titleType", title_type)
-   $("#search-info #movie #add-to-favourites").data("titleID", info.id)
-
-   $("#search-info #movie #add-to-favourites").on('click', { event: event }, toggleFavourite);
-
-   $("#search-info #movie #title-overview")[0].textContent = info.overview;
-   $("#search-info #movie div.row div.well a.btn.btn-primary")[0].href = `http://imdb.com/title/${info.imdb_id}`;
-
-   hideTopList();
-   $("#search-box").css("display", "none"); // Hide search-box along with partial-search-result
-   $("#full-search-result").css("display", "none"); // Hide full-search-result
-   $("#carousel-effect").css("display", "none"); // Hide now-playing carousel effect
-   $("#search-info").css("display", "block"); // Display selected titles information
-}
-
 function populateTopList(data) {
    $("#top-list .list-group").empty();
 
@@ -182,7 +147,7 @@ function populateTopList(data) {
    $.each(data, (index, movie) => {
       if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
 
-         sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type}')`);
+         sampleNode.setAttribute("onclick", `openMovieInfo('${movie.id}', '${movie.media_type}')`);
          sampleNode.querySelector("img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
          sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
          sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
@@ -242,7 +207,7 @@ async function showNowPlayingCarousel() {
 
       $.each(nowPlayingData.results, (index, movie) => {
          $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
-          src="https://image.tmdb.org/t/p/w185${movie.poster_path}" onclick="getTitleInfo('${movie.id}', 'movie')"  /></li>`
+          src="https://image.tmdb.org/t/p/w185${movie.poster_path}" onclick="openMovieInfo('${movie.id}', 'movie')"  /></li>`
       });
 
       // Enable carousel effect
@@ -393,14 +358,6 @@ async function toggleFavourite(event) {
    }
 
 
-}
-
-function delay(fn, ms = 0) {
-   let timer = 0;
-   return function (...args) {
-      clearTimeout(timer)
-      timer = setTimeout(fn.bind(this, ...args), ms)
-   }
 }
 
 async function openMovieInfo(tmdbid, title_type) {
