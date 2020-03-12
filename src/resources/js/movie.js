@@ -66,10 +66,35 @@ function showMovieInfo(movieData) {
 
   $("#imdb_button")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
 
+  // Set movie ID as data attribute on the button (to be reused later)
   $("#movie_favourite > button").data("title_type", "movie");
   $("#movie_favourite > button").data("titleID", movieData.id);
   $("#movie_favourite > button").on('click', { event: event }, toggleFavourite)
 
+  // Set whether already favourite or not
+  let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
+  let favouritesIndex = localFavourites.findIndex(i => i.movie === movieData.id)
+  if (favouritesIndex !== -1) {
+    $("#movie_favourite span.non_favourite").toggleClass("d-none")
+    $("#movie_favourite span.favourite").toggleClass("d-none")
+    $("#movie_favourite > button > i").css("color", "pink");
+  }
+
+
+  // Add to watched movies list
+  // Set movie ID as data attribute on the button (to be reused later)
+  $("#movie_watched > button").data("title_type", "movie");
+  $("#movie_watched > button").data("titleID", movieData.id);
+  $("#movie_watched > button").on('click', { event: event }, toggleWatched)
+
+  // Set whether already watched or not
+  let localWatched = JSON.parse(localStorage.getItem("user_watched"))
+  let watchedIndex = localWatched.findIndex(j => j.movie === movieData.id)
+  if (watchedIndex !== -1) {
+    $("#movie_watched span.non_watched").toggleClass("d-none")
+    $("#movie_watched span.watched").toggleClass("d-none")
+    $("#movie_watched > button > i").css("color", "cornflowerblue");
+  }
 }
 
 function populateTopList(data) {
@@ -139,8 +164,10 @@ async function toggleFavourite(event) {
     )
 
       .then(res => {
-        $("#fav_status")[0].textContent = "Add to favourites";
-        console.log("movie-favourite: ");
+        $("#movie_favourite span.non_favourite").toggleClass("d-none")
+        $("#movie_favourite span.favourite").toggleClass("d-none")
+        $("#movie_favourite > button > i").css("color", "white");
+        console.log("movie-favourite:response: ");
         console.log(res);
       })
 
@@ -167,10 +194,11 @@ async function toggleFavourite(event) {
       }
     )
       .then(res => {
-        console.log('movie-favourite: ');
+        $("#movie_favourite span.non_favourite").toggleClass("d-none")
+        $("#movie_favourite span.favourite").toggleClass("d-none")
+        $("#movie_favourite > button > i").css("color", "pink");
+        console.log('movie-favourite:response: ');
         console.log(res);
-        $("#fav_status")[0].textContent = "Added to favourites";
-        $("#movie_favourite > button > i")[0].style = "color: pink";
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
@@ -178,6 +206,83 @@ async function toggleFavourite(event) {
     localFavourites.push({ [title_type]: titleID })
 
     localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
+  }
+}
+
+async function toggleWatched(event) {
+  let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
+  console.log(title_type);
+  console.log(titleID);
+
+  // Get favourites from localstorage
+  let watchedList = JSON.parse(localStorage.getItem("user_watched"))
+
+  // search for given title ID in localstorage
+  let title_local_index
+  if (title_type === "movie") {
+    title_local_index = watchedList.findIndex(fav => fav.movie === titleID)
+  } else {
+    title_local_index = watchedList.findIndex(fav => fav.tv === titleID)
+  }
+
+  // Remove from watched list, if it is already watched
+  if (title_local_index > -1) {
+    console.log('Removing from watched list');
+
+    fetch('/.netlify/functions/firestore-data',
+      {
+        method: 'POST', body: JSON.stringify({
+          userID: netlifyIdentity.currentUser().id,
+          operation: "remove-from-watched-list",
+          titleType: title_type,
+          titleID: titleID
+        })
+      }
+    )
+
+      .then(res => {
+        $("#movie_watched span.non_watched").toggleClass("d-none")
+        $("#movie_watched span.watched").toggleClass("d-none")
+        $("#movie_watched > button > i").css("color", "white");
+        console.log("movie-add-watched:response: ");
+        console.log(res);
+      })
+
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+    watchedList.splice(title_local_index, 1);
+
+    localStorage.setItem("user_watched", JSON.stringify(watchedList));
+
+
+  } else {
+    console.log('Adding to watched list');
+
+    fetch('/.netlify/functions/firestore-data',
+      {
+        method: 'POST', body: JSON.stringify({
+          userID: netlifyIdentity.currentUser().id,
+          operation: "add-to-watched-list",
+          titleType: title_type,
+          titleID: titleID
+        })
+      }
+    )
+      .then(res => {
+        $("#movie_watched span.non_watched").toggleClass("d-none")
+        $("#movie_watched span.watched").toggleClass("d-none")
+        $("#movie_watched > button > i").css("color", "cornflowerblue");
+        console.log('movie-add-watched:response: ');
+        console.log(res);
+      })
+
+      .catch(error => { console.log('Error:'); console.error(error); });
+
+    watchedList.push({ [title_type]: titleID })
+
+    localStorage.setItem("user_watched", JSON.stringify(watchedList));
   }
 }
 

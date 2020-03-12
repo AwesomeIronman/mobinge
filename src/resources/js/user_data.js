@@ -1,12 +1,21 @@
 $(document).ready(() => {
    removeStoredFavourites()
+   removeStoredWatched()
 
-   netlifyIdentity.on('login', storeFavourites);
-   netlifyIdentity.on('logout', removeStoredFavourites);
+   netlifyIdentity.on('login', () => {
+      storeFavourites();
+      storeWatched();
+   });
+
+   netlifyIdentity.on('logout', () => {
+      removeStoredFavourites();
+      removeStoredWatched();
+   });
 
    // Get and store favourites only if user has logged in
    if (netlifyIdentity.currentUser() !== null) {
       storeFavourites()
+      storeWatched()
    }
 
 });
@@ -44,4 +53,39 @@ async function removeStoredFavourites() {
    console.log('Removing favourites from localstorage');
 
    localStorage.setItem("user_favourites", JSON.stringify([]))
+}
+
+async function storeWatched() {
+   console.log('Gettings stored watched list from firestore');
+
+   await fetch('/.netlify/functions/firestore-data',
+      {
+         method: 'POST', body: JSON.stringify({
+            userID: netlifyIdentity.currentUser().id,
+            operation: "get-data"
+         })
+      }
+   )
+      .then(res => res.json())
+
+      .then(res => {
+         console.log('StoreWatched():retrieved: '); console.log(res);
+
+         if (Array.isArray(res.watchedlist)) {
+            localStorage.setItem("user_watched", JSON.stringify(res.watchedlist));
+         } else {
+            localStorage.setItem("user_watched", JSON.stringify([]));
+         }
+
+      })
+
+      .catch(error => {
+         console.error('Error:'); console.error(error);
+      });
+}
+
+async function removeStoredWatched() {
+   console.log('Removing watched list from localstorage');
+
+   localStorage.setItem("user_watched", JSON.stringify([]))
 }

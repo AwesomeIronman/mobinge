@@ -10,6 +10,8 @@ body {
 
 /* navbar is fixed to the top */
 body {
+  font-family: 'Poppins', sans-serif;
+  
   min-width: 100%;
   min-height: 100vh;
   padding-top: 40px;

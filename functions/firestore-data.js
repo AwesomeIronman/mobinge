@@ -24,7 +24,28 @@ exports.handler = async function (event, context) {
 
         console.log('Operation: ', operation);
 
-        if (operation === "add-to-favourites") {
+        if (operation === "add-to-watched-list") {
+            let docRef = db.collection('users').doc(userID);
+
+            let response = await docRef.update(
+                {
+                    watchedlist: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                }
+            );
+
+            console.log('add-to-watched-list: ', response);
+
+        } else if (operation === "remove-from-watched-list") {
+            let docRef = db.collection('users').doc(userID);
+
+            let response = await docRef.update(
+                {
+                    watchedlist: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                }
+            );
+            console.log('remove-from-watched-list: ', response);
+
+        } else if (operation === "add-to-favourites") {
             let docRef = db.collection('users').doc(userID);
 
             let response = await docRef.update(
@@ -33,7 +54,7 @@ exports.handler = async function (event, context) {
                 }
             );
 
-            console.log('add-to-favourites: ',response);
+            console.log('add-to-favourites: ', response);
 
         } else if (operation === "remove-from-favourites") {
             let docRef = db.collection('users').doc(userID);
@@ -63,7 +84,7 @@ exports.handler = async function (event, context) {
             } else {
                 return {
                     statusCode: 200,
-                    body: JSON.stringify({ favourites: [] })
+                    body: JSON.stringify({ favourites: [], watchedlist: [] })
                 }
             }
 

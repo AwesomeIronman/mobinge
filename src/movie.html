@@ -117,7 +117,17 @@
                                     <h6 id="movie_favourite" class="ml-3">
                                         <button class="rounded px-2 py-1" style="background-color: #6c757d;">
                                             <i class="fas fa-heart" style="color: white;"></i>
-                                            <span id="fav_status">Loading...</span>
+                                            <span class="non_favourite">Add to favourites</span>
+                                            <span class="favourite d-none">Added to favourites</span>
+                                        </button>
+                                    </h6>
+
+                                    <!-- Favourite movie button -->
+                                    <h6 id="movie_watched" class="ml-3">
+                                        <button class="rounded px-2 py-1" style="background-color: #6c757d;">
+                                            <i class="fas fa-eye" style="color: white;"></i>
+                                            <span class="non_watched">Add to watched</span>
+                                            <span class="watched d-none">Watched</span>
                                         </button>
                                     </h6>
                                 </div>
@@ -166,6 +176,9 @@
     <link rel="stylesheet" href="./resources/css/movie.css">
     <script type="text/javascript" src="./resources/js/movie.js"></script>
     <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
+
+    <!-- Poppins font -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
 </body>
 
 </html>
