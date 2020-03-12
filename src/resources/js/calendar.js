@@ -1,8 +1,6 @@
 $(document).ready(() => {
   initCalendar()
 
-  $("#calendar-container").css("margin-top", "15%");
-
   // Add event to show upcoming movies list
   $('#btn-upcoming').on('click', { event: event }, showUpcomingMovies);
 
@@ -340,8 +338,48 @@ async function initCalendar() {
     },
     eventClick: function (info) {
       console.log(info.event.id, "movie");
+      showMovieInfo(info.event.id);
     }
   });
 
   calendar.render();
+}
+
+async function showMovieInfo(tmdbid) {
+  await getResponse(
+    {
+      path: `movie/${tmdbid}`,
+      query_params: "language=en-US"
+    }
+  )
+    .then(res => {
+      console.log('showMovieInfo response: ');
+      console.log(res);
+
+
+      $("#mega > div > img")[0].src = res.poster_path ?
+        `https://image.tmdb.org/t/p/w300${res.poster_path}` : "../resources/images/imageNotFound.png";
+
+      $("#mega > div > div > div > p:nth-child(1) > span > span")[0].textContent = res.title ? res.title : res.name;
+
+      $("#mega > div > div > div > p:nth-child(2) > span > span")[0].textContent = `${res.vote_average} / 10`;
+
+      $("#mega > div > div > div > p:nth-child(3) > span > span")[0].textContent = res.release_date;
+
+      $("#mega > div > div > div > a")[0].setAttribute("onclick", `openMovieInfo('${res.id}', 'movie')`);
+
+    })
+
+}
+
+async function openMovieInfo(tmdbid, title_type) {
+  // Set the ID of the movie/series user clicked in localstorage to use it later
+  localStorage.setItem("info_to_open", JSON.stringify(
+    { id: tmdbid }
+  ))
+  if (title_type === "tv") {
+    window.location.href = "/series"
+  } else {
+    window.location.href = "/movie"
+  }
 }

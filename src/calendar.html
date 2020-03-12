@@ -64,49 +64,50 @@
 
       </nav>
 
-      <div class="row">
+      <div class="row justify-content-center">
 
-         <div class="card" id="calendar-container">
-            <div id='calendar'></div>
+         <div class="col-md-6">
+            <div class="card h-100" id="calendar-container">
+               <div id='calendar'></div>
+            </div>
          </div>
 
-         <div class="card" id="day-title-info">
-            <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-            <div id="mega">
-               <div class="card">
-                  <img src="" class="rounded img-fluid"
-                     onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
-                  <div class="overlay rounded">
-                     <div class="movie p-2">
-                        <p><span class="movie-title">Movie name</span></p>
-                        <p><span class="movie-rating">Rating</span></p>
-                        <p><span class="movie-release-year">Released Year</span></p>
-                        <a onclick="" href="#">Details</a>
+         <div class="col-md-3">
+
+            <div class="card h-100" id="day-title-info">
+               <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+               <div id="mega">
+                  <div class="card">
+
+                     <img src="#" class="card-img-top img-fluid"
+                        onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
+
+                     <div class="overlay rounded">
+                        <div class="movie p-2">
+                           <p>
+                              <span class="movie-title">Movie name:
+                                 <span class="title"></span>
+                              </span>
+                           </p>
+                           <p>
+                              <span class="movie-rating">Movie rating:
+                                 <span class="rating"></span>
+                              </span>
+                           </p>
+                           <p>
+                              <span class="movie-release-year">Movie release date:
+                                 <span class="release-year"></span>
+                              </span>
+                           </p>
+                           <a onclick="" href="#">View More</a>
+                        </div>
                      </div>
-                  </div>
-               </div>
 
-            </div>
-         </div>
-
-
-         <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-         <div id="fullSample" class="col-md-3" style="display: none;">
-            <div class="card">
-               <img src="" class="rounded img-fluid"
-                  onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
-               <div class="overlay rounded">
-                  <div class="movie p-2">
-                     <p><span class="movie-title">Movie name</span></p>
-                     <p><span class="movie-rating">Rating</span></p>
-                     <p><span class="movie-release-year">Released Year</span></p>
-                     <a onclick="" href="#">Details</a>
                   </div>
                </div>
             </div>
 
          </div>
-
 
 
          <!-- Side div to show top lists -->
@@ -129,21 +130,21 @@
 
    <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
    <script type="text/javascript" src="./resources/js/moment.js"></script>
-   
+
    <link href='./resources/full-calendar/full-calendar-core.css' rel='stylesheet' />
    <link href='./resources/full-calendar/full-calendar-bootstrap.css' rel='stylesheet' />
    <link href='./resources/full-calendar/full-calendar-daygrid.css' rel='stylesheet' />
    <link href='./resources/full-calendar/full-calendar-list.css' rel='stylesheet' />
-   
+
    <script src='./resources/full-calendar/full-calendar-core.js'></script>
    <script src='./resources/full-calendar/full-calendar-interaction.js'></script>
    <script src='./resources/full-calendar/full-calendar-bootstrap.js'></script>
    <script src='./resources/full-calendar/full-calendar-daygrid.js'></script>
    <script src='./resources/full-calendar/full-calendar-list.js'></script>
-   
+
    <!-- netlify identity user login library: -->
    <script type="text/javascript" src="resources/js/netlify-identity-widget.js"></script>
-   
+
    <!-- Custom CSS and JS: -->
    <link rel="stylesheet" href="./resources/css/main.css">
    <link rel="stylesheet" href="./resources/css/calendar.css">
