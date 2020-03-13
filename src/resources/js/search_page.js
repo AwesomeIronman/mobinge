@@ -30,7 +30,7 @@ $(document).ready(() => {
 window.timer = 0
 
 async function partialSearch(event) {
-   event.preventDefault();   
+   event.preventDefault();
 
    let search = $('#searchText').val()
    let searchType = $('#searchType')[0].value
@@ -42,7 +42,8 @@ async function partialSearch(event) {
       })
 
       if (Array.isArray(response.results)) {
-         showPartialResult(response.results)
+         let filteredResults = filterTitles(response.results);
+         showPartialResult(await filteredResults)
       } else {
          console.debug('partial-search-result: ', response);
       }
@@ -67,7 +68,8 @@ async function fullSearch(event) {
       })
 
       if (Array.isArray(response.results)) {
-         showFullResult(response.results)
+         let filteredResult = filterTitles(response.results);
+         showFullResult(await filteredResult)
       } else {
          console.debug('Testing:full-search-result: ', response);
       }
@@ -98,7 +100,6 @@ function showPartialResult(result) {
 
    } else {
       sampleNode.innerHTML = "No result found!";
-
       $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
    }
 
@@ -118,7 +119,8 @@ function showFullResult(result) {
       $.each(result, (index, movie) => {
          if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
 
-            sampleNode.querySelector("img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
+            sampleNode.querySelector("img.img-fluid").src = movie.poster_path ?
+               `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "../resources/images/imageNotFound.png";
             sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
             sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
             sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
@@ -131,8 +133,7 @@ function showFullResult(result) {
 
    } else {
       sampleNode.innerHTML = "No result found!";
-
-      $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
+      $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
    }
 
    $("#partial-search-result").css("display", "none");
@@ -377,9 +378,14 @@ async function openMovieInfo(tmdbid, title_type) {
 }
 
 function delay(fn, ms) {
-   
+
    return function (...args) {
       clearTimeout(window.timer)
       window.timer = setTimeout(fn.bind(this, ...args), ms || 0)
    }
+}
+
+function filterTitles(data) {
+   // Remove regional movies
+   return data.filter(movie => movie.original_language === "en" || movie.original_language === "hi")
 }
