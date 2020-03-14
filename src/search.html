@@ -17,55 +17,51 @@
 </head>
 
 <body>
-    <div id="root-div" class="container-fluid">
 
-        <!-- Navbar: -->
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+    <!-- For stars background  -->
+    <section class="wrapper">
+        <div data-depth="0.2" id="stars"></div>
+        <div data-depth="0.4" id="stars2"></div>
+        <div data-depth="0.6" id="stars3"></div>
+    </section>
 
-            <a class="navbar-brand" href="search">Mobinge</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarCollapse">
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a href="/search" class="nav-link active">Search</a>
-                    </li>
+    <!-- Navbar: -->
+    <nav class="navbar navbar-dark navbar-expand-md">
 
-                    <li class="nav-item">
-                        <a href="/calendar" class="nav-link">Calendar</a>
-                    </li>
+        <a class="navbar-brand" href="./search.html">Mobinge</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a href="./search.html" class="nav-link active">Search</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a href="#" id="btn-upcoming" class="nav-link">Upcoming</a>
-                    </li>
+                <li class="nav-item">
+                    <a href="./calendar.html" class="nav-link">Calendar</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a href="#" id="btn-now-playing" class="nav-link">Now Playing</a>
-                    </li>
+                <li class="nav-item">
+                    <a href="./favourites.html" class="nav-link">Favourites</a>
+                </li>
 
-                    <li class="nav-item">
-                        <a href="#" id="btn-popular" class="nav-link">Popular</a>
-                    </li>
+                <li class="nav-item">
+                    <a href="./watched.html" class="nav-link">Watched List</a>
+                </li>
+            </ul>
 
-                    <li class="nav-item">
-                        <a href="#" id="btn-trending" class="nav-link">Trending</a>
-                    </li>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <div class="btn-ntl-login" data-netlify-identity-button></div>
+                </li>
+            </ul>
+        </div>
 
-                    <li class="nav-item">
-                        <a href="/favourites" class="nav-link">Favourites</a>
-                    </li>
-                </ul>
+    </nav>
 
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item">
-                        <div class="btn-ntl-login" data-netlify-identity-button></div>
-                    </li>
-                </ul>
-            </div>
-
-        </nav>
+    <div id="root-div" class="container">
 
         <div class="row">
 
@@ -161,64 +157,8 @@
             </aside>
             <!-- CLOSE: Side div to show top lists -->
 
-
-            <!-- OPEN: Show full movie information -->
-            <div class="container">
-                <div class="col-md-12" id="search-info" style="display: none;">
-                    <div id="movie" class="well">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img src="" class="img-fluid">
-                            </div>
-                            <div class="col-md-8">
-                                <h2 id="title-name">${movie.Title}</h2>
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <strong>Genre:</strong>
-                                        <span id="title-genre">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Released:</strong>
-                                        <span id="title-release-date">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Runtime:</strong>
-                                        <span id="title-runtime">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>IMDB Rating:</strong>
-                                        <span id="title-imdb-rating">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Tagline:</strong>
-                                        <span id="title-tagline">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <button id="add-to-favourites">
-                                            Favourite
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="well">
-                                <h3>Plot</h3>
-                                <span id="title-overview">UNSET</span>
-                                <hr>
-                                <a href="#" target="_blank" class="btn btn-primary">
-                                    View IMDB
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- CLOSE: Show full movie information -->
-
         </div>
         <!-- CLOSE: row div -->
-
 
     </div>
     <!-- CLOSE: root div -->
