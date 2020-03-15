@@ -79,7 +79,7 @@ exports.handler = async function (event, context) {
             if (data) {
                 return {
                     statusCode: 200,
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
                 }
             } else {
                 return {

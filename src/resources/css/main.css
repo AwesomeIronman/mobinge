@@ -14,7 +14,7 @@ body {
   padding: 0rem 0rem 0rem 2rem;
 }
 
-#navbarCollapse > ul.nav.navbar-nav.mr-auto > li > a:hover {
+.nav.navbar-nav > .nav-item:hover {
   border-radius: 0.25rem;
   background-color: rgba(0,0,0,0.2);
 }

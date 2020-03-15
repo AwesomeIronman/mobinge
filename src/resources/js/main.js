@@ -4,3 +4,8 @@ if ('scrollRestoration' in history) {
 }
 // This is needed if the user scrolls down during page load and you want to make sure the page is scrolled to the top once it's fully loaded.
 window.scrollTo(0, 0);
+
+$(document).ready(() => {
+   console.log('main JS');
+   
+});
