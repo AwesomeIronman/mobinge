@@ -11,3 +11,8 @@
 #mega {
   overflow-y: auto;
 }
+
+/* Calendar styling */
+.fc-event-container:hover {
+  cursor: pointer;
+}

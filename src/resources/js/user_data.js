@@ -1,7 +1,4 @@
 $(document).ready(() => {
-   removeStoredFavourites()
-   removeStoredWatched()
-
    netlifyIdentity.on('login', () => {
       storeFavourites();
       storeWatched();
@@ -11,12 +8,6 @@ $(document).ready(() => {
       removeStoredFavourites();
       removeStoredWatched();
    });
-
-   // Get and store favourites only if user has logged in
-   if (netlifyIdentity.currentUser() !== null) {
-      storeFavourites()
-      storeWatched()
-   }
 
 });
 
