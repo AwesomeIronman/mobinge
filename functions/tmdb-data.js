@@ -40,9 +40,6 @@ exports.handler = async function (event, context) {
             }
         }
 
-        console.log('options obj: '); console.log(options);
-
-
         let status, data;
 
         data = await fetch(URL, options)

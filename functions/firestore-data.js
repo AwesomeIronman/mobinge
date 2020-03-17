@@ -23,77 +23,84 @@ exports.handler = async function (event, context) {
 
         console.log('Operation: ', operation);
 
-        if (operation === "add-to-watched-list") {
-            let docRef = db.collection('users').doc(userID);
+        try {
+            if (operation === "add-to-watched-list") {
+                let docRef = db.collection('users').doc(userID);
 
-            let response = await docRef.update(
-                {
-                    watchedlist: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                let response = await docRef.update(
+                    {
+                        watchedlist: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                    }
+                );
+
+                console.log('add-to-watched-list: ', response);
+
+            } else if (operation === "remove-from-watched-list") {
+                let docRef = db.collection('users').doc(userID);
+
+                let response = await docRef.update(
+                    {
+                        watchedlist: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                    }
+                );
+                console.log('remove-from-watched-list: ', response);
+
+            } else if (operation === "add-to-favourites") {
+                let docRef = db.collection('users').doc(userID);
+
+                let response = await docRef.update(
+                    {
+                        favourites: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                    }
+                );
+
+                console.log('add-to-favourites: ', response);
+
+            } else if (operation === "remove-from-favourites") {
+                let docRef = db.collection('users').doc(userID);
+
+                let response = await docRef.update(
+                    {
+                        favourites: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                    }
+                );
+                console.log('remove-from-favourites: ', response);
+
+            } else if (operation === "get-data") {
+
+                let docRef = db.collection('users').doc(userID);
+                docRef.set({}, { merge: true });
+
+                let data = await docRef.get()
+                    .then(snapshot => snapshot.data());
+
+                console.log('get-data: ', data);
+
+                if (data) {
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
+                    }
+                } else {
+                    return {
+                        statusCode: 200,
+                        body: JSON.stringify({ favourites: [], watchedlist: [] })
+                    }
                 }
-            );
 
-            console.log('add-to-watched-list: ', response);
-
-        } else if (operation === "remove-from-watched-list") {
-            let docRef = db.collection('users').doc(userID);
-
-            let response = await docRef.update(
-                {
-                    watchedlist: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
-                }
-            );
-            console.log('remove-from-watched-list: ', response);
-
-        } else if (operation === "add-to-favourites") {
-            let docRef = db.collection('users').doc(userID);
-
-            let response = await docRef.update(
-                {
-                    favourites: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
-                }
-            );
-
-            console.log('add-to-favourites: ', response);
-
-        } else if (operation === "remove-from-favourites") {
-            let docRef = db.collection('users').doc(userID);
-
-            let response = await docRef.update(
-                {
-                    favourites: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
-                }
-            );
-            console.log('remove-from-favourites: ', response);
-
-        } else if (operation === "get-data") {
-
-            let docRef = db.collection('users').doc(userID);
-            docRef.set({}, { merge: true });
-
-            let data = await docRef.get()
-                .then(snapshot => snapshot.data());
-
-            console.log('get-data: ', data);
-
-            if (data) {
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
-                }
-            } else {
-                return {
-                    statusCode: 200,
-                    body: JSON.stringify({ favourites: [], watchedlist: [] })
-                }
             }
-
+        } catch (error) {
+            console.log(error.errorType)
+            return {
+                statusCode: 500,
+                body: JSON.stringify('Error')
+            }
         }
 
         return {
             statusCode: 200,
             body: JSON.stringify('action complete')
         }
-
-
+        
     }
 }
