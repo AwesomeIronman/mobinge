@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const fetch = require('node-fetch-npm');
 
 exports.handler = async function (event, context) {
 
@@ -12,11 +12,14 @@ exports.handler = async function (event, context) {
 
         let URL = `${TMDB_API_URL}/${params.path}?api_key=${TMDB_API_KEY}&${params.query_params}`
 
-        var options;
+        var options = { timeout: 4500 };
 
         if (params.method && params.method !== "") {
 
-            options = { method: params.method }
+            options = {
+                method: params.method,
+                timeout: 4500
+            };
 
             if (params.body && Object.keys(params.body).length !== 0
                 && params.headers && Object.keys(params.headers).length !== 0) {
@@ -28,12 +31,17 @@ exports.handler = async function (event, context) {
                 }
 
             } else if (params.body && Object.keys(params.body).length !== 0) {
+
                 options = {
                     method: params.method,
                     body: JSON.stringify(params.body)
                 }
+                
             }
         }
+
+        console.log('options obj: '); console.log(options);
+
 
         let status, data;
 

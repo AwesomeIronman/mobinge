@@ -1,18 +1,6 @@
 $(document).ready(() => {
   initCalendar()
 
-  // Add event to show upcoming movies list
-  $('#btn-upcoming').on('click', { event: event }, showUpcomingMovies);
-
-  // Add event to show now-playing list
-  $('#btn-now-playing').on('click', { event: event }, showNowPlayingMovies);
-
-  // Add event to show popular list
-  $('#btn-popular').on('click', { event: event }, showPopularMovies);
-
-  // Add event to show trending list
-  $('#btn-trending').on('click', { event: event }, showTrendingMovies);
-
 });
 // JQuery OnReady Close
 
@@ -317,7 +305,8 @@ async function getReleaseEvents(filteredMovies) {
 async function initCalendar() {
   let calendarEl = document.getElementById('calendar');
 
-  let filteredMovies = await getInTheatorMovies().then(data => filterTitles(data))
+  let filteredMovies = await getInTheatorMovies()
+    .then(data => filterTitles(data))
 
   let eventData = await getReleaseEvents(filteredMovies)
 

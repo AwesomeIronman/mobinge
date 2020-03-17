@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const fetch = require('node-fetch-npm');
 
 // Get env var values defined in our Netlify site UI
 const { TMDB_API_KEY, TMDB_API_URL } = process.env
@@ -52,11 +52,21 @@ exports.handler = async function (event, context) {
                 })
             })
 
-        console.log('Total no of movies: ', result.length);
+        console.log('Total no movies with duplicates: ', result.length);
+
+        var seen = new Set();
+
+        var filteredArr = result.filter(el => {
+            const duplicate = seen.has(el.id);
+            seen.add(el.id);
+            return !duplicate;
+        });
+
+        console.log('Without duplicates: ', filteredArr.length);
 
         return {
             statusCode: 200,
-            body: JSON.stringify(result)
+            body: JSON.stringify(filteredArr)
         }
 
 
@@ -64,12 +74,15 @@ exports.handler = async function (event, context) {
 }
 
 async function fetch_data(URL) {
-    return await fetch(URL)
+    return await fetch(URL, { timeout: 4500 })
         .then((res) => {
+            if (!res.ok) {
+                console.log(res);
+            }
+
             return res.json();
         })
         .catch((error) => {
-            console.log('fetch-data: ', error.code);
             return error;
         })
 }
