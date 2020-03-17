@@ -20,7 +20,7 @@
 
         <!-- Navbar: -->
         <nav class="navbar navbar-dark navbar-expand-md">
-        
+
             <a class="navbar-brand" href="./search.html">Mobinge</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,118 +29,151 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a href="./search.html" class="nav-link active">Search</a>
+                        <a href="./search.html" class="nav-link">Search</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="./calendar.html" class="nav-link">Calendar</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="./favourites.html" class="nav-link">Favourites</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="./watched.html" class="nav-link">Watched List</a>
                     </li>
                 </ul>
-        
+
                 <ul class="nav navbar-nav navbar-right">
                     <li class="nav-item">
                         <div class="btn-ntl-login" data-netlify-identity-button></div>
                     </li>
                 </ul>
             </div>
-        
+
         </nav>
 
-        <div class="row">
+        <div class="row justify-content-md-center">
 
+            <div id="seriesInfoContainer" class="col-md-9 rounded text-dark">
 
-            <!-- Side div to show top lists -->
-            <aside class="col-3 order-12" id="top-list" style="display: none; top: -250px;">
-                <ul class="list-group">
-                    <!-- Add all the basic search result output here through JavaScript -->
-                </ul>
-            </aside>
-            <!-- CLOSE: Side div to show top lists -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <img id="poster_image" class="img-fluid rounded" src="#" alt="Series Poster">
 
+                            <div class="card-body d-flex justify-content-center">
+                                <!-- Add to favourites button -->
+                                <h6 id="series_favourite" class="d-inline-block border-right">
+                                    <button class="rounded py-1">
+                                        <i class="fas fa-heart fa-2x" style="color:#6c757d;"></i>
+                                    </button>
+                                </h6>
 
-            <!-- OPEN: Show full movie information -->
-            <div class="container">
-                <div class="col-md-12" id="search-info" style="display: none;">
-                    <div id="movie" class="well">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <img src="" class="img-fluid">
-                            </div>
-                            <div class="col-md-8">
-                                <h2 id="title-name">${movie.Title}</h2>
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <strong>Genre:</strong>
-                                        <span id="title-genre">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Released:</strong>
-                                        <span id="title-release-date">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Runtime:</strong>
-                                        <span id="title-runtime">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>IMDB Rating:</strong>
-                                        <span id="title-imdb-rating">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <strong>Tagline:</strong>
-                                        <span id="title-tagline">UNSET</span>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <button id="add-to-favourites">
-                                            Favourite
-                                        </button>
-                                    </li>
-                                </ul>
+                                <!-- Add to Watched button -->
+                                <h6 id="series_watched" class="d-inline-block">
+                                    <button class="rounded py-1">
+                                        <i class="fas fa-eye fa-2x" style="color: #6c757d;"></i>
+                                    </button>
+                                </h6>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="well">
-                                <h3>Plot</h3>
-                                <span id="title-overview">UNSET</span>
-                                <hr>
-                                <a href="#" target="_blank" class="btn btn-primary">
-                                    View IMDB
-                                </a>
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="card p-3">
+                            <div class="card-header">
+
+                                <div class="d-flex">
+                                    <!-- show series title/name -->
+                                    <h4 id="series_title">Loading...</h4>
+
+                                    <!-- show rating -->
+                                    <h4 id="series_rating" class="ml-3">
+                                        <i class="fas fa-star align-text-bottom" style="color: #FFCA28;"></i>
+                                        <span class="text-muted">Loading...</span>
+                                    </h4>
+                                </div>
+
+                                <div class="d-flex">
+                                    <!-- show release date -->
+                                    <h6 id="series_release_date">
+                                        <span id="release_status" class="text-muted mr-2">Loading...</span>
+                                        <i class="fas fa-calendar" style="color: #6c757d;"></i>
+                                        <span id="release_date" class="text-muted">Loading...</span>
+                                    </h6>
+
+                                    <!-- show release date -->
+                                    <h6 id="series_runtime" class="ml-3">
+                                        <span class="text-muted mr-2">Episode Runtime: </span>
+                                        <i class="fas fa-hourglass-end" style="color: #6c757d;"></i>
+                                        <span id="runtime" class="text-muted">Loading...</span>
+                                    </h6>
+                                </div>
+
+                                <div class="d-flex">
+                                    <!-- show series genres -->
+                                    <h6 id="series_genres">
+                                        <span class="text-muted mr-2">Genres: </span>
+                                        <span id="genres" class="text-muted">Loading...</span>
+                                    </h6>
+                                </div>
+
+                                <div class="d-flex">
+                                    <!-- show series tagline -->
+                                    <h6 id="series_tagline" class="text-muted"></h6>
+                                </div>
+
                             </div>
+
+
+                            <div class="card-body">
+                                <!-- series brief overview text -->
+                                <div id="series_overview" class="card-text m-2">Loading...</div>
+
+                                <div class="trailers"></div>
+
+                                <div id="sample-embed-container" class="d-none embed-container">
+                                    <iframe width="500" height="450" src='' frameborder='0' allowfullscreen></iframe>
+                                </div>
+
+                                <!-- series IMDB link button -->
+                                <a id="imdb_button" href="#" target="_blank" class="btn btn-warning m-2">View More on
+                                    IMDB</a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- CLOSE: Show full movie information -->
+
 
         </div>
-        <!-- CLOSE: row div -->
+
+
+    </div>
+    <!-- CLOSE: row div -->
 
 
     </div>
     <!-- CLOSE: root div -->
 
 
-    <!-- Custom script: -->
-    <link rel="stylesheet" href="./resources/css/main.css">
-
+    <link rel="stylesheet" href="./resources/fontawesome/css/all.css">
     <script type="text/javascript" src="./resources/js/bootstrap.bundle.js"></script>
 
-    <!-- Custom CSS and JS: -->
-    <link rel="stylesheet" href="./resources/css/index.css">
-    <script type="text/javascript" src="./resources/js/index.js"></script>
-
     <!-- netlify identity user login library: -->
-    <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script type="text/javascript" src="./resources/js/netlify-identity-widget.js"></script>
 
+    <!-- Custom CSS and JS: -->
+    <link rel="stylesheet" href="./resources/css/main.css">
+    <link rel="stylesheet" href="./resources/css/series.css">
+    <script type="text/javascript" src="./resources/js/series.js"></script>
     <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
+
+    <!-- Poppins font -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
 </body>
 
 </html>

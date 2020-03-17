@@ -12,18 +12,6 @@ $(document).ready(() => {
    // Add event listener to search on pressing search button
    $("#search-btn").on('click', event => fullSearch(event));
 
-   // Add event to show upcoming movies list
-   $('#btn-upcoming').on('click', { event: event }, showUpcomingMovies);
-
-   // Add event to show now-playing list
-   $('#btn-now-playing').on('click', { event: event }, showNowPlayingMovies);
-
-   // Add event to show popular list
-   $('#btn-popular').on('click', { event: event }, showPopularMovies);
-
-   // Add event to show trending list
-   $('#btn-trending').on('click', { event: event }, showTrendingMovies);
-
 });
 // JQuery OnReady Close
 
@@ -116,16 +104,16 @@ function showFullResult(result) {
 
    if (result !== undefined && result.length > 0) {
       // Show basic information of each search result
-      $.each(result, (index, movie) => {
-         if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
+      $.each(result, (index, info) => {
+         if (info.media_type !== "person") { // Show info only if result is not of a person/actor
 
-            sampleNode.querySelector("img.img-fluid").src = movie.poster_path ?
-               `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "../resources/images/imageNotFound.png";
-            sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
-            sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
-            sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-            sampleNode.querySelector(".overlay > .movie > a")
-               .setAttribute("onclick", `openMovieInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
+            sampleNode.querySelector("img.img-fluid").src = info.poster_path ?
+               `https://image.tmdb.org/t/p/w300${info.poster_path}` : "../resources/images/imageNotFound.png";
+            sampleNode.querySelector(".title").textContent = info.title ? info.title : info.name;
+            sampleNode.querySelector(".title-release-year").textContent = info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "";
+            sampleNode.querySelector(".title-rating").textContent = info.vote_average ? `${info.vote_average}/10` : "";
+            sampleNode.querySelector(".overlay > a")
+               .setAttribute("onclick", `openMovieInfo('${info.id}', '${info.media_type ? info.media_type : $('#searchType')[0].value}')`);
 
             $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
          }
@@ -138,55 +126,6 @@ function showFullResult(result) {
 
    $("#partial-search-result").css("display", "none");
    $("#full-search-result").css("display", "block");
-}
-
-
-function populateTopList(data) {
-   $("#top-list .list-group").empty();
-
-   let sampleNode = $('#fullSample')[0].cloneNode(true); // Create a clone to edit and append each time
-   sampleNode.removeAttribute("id")
-   sampleNode.removeAttribute("style")
-   sampleNode.removeAttribute("class")
-
-   $.each(data, (index, movie) => {
-      if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
-
-         sampleNode.setAttribute("onclick", `openMovieInfo('${movie.id}', '${movie.media_type}')`);
-         sampleNode.querySelector("img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
-         sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
-         sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
-         sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-
-         $("#top-list .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-      }
-   });
-
-   $("#top-list").css("display", "block"); // Display search results
-}
-
-function hideTopList() {
-   console.log('Hiding top list');
-
-   $("#top-list .list-group").empty();
-
-   $("#search-box").removeClass("col-md-9");
-   $("#search-box").addClass("col-md-12");
-   $("#carousel-effect").removeClass("col-md-9");
-   $("#carousel-effect").addClass("col-md-12");
-
-   $("#top-list").css("display", "none");
-}
-
-function handleData(data) {
-   console.log('Data: ', data);
-
-   $("#search-box").removeClass("col-md-12");
-   $("#search-box").addClass("col-md-9");
-   $("#carousel-effect").removeClass("col-md-12");
-   $("#carousel-effect").addClass("col-md-9");
-
-   populateTopList(data);
 }
 
 async function getResponse(request) {
@@ -224,74 +163,6 @@ async function showNowPlayingCarousel() {
    } else {
       console.log('Carousel: Didn\'t receive any data!');
       console.log('Carousel:data: ' + nowPlayingData);
-   }
-}
-
-async function showUpcomingMovies(event) {
-   event.preventDefault()
-   if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-   } else {
-
-      let data = await getResponse({
-         path: "movie/upcoming",
-         query_params: "language=en-US&page=1&region=IN"
-      })
-
-      console.log('Testing:upcoming: ', data)
-
-      handleData(data.results)
-   }
-}
-
-async function showNowPlayingMovies(event) {
-   event.preventDefault()
-   if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-   } else {
-
-      let data = await getResponse({
-         path: "movie/now_playing",
-         query_params: "language=en-US&page=1&region=IN"
-      })
-
-      console.log('Testing:now-playing: ', data)
-
-      handleData(data.results)
-   }
-}
-
-async function showPopularMovies(event) {
-   event.preventDefault()
-   if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-   } else {
-
-      let data = await getResponse({
-         path: "movie/popular",
-         query_params: "language=en-US&page=1&region=IN"
-      })
-
-      console.log('Testing:now-playing: ', data)
-
-      handleData(data.results)
-   }
-}
-
-async function showTrendingMovies(event) {
-   event.preventDefault()
-   if ($("#search-box").hasClass("col-md-9")) {
-      hideTopList()
-   } else {
-
-      let data = await getResponse({
-         path: "trending/movie/week",
-         query_params: ""
-      })
-
-      console.log('Testing:now-playing: ', data)
-
-      handleData(data.results)
    }
 }
 

@@ -54,13 +54,13 @@
   opacity: 1;
 }
 
-.card > .overlay > .movie {
+.card > .overlay > .title {
   position: absolute;
   bottom: 0;
   left: 0;
 }
 
-.card > .overlay > .movie > a {
+.card > .overlay > .title > a {
   justify-content: center;
 	align-items: center;
   padding: 3px;
@@ -77,18 +77,8 @@
   text-transform: uppercase;
 }
 
-#movie > div:nth-child(1) > div.col-md-8 > ul * {
-  color: black;
-}
-
 #root-div > .row > .container > #search-info {
   margin-top: 10%;
-}
-
-/* right-side top trending popular lists */
-#top-list {
-  width: 20%; height: 100%;
-  overflow-y: scroll;
 }
 
 button#add-to-favourites * {

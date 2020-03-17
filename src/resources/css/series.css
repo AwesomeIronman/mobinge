@@ -1,0 +1,8 @@
+#seriesInfoContainer div {
+   padding: 0;
+}
+
+#series_favourite > button, #series_watched > button {
+   border: none;
+   background: none;
+}
