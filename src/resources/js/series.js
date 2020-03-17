@@ -55,15 +55,12 @@ function showSeriesInfo(seriesData) {
   });
   $("#series_genres > span#genres")[0].textContent = genres;
 
-  // Movie tagline
-  $("#series_tagline")[0].textContent = `Tagline: ${seriesData.tagline}`;
-
   $("#series_overview")[0].textContent = seriesData.overview ? seriesData.overview : "Unavailable";
 
   $("#imdb_button")[0].href = `http://imdb.com/title/${seriesData.imdb_id}`;
 
   // Set movie ID as data attribute on the button (to be reused later)
-  $("#series_favourite > button").data("title_type", "movie");
+  $("#series_favourite > button").data("title_type", "tv");
   $("#series_favourite > button").data("titleID", seriesData.id);
   $("#series_favourite > button").on('click', { event: event }, toggleFavourite)
 
@@ -79,7 +76,7 @@ function showSeriesInfo(seriesData) {
 
   // Add to watched series list
   // Set series ID as data attribute on the button (to be reused later)
-  $("#series_watched > button").data("title_type", "movie");
+  $("#series_watched > button").data("title_type", "tv");
   $("#series_watched > button").data("titleID", seriesData.id);
   $("#series_watched > button").on('click', { event: event }, toggleWatched)
 
@@ -118,9 +115,7 @@ async function toggleFavourite(event) {
 
   // search for given title ID in localstorage
   let title_local_index
-  if (title_type === "movie") {
-    title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
-  } else {
+  if (title_type === "tv") {
     title_local_index = localFavourites.findIndex(fav => fav.tv === titleID)
   }
 
@@ -140,11 +135,7 @@ async function toggleFavourite(event) {
     )
 
       .then(res => {
-        $("#movie_favourite span.non_favourite").toggleClass("d-none")
-        $("#movie_favourite span.favourite").toggleClass("d-none")
-        $("#movie_favourite > button > i").css("color", "white");
-        console.log("movie-favourite:response: ");
-        console.log(res);
+        $("#series_favourite > button > i").css("color", "#6c757d");
       })
 
       .catch(error => {
@@ -170,11 +161,7 @@ async function toggleFavourite(event) {
       }
     )
       .then(res => {
-        $("#movie_favourite span.non_favourite").toggleClass("d-none")
-        $("#movie_favourite span.favourite").toggleClass("d-none")
-        $("#movie_favourite > button > i").css("color", "pink");
-        console.log('movie-favourite:response: ');
-        console.log(res);
+        $("#series_favourite > button > i").css("color", "pink");
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
@@ -195,9 +182,7 @@ async function toggleWatched(event) {
 
   // search for given title ID in localstorage
   let title_local_index
-  if (title_type === "movie") {
-    title_local_index = watchedList.findIndex(fav => fav.movie === titleID)
-  } else {
+  if (title_type === "series") {
     title_local_index = watchedList.findIndex(fav => fav.tv === titleID)
   }
 
@@ -217,11 +202,7 @@ async function toggleWatched(event) {
     )
 
       .then(res => {
-        $("#movie_watched span.non_watched").toggleClass("d-none")
-        $("#movie_watched span.watched").toggleClass("d-none")
-        $("#movie_watched > button > i").css("color", "white");
-        console.log("movie-add-watched:response: ");
-        console.log(res);
+        $("#series_watched > button > i").css("color", "#6c757d");
       })
 
       .catch(error => {
@@ -247,11 +228,7 @@ async function toggleWatched(event) {
       }
     )
       .then(res => {
-        $("#movie_watched span.non_watched").toggleClass("d-none")
-        $("#movie_watched span.watched").toggleClass("d-none")
-        $("#movie_watched > button > i").css("color", "cornflowerblue");
-        console.log('movie-add-watched:response: ');
-        console.log(res);
+        $("#series_watched > button > i").css("color", "cornflowerblue");
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });

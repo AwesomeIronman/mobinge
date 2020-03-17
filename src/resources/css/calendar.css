@@ -13,6 +13,6 @@
 }
 
 /* Calendar styling */
-.fc-event-container:hover {
+.fc-event:hover, .fc-list-item:hover {
   cursor: pointer;
 }

@@ -17,6 +17,9 @@
 </head>
 
 <body>
+
+    <div id="particles-js"></div>
+    
     <div id="root-div" class="container-fluid">
 
         <!-- Navbar: -->
@@ -59,20 +62,18 @@
 
             <div class="col-9 round">
 
-                <h2>My Favourites</h2>
+                <h2>Watched Movies</h2>
 
                 <div id="favourites_container" class="row"></div>
 
                 <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
                 <div id="fullSample" class="col-md-3" style="display: none;">
-                    <div class="card">
-                        <img src="" class="rounded img-fluid"
-                            onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
-                        <div class="overlay rounded">
+                    <div class="card h-100">
+                        <img src="" class="rounded img-fluid">
+                        <div class="overlay rounded text-dark">
                             <div class="movie p-2">
                                 <p><span class="movie-title">Movie name</span></p>
                                 <p><span class="movie-rating">Rating</span></p>
-                                <p><span class="movie-release-year">Released Year</span></p>
                                 <a onclick="" href="#">Details</a>
                             </div>
                         </div>
@@ -106,9 +107,10 @@
 
     <!-- Custom CSS and JS: -->
     <link rel="stylesheet" href="./resources/css/main.css">
-    <!-- <link rel="stylesheet" href="./resources/css/search_page.css"> -->
-    <script type="text/javascript" src="./resources/js/favourites.js"></script>
-    <!-- <script type="text/javascript" src="./resources/js/user_data.js"></script> -->
+    <script type="text/javascript" src="./resources/js/main.js"></script>
+    <script type="text/javascript" src="./resources/js/watched.js"></script>
+
+    <script type="text/javascript" src="./resources/js/particles.js"></script>
 </body>
 
 </html>

@@ -112,41 +112,6 @@ function showMovieInfo(movieData) {
 
 }
 
-function populateTopList(data) {
-  $("#top-list .list-group").empty();
-
-  let sampleNode = $('#fullSample')[0].cloneNode(true); // Create a clone to edit and append each time
-  sampleNode.removeAttribute("id")
-  sampleNode.removeAttribute("style")
-  sampleNode.removeAttribute("class")
-
-  $.each(data, (index, movie) => {
-    if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
-
-      sampleNode.setAttribute("onclick", `getTitleInfo('${movie.id}', '${movie.media_type}')`);
-      sampleNode.querySelector("img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
-      sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
-      sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
-      sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-
-      $("#top-list .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-    }
-  });
-
-  $("#top-list").css("display", "block"); // Display search results
-}
-
-function handleData(data) {
-  console.log('Data: ', data);
-
-  $("#search-box").removeClass("col-md-12");
-  $("#search-box").addClass("col-md-9");
-  $("#carousel-effect").removeClass("col-md-12");
-  $("#carousel-effect").addClass("col-md-9");
-
-  populateTopList(data);
-}
-
 async function toggleFavourite(event) {
   let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
   console.log(title_type);
@@ -159,8 +124,6 @@ async function toggleFavourite(event) {
   let title_local_index
   if (title_type === "movie") {
     title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
-  } else {
-    title_local_index = localFavourites.findIndex(fav => fav.tv === titleID)
   }
 
   // Remove from favourites, if it is already favourite
@@ -181,9 +144,7 @@ async function toggleFavourite(event) {
       .then(res => {
         $("#movie_favourite span.non_favourite").toggleClass("d-none")
         $("#movie_favourite span.favourite").toggleClass("d-none")
-        $("#movie_favourite > button > i").css("color", "white");
-        console.log("movie-favourite:response: ");
-        console.log(res);
+        $("#movie_favourite > button > i").css("color", "#6c757d");
       })
 
       .catch(error => {
@@ -212,8 +173,6 @@ async function toggleFavourite(event) {
         $("#movie_favourite span.non_favourite").toggleClass("d-none")
         $("#movie_favourite span.favourite").toggleClass("d-none")
         $("#movie_favourite > button > i").css("color", "pink");
-        console.log('movie-favourite:response: ');
-        console.log(res);
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
@@ -236,8 +195,6 @@ async function toggleWatched(event) {
   let title_local_index
   if (title_type === "movie") {
     title_local_index = watchedList.findIndex(fav => fav.movie === titleID)
-  } else {
-    title_local_index = watchedList.findIndex(fav => fav.tv === titleID)
   }
 
   // Remove from watched list, if it is already watched
@@ -258,9 +215,7 @@ async function toggleWatched(event) {
       .then(res => {
         $("#movie_watched span.non_watched").toggleClass("d-none")
         $("#movie_watched span.watched").toggleClass("d-none")
-        $("#movie_watched > button > i").css("color", "white");
-        console.log("movie-add-watched:response: ");
-        console.log(res);
+        $("#movie_watched > button > i").css("color", "#6c757d");
       })
 
       .catch(error => {
@@ -289,8 +244,6 @@ async function toggleWatched(event) {
         $("#movie_watched span.non_watched").toggleClass("d-none")
         $("#movie_watched span.watched").toggleClass("d-none")
         $("#movie_watched > button > i").css("color", "cornflowerblue");
-        console.log('movie-add-watched:response: ');
-        console.log(res);
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });

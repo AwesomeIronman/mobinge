@@ -14,13 +14,13 @@ $(document).ready(() => {
 // JQuery OnReady Close
 
 async function showFavourites() {
-   // Get and store favourites only if user has logged in
+   // Get and store watched list only if user has logged in
    if (netlifyIdentity.currentUser() !== null) {
       await loadUserData()
          .then(() => {
-            let favourites = JSON.parse(localStorage.getItem("user_favourites"));
-            console.log('favourites loaded');
-            favourites.forEach(element => {
+            let watchedlist = JSON.parse(localStorage.getItem("user_watched"));
+            watchedlist.forEach(element => {
+               // if movie
                let data = []
                if ("movie" in element) {
                   data = getResponse(
@@ -37,9 +37,8 @@ async function showFavourites() {
                      }
                   )
                }
-               data.then(movie => {
-                  console.log(movie);
 
+               data.then(movie => {
                   let sampleNode = $('#fullSample')[0].cloneNode(true); // Create a clone to edit and append each time
                   sampleNode.removeAttribute("id")
                   sampleNode.removeAttribute("style")
@@ -53,7 +52,6 @@ async function showFavourites() {
                   $("#favourites_container")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
 
                })
-
             });
          })
    } else {
