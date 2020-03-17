@@ -95,6 +95,21 @@ function showMovieInfo(movieData) {
     $("#movie_watched span.watched").toggleClass("d-none")
     $("#movie_watched > button > i").css("color", "cornflowerblue");
   }
+
+  // Get videos which are Youtube trailers of the movie
+  let trailerKeys = movieData.videos.results.filter(v => v.type === "Trailer" && v.site === "YouTube").map(v => v.key)
+  let sampleTrailer = $("#embed-container")[0].cloneNode(true); // Create a clone to edit and append each time
+  $(sampleTrailer).removeAttr('id')
+  $(sampleTrailer).removeClass("d-none")
+
+  trailerKeys.forEach(keys => {
+    console.log(`https://www.youtube.com/embed/${keys}`);
+    $(sampleTrailer).find("iframe")[0].src = `https://www.youtube.com/embed/${keys}`;
+    $(".trailers")[0].innerHTML += sampleTrailer.outerHTML;
+  })
+
+  $(".trailers")[0].classList.remove("d-none")
+
 }
 
 function populateTopList(data) {
