@@ -16,16 +16,16 @@
 
 </head>
 
-<body>
+<body class="text-light">
 
    <div id="particles-js"></div>
-   
+
    <div id="root-div" class="container-fluid">
 
 
       <!-- Navbar: -->
       <nav class="navbar navbar-dark navbar-expand-md">
-      
+
          <a class="navbar-brand" href="./search.html">Mobinge</a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,27 +36,27 @@
                <li class="nav-item">
                   <a href="./search.html" class="nav-link">Search</a>
                </li>
-      
+
                <li class="nav-item">
                   <a href="./calendar.html" class="nav-link active">Calendar</a>
                </li>
-      
+
                <li class="nav-item">
                   <a href="./favourites.html" class="nav-link">Favourites</a>
                </li>
-      
+
                <li class="nav-item">
                   <a href="./watched.html" class="nav-link">Watched List</a>
                </li>
             </ul>
-      
+
             <ul class="nav navbar-nav navbar-right">
                <li class="nav-item">
                   <div class="btn-ntl-login" data-netlify-identity-button></div>
                </li>
             </ul>
          </div>
-      
+
       </nav>
 
       <div class="row justify-content-center">
@@ -69,35 +69,24 @@
 
          <div class="col-md-3">
 
-            <div class="card h-100" id="day-title-info">
-               <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-               <div id="mega">
-                  <div class="card">
+            <div class="card h-100" id="title-clicked-info"></div>
 
-                     <img src="#" class="card-img-top img-fluid"
-                        onerror="this.onerror=null;this.src='../resources/images/imageNotFound.png';">
+            <!-- Always hidden, only required as sample -->
+            <div class="sampleTitleInfo d-none">
+               <img src="#" class="card-img-top img-fluid">
 
-                     <div class="overlay rounded text-dark">
-                        <div class="movie p-2">
-                           <p>
-                              <span class="movie-title">Movie name:
-                                 <span class="title"></span>
-                              </span>
-                           </p>
-                           <p>
-                              <span class="movie-rating">Movie rating:
-                                 <span class="rating"></span>
-                              </span>
-                           </p>
-                           <p>
-                              <span class="movie-release-year">Movie release date:
-                                 <span class="release-year"></span>
-                              </span>
-                           </p>
-                           <a onclick="" href="#">View More</a>
-                        </div>
-                     </div>
-
+               <div class="rounded text-dark">
+                  <div class="movie p-2">
+                     <p><span class="movie-title">Movie name:
+                           <span class="title"></span>
+                        </span></p>
+                     <p><span class="movie-rating">Movie rating:
+                           <span class="rating"></span>
+                        </span></p>
+                     <p><span class="movie-release-date">Movie release date:
+                           <span class="release-date"></span>
+                        </span></p>
+                     <a onclick="" href="#">View More</a>
                   </div>
                </div>
             </div>
@@ -106,7 +95,6 @@
 
       </div>
       <!-- CLOSE: row div -->
-
 
    </div>
    <!-- CLOSE: root div -->

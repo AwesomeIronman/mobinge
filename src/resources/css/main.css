@@ -3,12 +3,9 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  color: white;
-
   min-width: 100%;
   min-height: 100vh;
   
-  overflow: auto;
   background: radial-gradient(ellipse at bottom, #1b2735 0%,#090a0f 100%);
 }
 
@@ -18,13 +15,9 @@ body {
   position: fixed;
 }
 
-.navbar {
-  padding: 0rem 0rem 0rem 2rem;
-}
-
-.nav.navbar-nav > .nav-item:hover {
+ul > li.nav-item:hover {
   border-radius: 0.25rem;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(255,255,255,0.2);
 }
 
 #carousel-effect {
@@ -37,15 +30,6 @@ body {
 @media only screen and (min-width: 768px) {
   .netlify-identity-button {
     padding: 1rem 2rem;
-    margin: 1rem 2rem;
-    border: 1px solid transparent;
-    border-radius: 0.5rem;
-
-    transition: border 1s;
-  }
-
-  .netlify-identity-button:hover {
-    border: 1px solid white;
   }
 }
 

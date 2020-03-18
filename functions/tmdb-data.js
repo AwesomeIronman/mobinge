@@ -48,13 +48,10 @@ exports.handler = async function (event, context) {
                 return res.json();
             })
             .catch((error) => {
-                console.log('Parameters received: ', params);
-                console.log('Error: ', error.code);
+                console.log(error);
             })
 
-        console.log('Testing:status: ', status);
-
-        // Send data only if response is OK
+        // if response received with ok status
         if (status === 200) {
             return {
                 statusCode: 200,

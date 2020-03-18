@@ -16,7 +16,7 @@
 
 </head>
 
-<body>
+<body class="text-light">
 
     <div id="particles-js"></div>
 
@@ -60,64 +60,63 @@
 
         <div class="row">
 
-            <div class="col-12 order-1" id="search-box">
-                <div class="container">
-                    <h3 class="text-center">Search For Any Movie</h3>
-                    <form id="searchForm">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="searchText" placeholder="Search Movies..."
-                                autocomplete="off">
-                            <div class="input-group-append">
-                                <select class="custom-select input-group-text" id="searchType">
-                                    <option selected value="multi">All</option>
-                                    <option value="movie">Movies</option>
-                                    <option value="tv">Series</option>
-                                </select>
-                                <span class="input-group-text" id="search-btn">Search</span>
-                            </div>
-                        </div>
-                    </form>
+            <div class="col-12" id="search-box">
 
-                    <!-- SHOW: partial search results -->
-                    <div id="partial-search-result">
-                        <div id="partial-info">
-                            <ul class="list-group">
-                                <!-- Add all the basic search result output here through JavaScript -->
-                            </ul>
-
-                            <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                            <li id="partialSample" class="list-group-item" style="display: none;">
-                                <span class="movie-title">Movie name</span>
-                                <span class="movie-release-year">Released Year</span>
-                                <span class="movie-rating">Rating</span>
-                            </li>
+                <h3 class="text-center mb-4">Search For Any Movie/Series</h3>
+                <form id="searchForm">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchText" placeholder="Search Movies..."
+                            autocomplete="off">
+                        <div class="input-group-append">
+                            <select class="custom-select input-group-text" id="searchType">
+                                <option selected value="multi">All</option>
+                                <option value="movie">Movies</option>
+                                <option value="tv">Series</option>
+                            </select>
+                            <span class="input-group-text" id="search-btn">Search</span>
                         </div>
                     </div>
-                    <!-- CLOSE: partial search results -->
+                </form>
 
-                    <!-- SHOW: full search results -->
-                    <div id="full-search-result">
-                        <div id="full-info" class="row"></div>
+                <!-- SHOW: partial search results -->
+                <div class="text-dark" id="partial-search-result">
+                    <div id="partial-info">
+                        <ul class="list-group">
+                            <!-- Add all the basic search result output here through JavaScript -->
+                        </ul>
 
                         <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                        <div id="fullSample" class="col-md-3" style="display: none;">
-                            <div class="card h-100">
-                                <img src="" class="rounded img-fluid">
-                                <div class="overlay rounded p-2">
+                        <li id="partialSample" class="list-group-item" style="display: none;">
+                            <span class="movie-title">Movie name</span>
+                            <span class="movie-release-year">Released Year</span>
+                            <span class="movie-rating">Rating</span>
+                        </li>
+                    </div>
+                </div>
+                <!-- CLOSE: partial search results -->
+
+                <!-- SHOW: full search results -->
+                <div class="text-light" id="full-search-result">
+                    <div id="full-info" class="row"></div>
+
+                    <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
+                    <div id="fullSample" class="col-md-3 col-6" style="display: none;">
+                        <div class="card h-100">
+                            <img src="" class="rounded img-fluid">
+                            <div class="overlay rounded p-2">
+                                <div class="content">
                                     <p><span class="title">Name</span></p>
                                     <p><span class="title-rating">Rating</span></p>
                                     <p><span class="title-release-year">Released Year</span></p>
                                     <a onclick="" href="#">Details</a>
                                 </div>
                             </div>
-
                         </div>
 
                     </div>
-                    <!-- CLOSE: full search results -->
 
                 </div>
-                <!-- CLOSE: container -->
+                <!-- CLOSE: full search results -->
 
             </div>
             <!-- CLOSE: search box -->
@@ -128,11 +127,8 @@
                 <div class="image-rotator hi-slide">
 
                     <div class="hi-prev "></div>
-
                     <div class="hi-next "></div>
-
                     <h3>Now in theaters:</h3>
-
                     <ul>
                         <!-- <li><img class="img-fluid" alt="testing" src="./resources/images/1.jpg" /></li> -->
                     </ul>
@@ -159,7 +155,6 @@
 
     <!-- Custom CSS and JS: -->
     <link rel="stylesheet" href="./resources/css/main.css">
-    <!-- <link rel="stylesheet" href="./resources/css/stars.css"> -->
     <link rel="stylesheet" href="./resources/css/search_page.css">
     <script type="text/javascript" src="./resources/js/main.js"></script>
     <script type="text/javascript" src="./resources/js/search_page.js"></script>

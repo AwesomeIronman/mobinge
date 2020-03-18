@@ -33,7 +33,7 @@ async function partialSearch(event) {
          let filteredResults = filterTitles(response.results);
          showPartialResult(await filteredResults)
       } else {
-         console.debug('partial-search-result: ', response);
+         console.log(response);
       }
 
    }
@@ -59,7 +59,7 @@ async function fullSearch(event) {
          let filteredResult = filterTitles(response.results);
          showFullResult(await filteredResult)
       } else {
-         console.debug('Testing:full-search-result: ', response);
+         console.log(response);
       }
 
    }
@@ -112,7 +112,7 @@ function showFullResult(result) {
             sampleNode.querySelector(".title").textContent = info.title ? info.title : info.name;
             sampleNode.querySelector(".title-release-year").textContent = info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "";
             sampleNode.querySelector(".title-rating").textContent = info.vote_average ? `${info.vote_average}/10` : "";
-            sampleNode.querySelector(".overlay > a")
+            sampleNode.querySelector(".overlay > .content > a")
                .setAttribute("onclick", `openMovieInfo('${info.id}', '${info.media_type ? info.media_type : $('#searchType')[0].value}')`);
 
             $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node

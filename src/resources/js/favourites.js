@@ -180,7 +180,7 @@ async function toggleFavourite(event) {
 
 }
 
-async function openMovieInfo(tmdbid, title_type) {
+function openMovieInfo(tmdbid, title_type) {
    // Set the ID of the movie/series user clicked in localstorage to use it later
    localStorage.setItem("info_to_open", JSON.stringify(
       { id: tmdbid }
@@ -189,13 +189,5 @@ async function openMovieInfo(tmdbid, title_type) {
       window.location.href = "/series"
    } else {
       window.location.href = "/movie"
-   }
-}
-
-function delay(fn, ms) {
-
-   return function (...args) {
-      clearTimeout(window.timer)
-      window.timer = setTimeout(fn.bind(this, ...args), ms || 0)
    }
 }
