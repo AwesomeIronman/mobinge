@@ -27,14 +27,16 @@ exports.handler = async function (event, context) {
                 options = {
                     method: params.method,
                     headers: params.headers,
-                    body: JSON.stringify(params.body)
+                    body: JSON.stringify(params.body),
+                    timeout: 4500
                 }
 
             } else if (params.body && Object.keys(params.body).length !== 0) {
 
                 options = {
                     method: params.method,
-                    body: JSON.stringify(params.body)
+                    body: JSON.stringify(params.body),
+                    timeout: 4500
                 }
                 
             }
@@ -53,6 +55,11 @@ exports.handler = async function (event, context) {
 
         // if response received with ok status
         if (status === 200) {
+            // Sort search results according to their poularity
+            if (data.results) {
+                data.results.sort((a, b) => (a.popularity > b.popularity) ? -1 : 1)
+            }
+            
             return {
                 statusCode: 200,
                 body: JSON.stringify(data)
