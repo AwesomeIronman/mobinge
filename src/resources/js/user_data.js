@@ -1,12 +1,10 @@
 $(document).ready(() => {
    netlifyIdentity.on('login', () => {
       loadUserData();
-      storeWatched();
    });
 
    netlifyIdentity.on('logout', () => {
       removeUserData();
-      removeStoredWatched();
    });
 
 });
