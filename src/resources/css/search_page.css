@@ -2,14 +2,10 @@
   margin-top: 10%;
 }
 
-#search-btn, li.list-group-item, .col-md-3 > .well {
-  cursor: pointer;
-}
-
 #partial-search-result {
-  width: 100%;
+  width: 88%;
   max-height: 50vh;
-  margin-top: 0.125rem;
+  margin: 0.125rem auto;
   overflow-y: auto;
 }
 

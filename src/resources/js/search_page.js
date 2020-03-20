@@ -1,7 +1,4 @@
 $(document).ready(() => {
-   // Show Now Playing movies with carousel effect
-   showNowPlayingCarousel()
-
    // Add event listener to search on pressing any key
    // Delay and search only once per 750ms
    $("#searchText").on('keyup', event => delay(partialSearch, 750)(event));
@@ -93,6 +90,7 @@ function showPartialResult(result) {
 
    $("#full-search-result").css("display", "none");
    $("#partial-search-result").css("display", "block");
+   $("#partial-search-result").removeClass("d-none");
 }
 
 function showFullResult(result) {
