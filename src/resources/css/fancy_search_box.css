@@ -68,7 +68,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  width: 90%;
+  width: 60%;
   height: 3rem;
   outline: none;
   border: none;
@@ -91,7 +91,7 @@ input.open {
 }
 
 .search.open {
-  left: 88%;
+  left: 60%;
   background: #1b2735;
   z-index: 6;
 }

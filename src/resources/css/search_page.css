@@ -3,7 +3,7 @@
 }
 
 #partial-search-result {
-  width: 88%;
+  width: 60%;
   max-height: 50vh;
   margin: 0.125rem auto;
   overflow-y: auto;
