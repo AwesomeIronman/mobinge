@@ -58,7 +58,6 @@ async function fullSearch(event) {
       } else {
          console.log(response);
       }
-
    }
 }
 
@@ -105,15 +104,34 @@ function showFullResult(result) {
       $.each(result, (index, info) => {
          if (info.media_type !== "person") { // Show info only if result is not of a person/actor
 
-            sampleNode.querySelector("img.img-fluid").src = info.poster_path ?
-               `https://image.tmdb.org/t/p/w300${info.poster_path}` : "../resources/images/imageNotFound.png";
-            sampleNode.querySelector(".title").textContent = info.title ? info.title : info.name;
-            sampleNode.querySelector(".title-release-year").textContent = info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "";
-            sampleNode.querySelector(".title-rating").textContent = info.vote_average ? `${info.vote_average}/10` : "";
-            sampleNode.querySelector(".overlay > .content > a")
-               .setAttribute("onclick", `openMovieInfo('${info.id}', '${info.media_type ? info.media_type : $('#searchType')[0].value}')`);
+            $(sampleNode).find(".scene .movie .poster").css({
+               "background-image": `url(
+                  https://image.tmdb.org/t/p/w300${info.poster_path}
+               )`
+            });
 
-            $("#full-info")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
+            $(sampleNode).find(".scene .movie header").css({
+               "background-image": `url(
+                  https://image.tmdb.org/t/p/w300${info.backdrop_path}
+               )`
+            });
+
+            $(sampleNode).find(".info header h1").text(info.title ? info.title : info.name);
+
+            $(sampleNode).find(".info header .year").text(info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "");
+
+            $(sampleNode).find(".info header .rating").text(info.vote_average ? `${info.vote_average}/10` : "");
+
+            // Movie runtime
+            let hours = Math.floor(info.runtime / 60);
+            let minutes = info.runtime % 60;
+            $(sampleNode).find(".info header .duration").text((hours && minutes) ? `${hours}Hour ${minutes}Minutes` : '');
+
+            $(sampleNode).find(".info p").text(info.overview)
+
+            $(sampleNode).find(".info").on('click', () => openMovieInfo('${info.id}', `${info.media_type ? info.media_type : $('#searchType')[0].value}`));
+
+            $("#full-info")[0].innerHTML += sampleNode.innerHTML; // Append edited sample node
          }
       });
 

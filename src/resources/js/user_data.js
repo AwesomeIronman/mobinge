@@ -21,9 +21,9 @@ async function loadUserData() {
       .then(res => res.json())
 
       .then(res => {
-         console.log('StoreFavourites():retrieved: '); console.log(res);
+         console.log('Retrieved Userdata: '); console.log(res);
 
-         if (Array.isArray(res.favourites)) {
+         if (Array.isArray(res.favourites) && Array.isArray(res.watchedlist)) {
             localStorage.setItem("user_favourites", JSON.stringify(res.favourites));
             localStorage.setItem("user_watched", JSON.stringify(res.watchedlist));
          } else {

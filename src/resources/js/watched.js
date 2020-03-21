@@ -3,6 +3,8 @@ $(document).ready(() => {
 
    netlifyIdentity.on('login', loadUserData);
    netlifyIdentity.on('logout', removeUserData);
+
+
 });
 
 
@@ -75,7 +77,7 @@ async function loadUserData() {
       .then(res => {
          console.log('Retrieved userdata: '); console.log(res);
 
-         if (Array.isArray(res.favourites)) {
+         if (Array.isArray(res.favourites) && Array.isArray(res.watchedlist)) {
             localStorage.setItem("user_favourites", JSON.stringify(res.favourites));
             localStorage.setItem("user_watched", JSON.stringify(res.watchedlist));
          } else {
