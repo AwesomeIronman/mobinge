@@ -127,8 +127,6 @@ function showFullResult(result) {
             let minutes = info.runtime % 60;
             $(sampleNode).find(".info header .duration").text((hours && minutes) ? `${hours}Hour ${minutes}Minutes` : '');
 
-            $(sampleNode).find(".info p").text(info.overview)
-
             $(sampleNode).find(".info").on('click', () => openMovieInfo('${info.id}', `${info.media_type ? info.media_type : $('#searchType')[0].value}`));
 
             $("#full-info")[0].innerHTML += sampleNode.innerHTML; // Append edited sample node
