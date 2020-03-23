@@ -9,6 +9,16 @@ $(document).ready(() => {
    // Add event listener to search on pressing search button
    $("#search-btn").on('click', event => fullSearch(event));
 
+   // Onclick listener for opening full movie info
+   $("ul#full-info").on("click", ".movie", function (event) {
+      var target = $(event.target);
+      if (target.is("button.more_info") || target.parent().is("button.more_info")) {
+         let tmdbid = $(this).find("button.more_info").data("tmdbid")
+         let title_type = $(this).find("button.more_info").data("title_type")
+         openMovieInfo(tmdbid, title_type)
+      }
+   });
+
 });
 // JQuery OnReady Close
 
@@ -122,14 +132,11 @@ function showFullResult(result) {
 
             $(sampleNode).find(".info header .rating").text(info.vote_average ? `${info.vote_average}/10` : "");
 
-            // Movie runtime
-            let hours = Math.floor(info.runtime / 60);
-            let minutes = info.runtime % 60;
-            $(sampleNode).find(".info header .duration").text((hours && minutes) ? `${hours}Hour ${minutes}Minutes` : '');
+            $("#full-info").append($(sampleNode).html()); // Append edited sample node
 
-            $(sampleNode).find(".info").on('click', () => openMovieInfo('${info.id}', `${info.media_type ? info.media_type : $('#searchType')[0].value}`));
-
-            $("#full-info")[0].innerHTML += sampleNode.innerHTML; // Append edited sample node
+            // Set id and type to use later for opening full title info page
+            $(`#full-info > li:nth-child(${index + 1}) button.more_info`).data("tmdbid", `${info.id}`);
+            $(`#full-info > li:nth-child(${index + 1}) button.more_info`).data("title_type", `${info.media_type}`);
          }
       });
 
@@ -151,33 +158,6 @@ async function getResponse(request) {
       .catch(error => {
          console.error('Error:', error);
       });
-}
-
-async function showNowPlayingCarousel() {
-   let nowPlayingData = await getResponse({
-      path: "movie/now_playing",
-      query_params: "language=en-US&page=1&region=IN"
-   })
-   console.log('Testing:now-playing-carousel: ', nowPlayingData)
-
-   // Act only if we receive data
-   if (nowPlayingData && nowPlayingData.results) {
-
-      $.each(nowPlayingData.results, (index, movie) => {
-         $(".image-rotator > ul")[0].innerHTML += `<li><img class="img-fluid" alt="${movie.title ? movie.title : movie.name}" 
-          src="https://image.tmdb.org/t/p/w185${movie.poster_path}" onclick="openMovieInfo('${movie.id}', 'movie')"  /></li>`
-      });
-
-      // Enable carousel effect
-      $('.image-rotator').hiSlide({
-         interval: 3000,
-         speed: 900
-      });
-
-   } else {
-      console.log('Carousel: Didn\'t receive any data!');
-      console.log('Carousel:data: ' + nowPlayingData);
-   }
 }
 
 async function toggleFavourite(event) {
