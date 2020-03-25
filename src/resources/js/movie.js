@@ -103,7 +103,6 @@ function showMovieInfo(movieData) {
   $(sampleTrailer).removeClass("d-none")
 
   trailerKeys.forEach(keys => {
-    console.log(`https://www.youtube.com/embed/${keys}`);
     $(sampleTrailer).find("iframe")[0].src = `https://www.youtube.com/embed/${keys}`;
     $(".trailers")[0].innerHTML += sampleTrailer.outerHTML;
   })

@@ -1,0 +1,57 @@
+.calendar-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto;
+	max-width: 600px;
+   
+   background:  #333333;
+   transform-style: preserve-3d;
+   perspective: 1000px;
+	transition: .9s;
+   box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
+}
+
+
+/* Front - Calendar */
+.front {
+	transform: rotateY(0deg);
+}
+
+/* Back - Event/Movies Info */
+.back {
+	transform: rotateY(180deg);
+}
+
+/* Flip animation */
+.flip {
+	transform: rotateY(180deg);
+}
+
+.front, .back {
+	backface-visibility: hidden;
+}
+
+/* Style events/movie release notifications */
+.fc-event {
+   background-color: var(--orange);
+   border: none;
+}
+
+.fc-event:hover, .fc-list-item:hover {
+  cursor: pointer;
+}
+
+/* Align labels in the center */
+.fc-content-skeleton {
+   text-align: center;
+}
+.fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number {
+  float: none;
+}
+
+/* Style today's date */
+.fc-unthemed td.fc-today {
+  color: var(--dark);
+  background-color: var(--light);
+}

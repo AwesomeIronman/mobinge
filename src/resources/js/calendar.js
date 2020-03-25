@@ -118,7 +118,7 @@ async function getReleaseEvents(filteredMovies) {
 }
 
 async function initCalendar() {
-  let calendarEl = document.getElementById('calendar');
+  let calendarEl = document.getElementById("calendar");
 
   let filteredMovies = await getInTheatorMovies()
     .then(data => filterTitles(data))
@@ -126,8 +126,7 @@ async function initCalendar() {
   let eventData = await getReleaseEvents(filteredMovies)
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: ['bootstrap', 'interaction', 'dayGrid', 'list'],
-    themeSystem: 'bootstrap',
+    plugins: ['interaction', 'dayGrid', 'list'],
     header: {
       left: 'prev,next today',
       center: 'title',
@@ -136,13 +135,20 @@ async function initCalendar() {
     events: eventData,
     editable: false,
     eventStartEditable: false,
+    showNonCurrentDates: false,
+    fixedWeekCount: false,
     eventLimit: true, // allow "more" link when too many events
     dateClick: function (e) {
       console.log(e);
     },
     eventClick: function (info) {
       console.log(info.event.id, "movie");
-      showTitleClickedInfo(info.event.id);
+      $(".calendar-container").toggleClass('flip');
+
+      $(".front").fadeOut(900);
+      $(".front").hide();
+
+      showTitleClickedInfo(info.event.id)
     }
   });
 
@@ -156,7 +162,7 @@ async function showTitleClickedInfo(tmdbid) {
       query_params: "language=en-US"
     }
   )
-    .then(res => {
+    .then(res => { // Received Response
       let sampleNode = $('.sampleTitleInfo')[0].cloneNode(true); // Create a clone to edit and append each time
 
       $(sampleNode).find("img")[0].src = res.poster_path ?
@@ -170,7 +176,9 @@ async function showTitleClickedInfo(tmdbid) {
 
       $(sampleNode).find("a")[0].setAttribute("onclick", `openMovieInfo('${res.id}', 'movie')`);
 
-      $("#title-clicked-info")[0].innerHTML = sampleNode.innerHTML;
+      $(".back").append($(sampleNode).html()); // Append edited 
+
+      $(".back").show();
 
     })
 
