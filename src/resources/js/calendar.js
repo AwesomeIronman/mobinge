@@ -1,5 +1,14 @@
 $(document).ready(() => {
-  initCalendar()
+  initCalendar();
+
+  $(".calendar-container").on("click", "#backButton", function () {
+    console.log($(this))
+    $(".calendar-container").toggleClass("flip");
+
+    $(".back").fadeOut(900)
+    $(".back").hide()
+    $(".front").show()
+  });
 
 });
 // JQuery OnReady Close
@@ -132,7 +141,7 @@ async function initCalendar() {
       center: 'title',
       right: 'dayGridMonth,dayGridWeek,dayGridDay,listMonth'
     },
-    events: eventData,
+    events: eventData, // Data to be sent which contains movie name along with its ID and release date
     editable: false,
     eventStartEditable: false,
     showNonCurrentDates: false,

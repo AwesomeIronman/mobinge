@@ -10,6 +10,8 @@
    perspective: 1000px;
 	transition: .9s;
    box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
+
+   border-radius: 0.25em;
 }
 
 
@@ -54,4 +56,12 @@
 .fc-unthemed td.fc-today {
   color: var(--dark);
   background-color: var(--light);
+}
+
+.fc td, .fc th, .fc td.fc-today {
+   border: none;
+}
+
+.fc-disabled-day:last-child {
+   border-bottom-right-radius: 0.25em;
 }
