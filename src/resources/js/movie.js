@@ -2,11 +2,21 @@ $(document).ready(() => {
 
   let tmdbid = JSON.parse(localStorage.getItem("info_to_open"));
 
-  let movie_info = fetch_movie_info(tmdbid.id, "movie")
+  fetch_movie_info(tmdbid.id, "movie")
     .then(data => {
       console.log('Data: ', data);
       showMovieInfo(data);
     });
+
+
+
+  $().fancybox({
+    selector: '.media-img a:visible'
+  });
+
+  $().fancybox({
+    selector: 'a.media-vd:visible'
+  });
 
 });
 // JQuery OnReady Close
@@ -17,7 +27,7 @@ async function fetch_movie_info(tmdbid, title_type) {
       method: "POST",
       body: JSON.stringify({
         path: `${title_type}/${tmdbid}`,
-        query_params: "language=en-US&append_to_response=videos,images"
+        query_params: "language=en-US&append_to_response=videos,images,credits,reviews,recommendations,similar&include_image_language=en"
       })
     })
     .then(res => res.json())
@@ -25,89 +35,161 @@ async function fetch_movie_info(tmdbid, title_type) {
 }
 
 function showMovieInfo(movieData) {
-  // $("#backdrop_img")[0].src = `https://image.tmdb.org/t/p/w1280${movieData.backdrop_path}`;
+  let cast = crew = []
 
-  $("#poster_image")[0].src = `https://image.tmdb.org/t/p/w342${movieData.poster_path}`;
+  let backdropImg = `https://image.tmdb.org/t/p/w1280${movieData.backdrop_path}`
+  let posterImg = `https://image.tmdb.org/t/p/w300${movieData.poster_path}`
 
-  $("#movie_title")[0].textContent = movieData.title ? movieData.title : movieData.name;
+  $(".hero-image").css({ "background-image": `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backdropImg})` })
+  $(".movie-poster img.card-img-top").attr("src", posterImg)
+
+  // For "Watch Trailer" button under movie poster
+  let trailerVdIndex = movieData.videos.results.findIndex(vid => vid.type === "Trailer")
+  let trailerYtKey = movieData.videos.results[trailerVdIndex].key;
+  $(".trailer-btn").attr("data-fancybox", "")
+  $(".trailer-btn").attr("data-src", `https://www.youtube.com/embed/${trailerYtKey}`)
+
+  $('.trailer-btn').fancybox();
+
+  // Show movie title/name
+  $(".main-content > .movie-title").html(`${movieData.title ? movieData.title : movieData.name}
+           <span class="text-muted">
+            (${new Date(movieData.release_date).getFullYear()})
+            </span>`);
 
   // Movie vote/rating
-  $("#movie_rating > span")[0].textContent = `${movieData.vote_average}/10`;
+  $("span.rate-text").text(`${movieData.vote_average}`);
 
-  // To create date string in format: 30th April 2008
+  // Draw the movie rating stars
+  for (let i = 0; i < 10; i++) {
+    if (i < Math.floor(movieData.vote_average)) {
+      $(".rate-star > i").eq(i).css("color", "#f5b50a")
+    }
+  }
+
+  // Add the movie overview/brief info text
+  $(".overview-text").text(movieData.overview)
+
+  // Add photos to the "Videos and Photos" line
+  let sampleMediaImg = $("#sampleMovieMediaImg").clone();
+  let postersArr = movieData.images.posters;
+  $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[0].file_path}`)
+  $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[0].file_path}`)
+  $(".movie-media").append($(sampleMediaImg).clone().find(".movie-media-item"))
+
+  $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[1].file_path}`)
+  $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[1].file_path}`)
+  $(".movie-media").append($(sampleMediaImg).clone().find(".movie-media-item"))
+
+  $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[2].file_path}`)
+  $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[2].file_path}`)
+  $(".movie-media").append($(sampleMediaImg).clone().find("div"))
+
+  let sampleMediaVd = $("#sampleMovieMediaVd").clone();
+  $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${movieData.videos.results[0].key}`)
+  $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${movieData.videos.results[0].key}/mqdefault.jpg`)
+  $(".movie-media").append($(sampleMediaVd).clone().find(".movie-media-item"))
+
+  // Add Cast Info to the "Cast" line
+  let sampleCastItem = $("#sampleCastItem").clone();
+  cast = movieData.credits.cast.slice();
+  let selectedCast = cast.filter(person => person.order <= 6)
+  $.each(selectedCast, (index, person) => {
+    $(sampleCastItem).find(".person > .info > a").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
+    $(sampleCastItem).find(".person > .info > a > img").attr("src", `https://image.tmdb.org/t/p/w45${person.profile_path}`)
+    $(sampleCastItem).find(".person > .info > p").text(`${person.name}`)
+    $(sampleCastItem).find(".person > p").text(`As ${person.character}`)
+
+    $(".movie-cast").append($(sampleCastItem).clone().find(".cast-info"))
+  })
+
+  // Add to the "User Reviews" line
+  let sampleReview = $("#sampleReviewItem").clone();
+  let reviewsArr = movieData.reviews.results;
+  $(sampleReview).find(".review-author").text(`By ${reviewsArr[0].author}`)
+  $(sampleReview).find(".review-content").text(`${reviewsArr[0].content}`)
+  $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
+
+  $(sampleReview).find(".review-author").text(`By ${reviewsArr[1].author}`)
+  $(sampleReview).find(".review-content").text(`${reviewsArr[1].content}`)
+  $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
+
+  $(sampleReview).find(".review-author").text(`By ${reviewsArr[2].author}`)
+  $(sampleReview).find(".review-content").text(`${reviewsArr[2].content}`)
+  $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
+
+  // To create release date string in format: April 30, 2008
   var monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
     'August', 'September', 'October', 'November', 'December'];
   var date = new Date(movieData.release_date);
-  var dateStr = date.getDate() + "th " + monthName[date.getMonth()] + " " + date.getFullYear();
+  var dateStr = monthName[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear();
 
-  $("#movie_release_date > span#release_status")[0].textContent = (date >= new Date()) ? "Releasing on: " : "Released on: ";
-  $("#movie_release_date > span#release_date")[0].textContent = dateStr;
+  $("p.release-date").text(dateStr);
 
-  // Movie runtime
+  // Movie runtime - How long movie is
   let hours = Math.floor(movieData.runtime / 60);
   let minutes = movieData.runtime % 60;
-  $("#movie_runtime > span#runtime")[0].textContent = `${hours} hours and ${minutes} minutes`;
+  $(".runtime").text(`${hours} hours and ${minutes} minutes`);
 
-  // Generate movie string i.e. add "," and "." from genres array
-  let genres = "";
-  (movieData.genres).forEach(function (i, idx, array) {
-    if (idx === array.length - 1) {
-      genres += `${i.name}.`;
-    } else {
-      genres += `${i.name}, `;
-    }
-  });
-  $("#movie_genres > span#genres")[0].textContent = genres;
+  // Show movie directors names
+  crew = movieData.credits.crew.slice();
+  let directorInfo = crew.filter(person => person.job === "Director")
+  let directorNames = commaSeparatedNames(directorInfo)
+  $("p.directors").text(directorNames)
+  
+  // Show movie writers names
+  crew = movieData.credits.crew.slice();
+  let writersInfo = crew.filter(person => person.department === "Writing")
+  let writersNames = commaSeparatedNames(writersInfo)
+  $("p.writers").text(writersNames)
 
-  // Movie tagline
-  $("#movie_tagline")[0].textContent = `Tagline: ${movieData.tagline}`;
+  // Show movie stars/actors names
+  cast = movieData.credits.cast.slice();
+  let starsInfo = cast.filter(person => person.order <= 6)
+  let starsNames = commaSeparatedNames(starsInfo)
+  $("p.lead-actors").text(starsNames)
 
-  $("#movie_overview")[0].textContent = movieData.overview ? movieData.overview : "Unavailable";
+  // Create movies genres string for eg. "action, comedy, drama"
+  let genres = commaSeparatedNames(movieData.genres);
+  $("p.genre").text(genres)
 
-  $("#imdb_button")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
+  // // Movie tagline
+  // $("#movie_tagline")[0].textContent = `Tagline: ${movieData.tagline}`;
 
+  // $("#imdb_button")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
+
+  // Add to favourites movies list
   // Set movie ID as data attribute on the button (to be reused later)
-  $("#movie_favourite > button").data("title_type", "movie");
-  $("#movie_favourite > button").data("titleID", movieData.id);
-  $("#movie_favourite > button").on('click', { event: event }, toggleFavourite)
+  $(".toggle-favourites-btn").data("title_type", "movie");
+  $(".toggle-favourites-btn").data("titleID", movieData.id);
+  $(".toggle-favourites-btn").on('click', { event: event }, toggleFavourite)
 
   // Set whether already favourite or not
   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
   let favouritesIndex = localFavourites.findIndex(i => i.movie === movieData.id)
   if (favouritesIndex !== -1) {
-    $("#movie_favourite span.non_favourite").toggleClass("d-none")
-    $("#movie_favourite span.favourite").toggleClass("d-none")
-    $("#movie_favourite > button > i").css("color", "pink");
+    $(".toggle-favourites-btn").find("i").css("color", "pink");
   }
 
 
   // Add to watched movies list
   // Set movie ID as data attribute on the button (to be reused later)
-  $("#movie_watched > button").data("title_type", "movie");
-  $("#movie_watched > button").data("titleID", movieData.id);
-  $("#movie_watched > button").on('click', { event: event }, toggleWatched)
+  $(".toggle-watched-btn").data("title_type", "movie");
+  $(".toggle-watched-btn").data("titleID", movieData.id);
+  $(".toggle-watched-btn").on('click', { event: event }, toggleWatched)
 
   // Set whether already watched or not
   let localWatched = JSON.parse(localStorage.getItem("user_watched"))
   let watchedIndex = localWatched.findIndex(j => j.movie === movieData.id)
   if (watchedIndex !== -1) {
-    $("#movie_watched span.non_watched").toggleClass("d-none")
-    $("#movie_watched span.watched").toggleClass("d-none")
-    $("#movie_watched > button > i").css("color", "cornflowerblue");
+    $(".toggle-watched-btn").find("i").css("color", "cornflowerblue");
   }
 
-  // Get videos which are Youtube trailers of the movie
-  let trailerKeys = movieData.videos.results.filter(v => v.type === "Trailer" && v.site === "YouTube").map(v => v.key)
-  let sampleTrailer = $("#sample-embed-container")[0].cloneNode(true); // Create a clone to edit and append each time
-  $(sampleTrailer).removeAttr('id')
-  $(sampleTrailer).removeClass("d-none")
+  showReviews(movieData.reviews.results.slice())
 
-  trailerKeys.forEach(keys => {
-    $(sampleTrailer).find("iframe")[0].src = `https://www.youtube.com/embed/${keys}`;
-    $(".trailers")[0].innerHTML += sampleTrailer.outerHTML;
-  })
+  showCredits(movieData.credits)
 
-  $(".trailers")[0].classList.remove("d-none")
+  showMediaInfo(movieData)
 
 }
 
@@ -141,9 +223,8 @@ async function toggleFavourite(event) {
     )
 
       .then(res => {
-        $("#movie_favourite span.non_favourite").toggleClass("d-none")
-        $("#movie_favourite span.favourite").toggleClass("d-none")
-        $("#movie_favourite > button > i").css("color", "#6c757d");
+        $(".toggle-favourites-btn").find("i").css("color", "inherit");
+        $(".toggle-favourites-btn").find("span").text("Add to Favourites");
       })
 
       .catch(error => {
@@ -169,9 +250,8 @@ async function toggleFavourite(event) {
       }
     )
       .then(res => {
-        $("#movie_favourite span.non_favourite").toggleClass("d-none")
-        $("#movie_favourite span.favourite").toggleClass("d-none")
-        $("#movie_favourite > button > i").css("color", "pink");
+        $(".toggle-favourites-btn").find("i").css("color", "pink");
+        $(".toggle-favourites-btn").find("span").css("Added to Favourites");
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
@@ -212,9 +292,8 @@ async function toggleWatched(event) {
     )
 
       .then(res => {
-        $("#movie_watched span.non_watched").toggleClass("d-none")
-        $("#movie_watched span.watched").toggleClass("d-none")
-        $("#movie_watched > button > i").css("color", "#6c757d");
+        $(".toggle-watched-btn").find("i").css("color", "inherit");
+        $(".toggle-watched-btn").find("span").text("Add to Watchedlist");
       })
 
       .catch(error => {
@@ -240,9 +319,8 @@ async function toggleWatched(event) {
       }
     )
       .then(res => {
-        $("#movie_watched span.non_watched").toggleClass("d-none")
-        $("#movie_watched span.watched").toggleClass("d-none")
-        $("#movie_watched > button > i").css("color", "cornflowerblue");
+        $(".toggle-watched-btn").find("i").css("color", "cornflowerblue");
+        $(".toggle-watched-btn").find("span").text("Added to Watchedlist");
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
@@ -251,6 +329,96 @@ async function toggleWatched(event) {
 
     localStorage.setItem("user_watched", JSON.stringify(watchedList));
   }
+}
+
+function showReviews(reviewsArr) {
+  let sampleReview = $("#sampleReviewItem").clone();
+
+  $.each(reviewsArr, (index, review) => {
+    $(sampleReview).find(".review-author").text(`By ${review.author}`)
+    $(sampleReview).find(".review-content").text(`${review.content}`)
+
+    $(".reviews-container").append($(sampleReview).clone().find(".user-review"))
+  })
+}
+
+function showCredits(creditsArr) {
+  let sampleCastItem = $("#sampleCastItem").clone();
+
+  $.each(creditsArr.cast, (index, person) => {
+    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
+    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
+    $(sampleCastItem).find(".person .info p").text(person.name)
+    $(sampleCastItem).find(".person .role").text(person.character)
+
+    $(".cast-container").append($(sampleCastItem).clone().find(".cast-info"))
+  })
+
+  let crewArrCopy = creditsArr.crew.slice()
+
+  let selectedCrew = crewArrCopy.filter(person => person.department === "Directing")
+  $.each(selectedCrew, (index, person) => {
+    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
+    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
+    $(sampleCastItem).find(".person .info p").text(person.name)
+    $(sampleCastItem).find(".person .role").text(person.job)
+
+    $(".crew-container").append($(sampleCastItem).clone().find(".cast-info"))
+  })
+
+  selectedCrew = crewArrCopy.filter(person => person.department === "Production")
+  $.each(selectedCrew, (index, person) => {
+    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
+    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
+    $(sampleCastItem).find(".person .info p").text(person.name)
+    $(sampleCastItem).find(".person .role").text(person.job)
+
+    $(".crew-container").append($(sampleCastItem).clone().find(".cast-info"))
+  })
+
+  selectedCrew = crewArrCopy.filter(person => person.department === "Writing")
+  $.each(selectedCrew, (index, person) => {
+    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
+    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
+    $(sampleCastItem).find(".person .info p").text(person.name)
+    $(sampleCastItem).find(".person .role").text(person.job)
+
+    $(".crew-container").append($(sampleCastItem).clone().find(".cast-info"))
+  })
+}
+
+function showMediaInfo(movieData) {
+  $(".no-of-videos").text(`(${movieData.videos.results.length})`)
+  $(".no-of-images").text(`(${movieData.images.backdrops.length})`)
+
+  let sampleMediaVd = $("#sampleMediaVd").clone();
+  $.each(movieData.videos.results, (index, yt_video) => {
+    $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${yt_video.key}`)
+    $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${yt_video.key}/mqdefault.jpg`)
+
+    $(".media-vd-container").append($(sampleMediaVd).clone().find(".vd-item"))
+  })
+
+  let sampleMediaImg = $("#sampleMediaImg").clone();
+  $.each(movieData.images.backdrops, (index, movieImg) => {
+    $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${movieImg.file_path}`)
+    $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w300${movieImg.file_path}`)
+
+    $(".media-img-container").append($(sampleMediaImg).clone().find("a"))
+  })
+}
+
+function commaSeparatedNames(params) {
+  var genString = ""
+  
+  params.forEach(function (i, idx, array) {
+    if (idx === array.length - 1) {
+      genString += `${i.name}`;
+    } else {
+      genString += `${i.name}, `;
+    }
+  });
+  return genString;
 }
 
 function openMovieInfo(tmdbid, title_type) {

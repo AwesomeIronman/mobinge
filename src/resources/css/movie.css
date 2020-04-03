@@ -1,8 +1,150 @@
-#movieInfoContainer div {
-   padding: 0;
+.hero-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/imageNotFound.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+
+  height: 598px;
 }
 
-#movie_favourite > button, #movie_watched > button {
-   border: none;
-   background: none;
+.movie_info {
+  margin-top: -300px;
+}
+
+.movie-poster {
+  position: sticky;
+  top: 3rem;
+
+  margin-right: 30px;
+  margin-bottom: 60px;
+  border: none;
+}
+@media (max-width: 767px) {
+  .movie-poster {
+    margin-right: 0;
+  }
+}
+.movie-poster .movie-btn {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.movie-btn > button {
+  margin: 1em;
+}
+
+.movie-btn > button:first-child {
+  margin-bottom: 0;
+}
+
+.main-content > .btn-container > button {
+  font-size: 1.1rem;
+  color: var(--light);
+}
+
+.movie-rate {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  border-top: 1px solid #405266;
+  border-bottom: 1px solid #405266;
+
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 70px;
+}
+
+.rate {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.rate-star {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid #405266;
+}
+
+.rate p, .rate-star p {
+  margin: 0;
+}
+
+.info-tabs > ul.nav {
+  padding: 10px 0 10px 0;
+  margin-bottom: 1em;
+  border: none;
+}
+
+.info-tabs > ul.nav > li > a {
+  color: var(--light);
+  text-decoration: none;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  transition: all 0.3s ease-out;
+}
+
+.info-tabs > ul.nav > li > a.active, .info-tabs > ul.nav > li:hover > a {
+  border-bottom: 3px solid var(--orange);
+  color: var(--orange);
+}
+
+.movie-media {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vd-item > img {
+  width: 160px;
+}
+
+.cast-info .person {
+  display: flex;
+  justify-content: space-between;
+}
+
+.person .info img, .user-info img, .cast-info .left img {
+  max-width: 50px;
+  max-height: 50px;
+}
+
+.vd-item {
+  position: relative;
+}
+
+.vd-item a {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-img-container > a.media-img > img {
+  width: 150px;
+  height: 85px;
+}
+
+.user-review {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid grey;
+}
+
+.review-author {
+  text-align: end;
+  padding-bottom: 0;
 }
