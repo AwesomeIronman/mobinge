@@ -1,5 +1,4 @@
 $(document).ready(() => {
-
   let tmdbid = JSON.parse(localStorage.getItem("info_to_open"));
 
   fetch_movie_info(tmdbid.id, "movie")
@@ -7,8 +6,6 @@ $(document).ready(() => {
       console.log('Data: ', data);
       showMovieInfo(data);
     });
-
-
 
   $().fancybox({
     selector: '.media-img a:visible'
@@ -168,9 +165,8 @@ function showMovieInfo(movieData) {
   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
   let favouritesIndex = localFavourites.findIndex(i => i.movie === movieData.id)
   if (favouritesIndex !== -1) {
-    $(".toggle-favourites-btn").find("i").css("color", "pink");
+    $(".toggle-favourites-btn").find("i").css("color", "var(--primary)");
   }
-
 
   // Add to watched movies list
   // Set movie ID as data attribute on the button (to be reused later)
@@ -182,7 +178,7 @@ function showMovieInfo(movieData) {
   let localWatched = JSON.parse(localStorage.getItem("user_watched"))
   let watchedIndex = localWatched.findIndex(j => j.movie === movieData.id)
   if (watchedIndex !== -1) {
-    $(".toggle-watched-btn").find("i").css("color", "cornflowerblue");
+    $(".toggle-watched-btn").find("i").css("color", "#f5b50a");
   }
 
   showReviews(movieData.reviews.results.slice())
@@ -190,7 +186,6 @@ function showMovieInfo(movieData) {
   showCredits(movieData.credits)
 
   showMediaInfo(movieData)
-
 }
 
 async function toggleFavourite(event) {
@@ -250,7 +245,7 @@ async function toggleFavourite(event) {
       }
     )
       .then(res => {
-        $(".toggle-favourites-btn").find("i").css("color", "pink");
+        $(".toggle-favourites-btn").find("i").css("color", "var(--primary)");
         $(".toggle-favourites-btn").find("span").css("Added to Favourites");
       })
 
@@ -319,7 +314,7 @@ async function toggleWatched(event) {
       }
     )
       .then(res => {
-        $(".toggle-watched-btn").find("i").css("color", "cornflowerblue");
+        $(".toggle-watched-btn").find("i").css("color", "#f5b50a");
         $(".toggle-watched-btn").find("span").text("Added to Watchedlist");
       })
 
