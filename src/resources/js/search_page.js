@@ -28,7 +28,7 @@ $(document).ready(() => {
       }
    });
 
-   loadTrendingMoviesCarousel()
+   loadAllCarousel()
 
 });
 // JQuery OnReady Close
@@ -254,33 +254,35 @@ async function openMovieInfo(tmdbid, title_type) {
    }
 }
 
-async function loadTrendingMoviesCarousel() {
-   // Load images in carousel
-
-   // 1. clone node
-   let sample = $(".sample-carousel")[0].cloneNode(true)
-   $(sample).removeClass("d-none")
-   $(sample).removeClass("sample-carousel")
-
-   // 2. get trending movies list
+async function loadAllCarousel() {
    getResponse({
       path: `trending/movie/week`,
       query_params: `language=en-US&region=IN&include_adult=true`
+   }).then(response => carouselLoader(response.results, "#trending-movies-carousel > .carousel-container"))
+
+   getResponse({
+      path: `trending/tv/week`,
+      query_params: `language=en-US&region=IN&include_adult=true`
+   }).then(response => carouselLoader(response.results, "#trending-series-carousel > .carousel-container"))
+
+   getResponse({
+      path: `movie/top_rated`,
+      query_params: `language=en-US&region=IN&include_adult=true`
+   }).then(response => carouselLoader(response.results, "#rated-movies-carousel > .carousel-container"))
+}
+
+function carouselLoader(data, containerRef) {
+   $.each(data, (index, title) => {
+      $(containerRef + " .carousel .wrap ul").append($("#carousel-poster-template").html())
+
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
+         .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
+
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "movie")
    })
 
-      // 3. append movies poster image
-      .then(resp => {
-         $.each(resp.results, (index, movie) => {
-            $(sample).find("img").attr('src', `https://image.tmdb.org/t/p/w185${movie.poster_path}`)
-            $(".carousel > .wrap > ul").append(sample.outerHTML)
-
-            $(`.carousel > .wrap > ul > li:nth-child(${index})`).find("img").data("tmdbid", movie.id)
-            $(`.carousel > .wrap > ul > li:nth-child(${index})`).find("img").data("title_type", "movie")
-         })
-
-      })
-
-
+   $(containerRef).parent().removeClass("d-none")
 }
 
 function delay(fn, ms) {
