@@ -22,8 +22,8 @@ $(document).ready(() => {
    $(".carousel-container").on("click", function (event) {
       var target = $(event.target);
       if (target.is("img")) {
-         let tmdbid = $(this).data("tmdbid")
-         let title_type = $(this).data("title_type")
+         let tmdbid = $(target).data("tmdbid")
+         let title_type = $(target).data("title_type")
          openMovieInfo(tmdbid, title_type)
       }
    });
