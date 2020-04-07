@@ -15,6 +15,16 @@ $(document).ready(() => {
     selector: 'a.media-vd:visible'
   });
 
+  // Open title info page on carousel images click
+   $(".carousel-container").on("click", function (event) {
+      var target = $(event.target);
+      if (target.is("img")) {
+         let tmdbid = $(target).data("tmdbid")
+         let title_type = $(target).data("title_type")
+         openMovieInfo(tmdbid, title_type)
+      }
+   });
+
 });
 // JQuery OnReady Close
 
@@ -29,6 +39,18 @@ async function fetch_movie_info(tmdbid, title_type) {
     })
     .then(res => res.json())
     .catch(error => console.log(error))
+}
+
+async function getResponse(request) {
+  return await fetch('/.netlify/functions/tmdb-data',
+    { method: 'POST', body: JSON.stringify(request) }
+  )
+    .then(res => res.json())
+
+    .catch(error => {
+      console.error('Error:', error);
+      return error;
+    });
 }
 
 function showMovieInfo(movieData) {
@@ -186,6 +208,8 @@ function showMovieInfo(movieData) {
   showCredits(movieData.credits)
 
   showMediaInfo(movieData)
+
+  showRecommendations(movieData)
 }
 
 async function toggleFavourite(event) {
@@ -403,6 +427,30 @@ function showMediaInfo(movieData) {
   })
 }
 
+function showRecommendations(data) {
+  let containerRef = "#recommendations-container";
+  $.each(data.recommendations.results, (index, title) => {
+    $(`${containerRef} .carousel .wrap ul`).append($("#carousel-poster-template").html())
+
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
+      .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
+
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "movie")
+  })
+
+  containerRef = "#similar-movies-container";
+  $.each(data.similar.results, (index, title) => {
+    $(`${containerRef} .carousel .wrap ul`).append($("#carousel-poster-template").html())
+
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
+      .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
+
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "movie")
+  })
+}
+
 function commaSeparatedNames(params) {
   var genString = ""
   
@@ -419,7 +467,7 @@ function commaSeparatedNames(params) {
 function openMovieInfo(tmdbid, title_type) {
   // Set the ID of the movie/series user clicked in localstorage to use it later
   localStorage.setItem("info_to_open", JSON.stringify(
-    { tmdbid: tmdbid }
+    { id: tmdbid }
   ))
   if (title_type === "tv") {
     window.location.href = "/series"

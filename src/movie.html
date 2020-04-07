@@ -129,6 +129,9 @@
                                 <li class="ml-5">
                                     <a data-toggle="tab" href="#media">Media</a>
                                 </li>
+                                <li class="ml-5">
+                                    <a data-toggle="tab" href="#recommendations">Recommendations</a>
+                                </li>
                             </ul>
 
                         </div>
@@ -138,13 +141,7 @@
                             <div id="overview" class="tab-pane active">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-12 col-xs-12">
-                                        <p class="overview-text">Tony Stark creates the Ultron Program to protect the
-                                            world, but when the
-                                            peacekeeping program becomes
-                                            hostile, The Avengers go into action to try and defeat a virtually
-                                            impossible enemy together. Earth's
-                                            mightiest heroes must come together once again to protect the world from
-                                            global extinction.</p>
+                                        <p class="overview-text"></p>
 
 
                                         <!-- Videos and Photos line -->
@@ -190,9 +187,9 @@
                                                             href="#">
                                                             <img src="#" alt="Actor's Picture">
                                                         </a>
-                                                        <p class="ml-2">Robert Downey Jr.</p>
+                                                        <p class="ml-2"></p>
                                                     </div>
-                                                    <p class="role d-flex">As Tony Stark</p>
+                                                    <p class="role d-flex"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -209,8 +206,8 @@
                                         <!-- Sample -->
                                         <div id="sampleReviewItem" class="d-none">
                                             <div class="user-review">
-                                                <p class="review-content">My Favourite Movie</p>
-                                                <p class="review-author">By Cyrus Gracias</p>
+                                                <p class="review-content"></p>
+                                                <p class="review-author"></p>
                                             </div>
                                         </div>
                                         <!-- END: Sample -->
@@ -220,31 +217,27 @@
                                     <div class="col-md-4 col-xs-12 col-sm-12">
                                         <div>
                                             <h6>Director: </h6>
-                                            <p class="directors">Cyrus Gracias</p>
+                                            <p class="directors"></p>
                                         </div>
                                         <div class="my-4">
                                             <h6>Writer: </h6>
-                                            <p class="writers">
-                                                Joss Whedon, Stan Lee
-                                            </p>
+                                            <p class="writers"></p>
                                         </div>
                                         <div class="my-4">
                                             <h6>Stars: </h6>
-                                            <p class="lead-actors">Robert Downey Jr, Chris Evans, Mark Ruffalo, Scarlett
-                                                Johansson
-                                            </p>
+                                            <p class="lead-actors"></p>
                                         </div>
                                         <div class="my-4">
                                             <h6>Genres:</h6>
-                                            <p class="genre">Drama, Story, Drama</p>
+                                            <p class="genre"></p>
                                         </div>
                                         <div class="my-4">
                                             <h6>Release Date:</h6>
-                                            <p class="release-date">May 1, 2015</p>
+                                            <p class="release-date"></p>
                                         </div>
                                         <div class="my-4">
                                             <h6>Run Time:</h6>
-                                            <p class="runtime">141 min</p>
+                                            <p class="runtime"></p>
                                         </div>
                                     </div>
 
@@ -315,6 +308,43 @@
 
 
                             </div>
+                            <div id="recommendations" class="tab-pane fade">
+                                <div class="mb-2">
+                                    <h4>Movie recommendations for</h4>
+                                    <h2 class="movie-name"></h2>
+                                </div>
+                                
+                                <div id="recommendations-container" class="d-flex flex-wrap border-bottom mt-4 mb-4">
+                                    <div class="carousel-container">
+                                        <div class="carousel right">
+                                            <div class="indicator"></div>
+                                            <div class="wrap">
+                                                <ul></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <h4>Similar Movies: </h4>
+                                </div>
+                                
+                                <div id="similar-movies-container" class="d-flex flex-wrap border-bottom mt-4 mb-4">
+                                    <div class="carousel-container">
+                                        <div class="carousel right">
+                                            <div class="indicator"></div>
+                                            <div class="wrap">
+                                                <ul></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Template of poster image to append to the carousels  -->
+                                <template id="carousel-poster-template">
+                                    <li><img src=""></li>
+                                </template>
+                            </div>
 
                         </div>
 
@@ -334,9 +364,12 @@
     <link rel="stylesheet" href="./resources/fancybox/jquery.fancybox.min.css" />
     <script src="./resources/fancybox/jquery.fancybox.min.js"></script>
 
+    <script type="text/javascript" src="./resources/js/jquery.hoverCarousel.js"></script>
+
     <!-- Custom CSS and JS: -->
     <link rel="stylesheet" href="./resources/css/main.css">
     <link rel="stylesheet" href="./resources/css/movie.css">
+    <link rel="stylesheet" href="./resources/css/carousel.css">
     <script type="text/javascript" src="./resources/js/main.js"></script>
     <script type="text/javascript" src="./resources/js/movie.js"></script>
     <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
