@@ -115,6 +115,21 @@
   color: var(--orange);
 }
 
+a.view-all {
+  color: darkgray;
+}
+
+a.view-all:hover {
+  color: gray;
+}
+
+.hide-extra-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .movie-media {
   display: flex;
   flex-wrap: wrap;
@@ -158,12 +173,10 @@
 }
 
 .user-review {
-  padding-top: 1em;
-  padding-bottom: 1em;
+  padding: 1em 0 1em;
   border-bottom: 1px solid grey;
 }
 
-.review-author {
-  text-align: end;
-  padding-bottom: 0;
+.user-review p {
+  margin-bottom: 0;
 }

@@ -16,15 +16,20 @@ $(document).ready(() => {
   });
 
   // Open title info page on carousel images click
-   $(".carousel-container").on("click", function (event) {
-      var target = $(event.target);
-      if (target.is("img")) {
-         let tmdbid = $(target).data("tmdbid")
-         let title_type = $(target).data("title_type")
-         openMovieInfo(tmdbid, title_type)
-      }
-   });
+  $(".carousel-container").on("click", function (event) {
+    var target = $(event.target);
+    if (target.is("img")) {
+      let tmdbid = $(target).data("tmdbid")
+      let title_type = $(target).data("title_type")
+      openMovieInfo(tmdbid, title_type)
+    }
+  });
 
+  // Add view all info listener on various buttons
+  $("a.view-all").on("click", function () {
+    let tab_type = $(this).attr("data-tab_type")
+    $(`.info-tabs .nav li a#${tab_type}-tab`).tab('show')
+  })
 });
 // JQuery OnReady Close
 
@@ -150,23 +155,21 @@ function showMovieInfo(movieData) {
   let minutes = movieData.runtime % 60;
   $(".runtime").text(`${hours} hours and ${minutes} minutes`);
 
+  // Show movie tagline
+  let tagline = movieData.tagline;
+  $(".tagline").text(tagline)
+
   // Show movie directors names
   crew = movieData.credits.crew.slice();
   let directorInfo = crew.filter(person => person.job === "Director")
   let directorNames = commaSeparatedNames(directorInfo)
   $("p.directors").text(directorNames)
-  
+
   // Show movie writers names
   crew = movieData.credits.crew.slice();
   let writersInfo = crew.filter(person => person.department === "Writing")
   let writersNames = commaSeparatedNames(writersInfo)
   $("p.writers").text(writersNames)
-
-  // Show movie stars/actors names
-  cast = movieData.credits.cast.slice();
-  let starsInfo = cast.filter(person => person.order <= 6)
-  let starsNames = commaSeparatedNames(starsInfo)
-  $("p.lead-actors").text(starsNames)
 
   // Create movies genres string for eg. "action, comedy, drama"
   let genres = commaSeparatedNames(movieData.genres);
@@ -203,6 +206,8 @@ function showMovieInfo(movieData) {
     $(".toggle-watched-btn").find("i").css("color", "#f5b50a");
   }
 
+  $(".movie-name").text(`${movieData.title ? movieData.title : movieData.name}`)
+
   showReviews(movieData.reviews.results.slice())
 
   showCredits(movieData.credits)
@@ -210,6 +215,16 @@ function showMovieInfo(movieData) {
   showMediaInfo(movieData)
 
   showRecommendations(movieData)
+
+  // Show whole review on read-more-btn click
+  $("button.read-more-btn").on("click", function () {
+    if ($(this).text("Read more")) {
+      $(this).text("Read less")
+    } else {
+      $(this).text("Read more")
+    }
+    $(this).closest(".user-review").find(".review-content").toggleClass("hide-extra-lines")
+  })
 }
 
 async function toggleFavourite(event) {
@@ -453,7 +468,7 @@ function showRecommendations(data) {
 
 function commaSeparatedNames(params) {
   var genString = ""
-  
+
   params.forEach(function (i, idx, array) {
     if (idx === array.length - 1) {
       genString += `${i.name}`;
