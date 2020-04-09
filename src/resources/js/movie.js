@@ -385,7 +385,11 @@ function showCredits(creditsArr) {
     $(sampleCastItem).find(".person .info p").text(person.name)
     $(sampleCastItem).find(".person .role").text(person.character)
 
-    $(".cast-container").append($(sampleCastItem).clone().find(".cast-info"))
+    if (index >= 6) {
+      $(".extra-cast").append($(sampleCastItem).clone().find(".cast-info"))
+    } else {
+      $(".start-cast").append($(sampleCastItem).clone().find(".cast-info"))
+    }
   })
 
   let crewArrCopy = creditsArr.crew.slice()
@@ -397,7 +401,11 @@ function showCredits(creditsArr) {
     $(sampleCastItem).find(".person .info p").text(person.name)
     $(sampleCastItem).find(".person .role").text(person.job)
 
-    $(".crew-container").append($(sampleCastItem).clone().find(".cast-info"))
+    if ($(".start-crew .cast-info").length >= 6) {
+      $(".extra-crew").append($(sampleCastItem).clone().find(".cast-info"))
+    } else {
+      $(".start-crew").append($(sampleCastItem).clone().find(".cast-info"))
+    }
   })
 
   selectedCrew = crewArrCopy.filter(person => person.department === "Production")
@@ -407,7 +415,11 @@ function showCredits(creditsArr) {
     $(sampleCastItem).find(".person .info p").text(person.name)
     $(sampleCastItem).find(".person .role").text(person.job)
 
-    $(".crew-container").append($(sampleCastItem).clone().find(".cast-info"))
+    if ($(".start-crew .cast-info").length >= 6) {
+      $(".extra-crew").append($(sampleCastItem).clone().find(".cast-info"))
+    } else {
+      $(".start-crew").append($(sampleCastItem).clone().find(".cast-info"))
+    }
   })
 
   selectedCrew = crewArrCopy.filter(person => person.department === "Writing")
@@ -417,7 +429,20 @@ function showCredits(creditsArr) {
     $(sampleCastItem).find(".person .info p").text(person.name)
     $(sampleCastItem).find(".person .role").text(person.job)
 
-    $(".crew-container").append($(sampleCastItem).clone().find(".cast-info"))
+    if ($(".start-crew .cast-info").length >= 6) {
+      $(".extra-crew").append($(sampleCastItem).clone().find(".cast-info"))
+    } else {
+      $(".start-crew").append($(sampleCastItem).clone().find(".cast-info"))
+    }
+  })
+
+  $(".view-more-cast-btn").on("click", function () {
+    if ($(this).text() === "View More") {
+      $(this).text("View Less")
+    } else {
+      $(this).text("View More")
+    }
+    $(this).parent().find("div[class^='extra']").toggleClass("d-none")
   })
 }
 
