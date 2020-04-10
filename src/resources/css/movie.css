@@ -180,11 +180,16 @@ a.view-all:hover {
   justify-content: center;
 }
 
-.trailer-container, .teaser-container {
+.media-img-container > div, .media-vd-container > div {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.trailer-container, .teaser-container, .backdrops-container, .poster-container {
   display: flex;
   flex-wrap: wrap;
 }
-.trailer-container > h5, .teaser-container > h5 {
+.trailer-container > h5, .teaser-container > h5, .backdrops-container h5, .poster-container > h5 {
   flex-grow: 1;
   flex-basis: 100%;
 }

@@ -471,11 +471,26 @@ function showMediaInfo(movieData) {
   })
 
   let sampleMediaImg = $("#sampleMediaImg").clone();
-  $.each(movieData.images.backdrops, (index, movieImg) => {
-    $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${movieImg.file_path}`)
-    $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w300${movieImg.file_path}`)
+  $.each(movieData.images.backdrops, (index, backdropImg) => {
+    $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${backdropImg.file_path}`)
+    $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w300${backdropImg.file_path}`)
 
-    $(".media-img-container").append($(sampleMediaImg).clone().find("a"))
+    if (!($(".backdrops-container .media-img").length > 0)) {
+      $(".backdrops-container").append(`<h5>Backdrop images: </h5>`)
+    }
+
+    $(".backdrops-container").append($(sampleMediaImg).clone().find("a"))
+  })
+
+  $.each(movieData.images.posters, (index, posterImg) => {
+    $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${posterImg.file_path}`)
+    $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w154${posterImg.file_path}`)
+
+    if (!($(".posters-container .media-img").length > 0)) {
+      $(".posters-container").append(`<h5>Posters: </h5>`)
+    }
+
+    $(".posters-container").append($(sampleMediaImg).clone().find("a"))
   })
 
   // Initialize bootstrap tooltips
