@@ -180,6 +180,15 @@ a.view-all:hover {
   justify-content: center;
 }
 
+.trailer-container, .teaser-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.trailer-container > h5, .teaser-container > h5 {
+  flex-grow: 1;
+  flex-basis: 100%;
+}
+
 .media-img-container > a.media-img > img {
   width: 150px;
   height: 85px;

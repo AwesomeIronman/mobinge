@@ -451,11 +451,23 @@ function showMediaInfo(movieData) {
   $(".no-of-images").text(`(${movieData.images.backdrops.length})`)
 
   let sampleMediaVd = $("#sampleMediaVd").clone();
+
   $.each(movieData.videos.results, (index, yt_video) => {
     $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${yt_video.key}`)
     $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${yt_video.key}/mqdefault.jpg`)
 
-    $(".media-vd-container").append($(sampleMediaVd).clone().find(".vd-item"))
+    if (yt_video.type === "Trailer") {
+      if (!($(".trailer-container .vd-item").length > 0)) {
+        $(".trailer-container").append(`<h5>Trailers: </h5>`)
+      }
+      $(".trailer-container").append($(sampleMediaVd).clone().find(".vd-item"))
+    } else if (yt_video.type === "Teaser") {
+      if (!($(".teaser-container .vd-item").length > 0)) {
+        $(".teaser-container").append(`<h5>Teasers: </h5>`)
+      }
+      $(sampleMediaVd).find("a.media-vd").attr("title", `${yt_video.name}`)
+      $(".teaser-container").append($(sampleMediaVd).clone().find(".vd-item"))
+    }
   })
 
   let sampleMediaImg = $("#sampleMediaImg").clone();
@@ -464,6 +476,11 @@ function showMediaInfo(movieData) {
     $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w300${movieImg.file_path}`)
 
     $(".media-img-container").append($(sampleMediaImg).clone().find("a"))
+  })
+
+  // Initialize bootstrap tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
   })
 }
 
