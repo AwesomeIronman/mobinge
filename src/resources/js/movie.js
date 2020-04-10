@@ -1,7 +1,12 @@
 $(document).ready(() => {
-  let tmdbid = JSON.parse(localStorage.getItem("info_to_open"));
+  let info_to_open = JSON.parse(localStorage.getItem("info_to_open"));
+  
+  if (!(info_to_open.title_type === "movie")) {
+    console.log("Unexpected title type found!");
+    window.location.href = "/"
+  }
 
-  fetch_movie_info(tmdbid.id, "movie")
+  fetch_movie_info(info_to_open.tmdbid, "movie")
     .then(data => {
       console.log('Data: ', data);
       showMovieInfo(data);
@@ -539,7 +544,10 @@ function commaSeparatedNames(params) {
 function openMovieInfo(tmdbid, title_type) {
   // Set the ID of the movie/series user clicked in localstorage to use it later
   localStorage.setItem("info_to_open", JSON.stringify(
-    { id: tmdbid }
+    {
+      title_type: title_type,
+      tmdbid: tmdbid
+    }
   ))
   if (title_type === "tv") {
     window.location.href = "/series"

@@ -245,7 +245,10 @@ async function toggleFavourite(event) {
 async function openMovieInfo(tmdbid, title_type) {
    // Set the ID of the movie/series user clicked in localstorage to use it later
    localStorage.setItem("info_to_open", JSON.stringify(
-      { id: `${tmdbid}` }
+      {
+         title_type: title_type,
+         tmdbid: tmdbid
+      }
    ))
    if (title_type === "tv") {
       window.location.href = "/series"
