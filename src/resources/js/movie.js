@@ -82,7 +82,7 @@ function showMovieInfo(movieData) {
 
   // Show movie title/name
   $(".main-content > .movie-title").html(`${movieData.title ? movieData.title : movieData.name}
-           <span class="text-muted">
+           <span class="release-year">
             (${new Date(movieData.release_date).getFullYear()})
             </span>`);
 
