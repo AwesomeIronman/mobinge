@@ -61,35 +61,44 @@
 
       <div class="calendar-container">
          <div id="calendar" class="front text-light"></div>
+
          <div id="event-info" class="back text-light"></div>
 
          <!-- Always hidden, only required as sample -->
-         <div class="sampleTitleInfo d-none">
-            <button id="backButton" class="btn">
-               <i class="fas fa-arrow-left"></i>
-            </button>
+         <template id="sampleTitleInfo">
+            <div class="row no-gutters">
 
-            <div class="card">
-               <img src="#" class="card-img-top img-fluid">
+               <div class="col-auto">
+                  <img id="movie-poster-img" class="rounded" src="">
+               </div>
 
-               <div class="rounded text-dark">
-                  <div class="movie p-2">
-                     <p><span class="movie-title">Movie name:
+               <div class="col align-self-center">
+                  <div class="info-block px-2">
+                     <p><span class="movie-title">Name:
                            <span class="title"></span>
                         </span></p>
-                     <p><span class="movie-rating">Movie rating:
+                     <p><span class="movie-genre">Genre:
+                           <span class="genre"></span>
+                        </span></p>
+                     <p><span class="movie-rating">Rating:
                            <span class="rating"></span>
                         </span></p>
-                     <p><span class="movie-release-date">Movie release date:
+                     <p><span class="movie-release-date">Release Date:
                            <span class="release-date"></span>
                         </span></p>
-                     <a onclick="" href="#">View More</a>
+                     <button id="open-info-btn" class="btn btn-primary"
+                        style="background-color: rgb(245, 181, 10);">View Full Info</button>
                   </div>
                </div>
-            </div>
-         </div>
 
+            </div>
+
+            <button id="backButton" class="btn btn-transparent">
+               <i class="fas fa-arrow-left"></i>
+            </button>
+         </template>
       </div>
+
 
    </div>
    <!-- CLOSE: root div -->
@@ -115,6 +124,7 @@
    <!-- Custom CSS and JS: -->
    <link rel="stylesheet" href="./resources/css/main.css">
    <link rel="stylesheet" href="./resources/css/custom_full_calendar.css">
+   <link rel="stylesheet" href="./resources/css/calendar.css">
    <script type="text/javascript" src="./resources/js/main.js"></script>
    <script type="text/javascript" src="./resources/js/calendar.js"></script>
    <script defer type="text/javascript" src="./resources/js/user_data.js"></script>

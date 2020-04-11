@@ -1,0 +1,19 @@
+#event-info {
+   display: flex;
+   /* flex-direction: column; */
+   flex-wrap: wrap;
+
+   position: relative;
+}
+
+#backButton {
+   position: absolute;
+   top: 0; right: 0;
+
+   color: var(--light);
+}
+
+img#movie-poster-img {
+   max-width: 300px;
+   max-height: 450px;
+}
