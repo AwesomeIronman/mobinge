@@ -40,6 +40,10 @@ ul#full-info {
 	border: 0;
 }
 
+#root-div .row {
+  margin-bottom: 5rem;
+}
+
 /*************************************
 Build the scene and rotate on hover
 **************************************/
@@ -199,8 +203,8 @@ Generate "lighting" using box shadows
 .fancy_search_container {
 	display: flex;
 	flex: 0 0 70%;
-  	position: relative;
-  	margin-top: 1rem;
+  position: relative;
+  margin-top: 1rem;
 }
 
 .fancy_search_container .search {
@@ -280,7 +284,7 @@ Generate "lighting" using box shadows
 }
 
 .fancy_search_container.open .search {
-  left: 95%;
+  left: 97%;
   background: #1b2735;
   z-index: 6;
 }

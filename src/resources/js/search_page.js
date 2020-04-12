@@ -42,6 +42,14 @@ $(document).ready(() => {
       $(".fancy_search_container").removeClass("open")
       $("#partial-search-result").addClass("d-none")
    })
+
+   $(".fancy_search_container").on("click", ".search", function (event) {
+      if ($(event.currentTarget.parentElement).hasClass("open")) {
+         $("#searchText").val("")   // Clear user search text
+         $("#partial-search-result").css("display", "none");  // Hide any current partial search result
+         $("#full-search-result").css("display", "none");  // Hide any current full search result
+      }
+   })
 });
 
 window.timer = 0  // Used to delay repititive keyboard searches
