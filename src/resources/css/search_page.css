@@ -3,7 +3,7 @@
 }
 
 #partial-search-result {
-  width: 60%;
+  width: 68%;
   max-height: 50vh;
   margin: 0.125rem auto;
   overflow-y: auto;
@@ -188,3 +188,142 @@ Generate "lighting" using box shadows
 .movie:hover .info header {
 	box-shadow: inset 0px 0px 40px rgba(0,0,0,0);
 }
+
+/* ---------- START: Fancy search box ------------ */
+
+#searchForm {
+  display: flex;
+  justify-content: center;
+}
+
+.fancy_search_container {
+	display: flex;
+	flex: 0 0 70%;
+  	position: relative;
+  	margin-top: 1rem;
+}
+
+.fancy_search_container .search {
+  position: absolute;
+  margin: auto;
+  top: 0; bottom: 0;
+  right: 0; left: 0;
+  width: 4rem; height: 4rem;
+  background: crimson;
+  border-radius: 50%;
+  transition: all 1s;
+  z-index: 4;
+  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
+}
+
+.fancy_search_container .search:hover {
+  cursor: pointer;
+}
+
+.fancy_search_container .search::before {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: 22px;
+  right: 0;
+  bottom: 0;
+  left: 22px;
+  width: 12px;
+  height: 2px;
+  background: white;
+  transform: rotate(45deg);
+  transition: all .5s;
+}
+
+.fancy_search_container .search::after {
+  content: "";
+  position: absolute;
+  margin: auto;
+  top: -5px;
+  right: 0;
+  bottom: 0;
+  left: -5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  border: 2px solid white;
+  transition: all .5s;
+}
+
+.fancy_search_container input {
+  flex: 0 0 50%;
+  font-family: 'Inconsolata', monospace;
+  height: 3rem;
+  outline: none;
+  border: none;
+  border-radius: inherit;
+  background: crimson;
+  color: white;
+  text-shadow: 0 0 10px crimson;
+  padding: 0 2rem 0 2rem;
+  transition: opacity 1s;
+  opacity: 0;
+  z-index: 5;
+  font-weight: bolder;
+  letter-spacing: 0.1em;
+}
+
+.fancy_search_container.open input, .fancy_search_container.open .input-group {
+  opacity: 1;
+}
+
+.fancy_search_container.open input {
+  cursor: text;
+}
+.fancy_search_container.open .input-group span#search-btn {
+  cursor: pointer;
+}
+
+.fancy_search_container.open .search {
+  left: 95%;
+  background: #1b2735;
+  z-index: 6;
+}
+.fancy_search_container.open .search::before {
+  top: 0;
+  left: 0;
+  width: 25px;
+}
+.fancy_search_container.open .search::after {
+  top: 0;
+  left: 0;
+  width: 25px;
+  height: 2px;
+  border: none;
+  background: white;
+  border-radius: 0%;
+  transform: rotate(-45deg);
+}
+.fancy_search_container input::placeholder {
+  color: #1b2735;
+  opacity: 0.5;
+  font-weight: bolder;
+}
+
+.fancy_search_container .input-group {
+  transition: opacity 0.5ms;
+  opacity: 0;
+  border-radius: 2rem 0 0 2rem;
+  box-shadow: 0 0 25px 0 crimson, 0 20px 25px 0 rgba(0, 0, 0, 0.2);
+}
+
+.fancy_search_container .input-group span#search-btn {
+	padding-right: 30px;
+}
+
+.input-group-text {
+  z-index: 5;
+  font-weight: bolder;
+  letter-spacing: .1em;
+  height: 3rem;
+  outline: 0;
+  border: none;
+  background: #dc143c;
+  color: #fff;
+}
+/* ---------- END: Fancy search button ------------ */

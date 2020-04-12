@@ -33,7 +33,18 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-window.timer = 0
+$(document).ready(() => {
+   $("#search-box > .col").mouseenter(() => {
+      $(".fancy_search_container").addClass("open")
+   })
+
+   $("#search-box > .col").mouseleave(() => {
+      $(".fancy_search_container").removeClass("open")
+      $("#partial-search-result").addClass("d-none")
+   })
+});
+
+window.timer = 0  // Used to delay repititive keyboard searches
 
 async function partialSearch(event) {
    event.preventDefault();
