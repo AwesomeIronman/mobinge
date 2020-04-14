@@ -19,12 +19,12 @@
 <body>
 
     <div id="particles-js"></div>
-    
+
     <div id="root-div" class="container-fluid">
 
         <!-- Navbar: -->
         <nav class="navbar navbar-dark navbar-expand-md">
-        
+
             <a class="navbar-brand" href="./search.html">Mobinge</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,50 +35,51 @@
                     <li class="nav-item">
                         <a href="./search.html" class="nav-link">Home</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="./calendar.html" class="nav-link">Calendar</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="./favourites.html" class="nav-link active">Favourites</a>
                     </li>
-        
+
                     <li class="nav-item">
                         <a href="./watched.html" class="nav-link">Watched List</a>
                     </li>
                 </ul>
-        
+
                 <ul class="nav navbar-nav navbar-right">
                     <li class="nav-item">
                         <div class="btn-ntl-login" data-netlify-identity-button></div>
                     </li>
                 </ul>
             </div>
-        
+
         </nav>
 
         <div class="row justify-content-center">
 
-            <div class="col-9 round">
+            <div class="container">
 
                 <h2>My Favourites</h2>
 
                 <div id="favourites_container" class="row"></div>
 
                 <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                <div id="fullSample" class="col-md-3" style="display: none;">
-                    <div class="card h-100">
-                        <img src="" class="rounded img-fluid">
-                        <div class="overlay rounded text-dark">
-                            <div class="movie p-2">
-                                <p><span class="movie-title">Movie name</span></p>
-                                <p><span class="movie-rating">Rating</span></p>
-                                <a onclick="" href="#">Details</a>
+                <template id="fullSample">
+                    <div class="favourite__item col-md-3">
+                        <div class="favourite__container">
+                            <img src="" class="favourite__img img-fluid rounded">
+                            <div class="overlay">
+                                <div class="title-type__container">
+                                    <p class="title-type"></p>
+                                </div>
+                                <button class="view-more-info__btn btn btn-block btn-transparent">View More</button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </template>
 
             </div>
 
@@ -96,7 +97,8 @@
 
     <!-- Custom CSS and JS: -->
     <link rel="stylesheet" href="./resources/css/main.css">
-    
+    <link rel="stylesheet" href="./resources/css/favourites.css">
+
     <script type="text/javascript" src="./resources/js/main.js"></script>
     <script type="text/javascript" src="./resources/js/favourites.js"></script>
 
