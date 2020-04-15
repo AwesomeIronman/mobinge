@@ -143,24 +143,27 @@ Shadow beneath the 3D object
 Movie information
 **************************************/
 
+.info * {
+  color: var(--dark);
+}
+
 .info header {
-	color: #FFF;
-	padding: 7px 10px;
-	font-weight: bold;
 	height: 110px;
 	background-size: contain;
 	background-repeat: no-repeat;
 	text-shadow: 0px 1px 1px rgba(0,0,0,1);
 }
 
-.info header h1 {
-	margin: 0 0 2px;
-	font-size: 1.4em;
+button.view-more-info__btn {
+  position: absolute;
+  bottom: 0;
+  padding: 1rem 0;
+  transition: all 0.2s ease-in-out;
 }
 
-.info header .rating {
-	border: 1px solid #FFF;
-	padding: 0px 3px;
+button.view-more-info__btn:hover {
+  font-size: large;
+  text-decoration: underline;
 }
 
 /*************************************

@@ -157,11 +157,12 @@ function showFullResult(result) {
                )`
             });
 
-            $(sampleNode).find(".info header h1").text(info.title ? info.title : info.name);
+            $(sampleNode).find(".info .name").text(info.title ? info.title : info.name);
 
-            $(sampleNode).find(".info header .year").text(info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "");
+            $(sampleNode).find(".info .year").text(
+               info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "Unavailable");
 
-            $(sampleNode).find(".info header .rating").text(info.vote_average ? `${info.vote_average}/10` : "");
+            $(sampleNode).find(".info .rating").text(info.vote_average ? `${info.vote_average}` : "Unavailable");
 
             $("#full-info").append($(sampleNode).html()); // Append edited sample node
 

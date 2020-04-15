@@ -116,13 +116,20 @@
                             <div class="movie" onclick="return true">
                                 <div class="poster"></div>
                                 <div class="info">
-                                    <header>
-                                        <h1>Movie Name</h1>
-                                        <span class="year">Year</span>
-                                        <span class="rating">Rating</span>
-                                        <span class="duration">Duration</span>
-                                    </header>
-                                    <button class="more_info"><u>Details</u></button>
+                                    <header></header>
+                                    <div class="p-2">
+                                        <p>
+                                            <span class="name"></span>
+                                            <span class="year" style="color: darkgray;"></span>
+                                        </p>
+                                        <p>
+                                            User Rating:
+                                            <span class="rating"></span>/10 <i class="ml-1 fas fa-star"
+                                                style="color: #f5b50a;"></i>
+                                        </p>
+                                    </div>
+                                    <button class="view-more-info__btn btn btn-block btn-transparent">View
+                                        More</button>
                                 </div>
                             </div>
                         </li>
@@ -211,6 +218,7 @@
 
     <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
 
+    <link rel="stylesheet" href="./resources/fontawesome/css/all.css">
     <script type="text/javascript" src="./resources/js/particles.js"></script>
 </body>
 
