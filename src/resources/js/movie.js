@@ -1,6 +1,6 @@
 $(document).ready(() => {
   let info_to_open = JSON.parse(localStorage.getItem("info_to_open"));
-  
+
   if (!(info_to_open.title_type === "movie")) {
     console.log("Unexpected title type found!");
     window.location.href = "/"
@@ -74,11 +74,17 @@ function showMovieInfo(movieData) {
 
   // For "Watch Trailer" button under movie poster
   let trailerVdIndex = movieData.videos.results.findIndex(vid => vid.type === "Trailer")
-  let trailerYtKey = movieData.videos.results[trailerVdIndex].key;
-  $(".trailer-btn").attr("data-fancybox", "")
-  $(".trailer-btn").attr("data-src", `https://www.youtube.com/embed/${trailerYtKey}`)
+  let sampleMediaVd = $("#sampleMovieMediaVd").clone();
+  if (trailerVdIndex > -1) {
+    let trailerYtKey = movieData.videos.results[trailerVdIndex].key;
+    $(".trailer-btn").attr("data-fancybox", "")
+    $(".trailer-btn").attr("data-src", `https://www.youtube.com/embed/${trailerYtKey}`)
+    $('.trailer-btn').fancybox();
 
-  $('.trailer-btn').fancybox();
+    $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${movieData.videos.results[0].key}`)
+    $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${movieData.videos.results[0].key}/mqdefault.jpg`)
+    $(".movie-media").append($(sampleMediaVd).clone().find(".movie-media-item"))
+  }
 
   // Show movie title/name
   $(".main-content > .movie-title").html(`${movieData.title ? movieData.title : movieData.name}
@@ -100,24 +106,15 @@ function showMovieInfo(movieData) {
   $(".overview-text").text(movieData.overview)
 
   // Add photos to the "Videos and Photos" line
-  let sampleMediaImg = $("#sampleMovieMediaImg").clone();
+  let $sampleMediaImg = $("#sampleMovieMediaImg").clone();
   let postersArr = movieData.images.posters;
-  $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[0].file_path}`)
-  $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[0].file_path}`)
-  $(".movie-media").append($(sampleMediaImg).clone().find(".movie-media-item"))
+  for (let index = 0; index < postersArr.length && index < 3; index++) {  // Add maximum of only 3 photos to the line
+    $($sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[index].file_path}`)
+    $($sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[index].file_path}`)
+    $(".movie-media").append($($sampleMediaImg).clone().find(".movie-media-item"))
+  }
 
-  $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[1].file_path}`)
-  $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[1].file_path}`)
-  $(".movie-media").append($(sampleMediaImg).clone().find(".movie-media-item"))
 
-  $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[2].file_path}`)
-  $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[2].file_path}`)
-  $(".movie-media").append($(sampleMediaImg).clone().find("div"))
-
-  let sampleMediaVd = $("#sampleMovieMediaVd").clone();
-  $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${movieData.videos.results[0].key}`)
-  $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${movieData.videos.results[0].key}/mqdefault.jpg`)
-  $(".movie-media").append($(sampleMediaVd).clone().find(".movie-media-item"))
 
   // Add Cast Info to the "Cast" line
   let sampleCastItem = $("#sampleCastItem").clone();
@@ -135,17 +132,11 @@ function showMovieInfo(movieData) {
   // Add to the "User Reviews" line
   let sampleReview = $("#sampleReviewItem").clone();
   let reviewsArr = movieData.reviews.results;
-  $(sampleReview).find(".review-author").text(`By ${reviewsArr[0].author}`)
-  $(sampleReview).find(".review-content").text(`${reviewsArr[0].content}`)
-  $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
-
-  $(sampleReview).find(".review-author").text(`By ${reviewsArr[1].author}`)
-  $(sampleReview).find(".review-content").text(`${reviewsArr[1].content}`)
-  $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
-
-  $(sampleReview).find(".review-author").text(`By ${reviewsArr[2].author}`)
-  $(sampleReview).find(".review-content").text(`${reviewsArr[2].content}`)
-  $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
+  for (let index = 0; index < reviewsArr.length && index < 3; index++) {
+    $(sampleReview).find(".review-author").text(`By ${reviewsArr[index].author}`)
+    $(sampleReview).find(".review-content").text(`${reviewsArr[index].content}`)
+    $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
+  }
 
   // To create release date string in format: April 30, 2008
   var monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -180,9 +171,6 @@ function showMovieInfo(movieData) {
   let genres = commaSeparatedNames(movieData.genres);
   $("p.genre").text(genres)
 
-  // // Movie tagline
-  // $("#movie_tagline")[0].textContent = `Tagline: ${movieData.tagline}`;
-
   // $("#imdb_button")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
 
   // Add to favourites movies list
@@ -202,7 +190,7 @@ function showMovieInfo(movieData) {
   // Set movie ID as data attribute on the button (to be reused later)
   $(".toggle-watched-btn").data("title_type", "movie");
   $(".toggle-watched-btn").data("titleID", movieData.id);
-  $(".toggle-watched-btn").on('click', { event: event }, toggleWatched)
+  $(".toggle-watched-btn", "div.main-content").on('click', { event: event }, toggleWatched)
 
   // Set whether already watched or not
   let localWatched = JSON.parse(localStorage.getItem("user_watched"))

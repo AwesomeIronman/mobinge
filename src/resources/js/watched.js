@@ -3,8 +3,6 @@ $(document).ready(() => {
 
    netlifyIdentity.on('login', loadUserData);
    netlifyIdentity.on('logout', removeUserData);
-
-
 });
 
 
@@ -16,15 +14,15 @@ $(document).ready(() => {
 // JQuery OnReady Close
 
 async function showFavourites() {
-   // Get and store watched list only if user has logged in
+   // Get and store favourites only if user has logged in
    if (netlifyIdentity.currentUser() !== null) {
       await loadUserData()
          .then(() => {
-            let watchedlist = JSON.parse(localStorage.getItem("user_watched"));
-            watchedlist.forEach(element => {
-               // if movie
-               let data = []
+            let favourites = JSON.parse(localStorage.getItem("user_watched"));
+            favourites.forEach(element => {
+               let data = [], isMovie = false;
                if ("movie" in element) {
+                  isMovie = true;
                   data = getResponse(
                      {
                         path: `movie/${element.movie}`,
@@ -32,6 +30,7 @@ async function showFavourites() {
                      }
                   )
                } else if ("tv" in element) {
+                  isMovie = false;
                   data = getResponse(
                      {
                         path: `tv/${element.tv}`,
@@ -39,21 +38,23 @@ async function showFavourites() {
                      }
                   )
                }
+               data.then(title_data => {
+                  let $sampleNode = $($("#fullSample").html()); // Create a clone to edit and append each time
 
-               data.then(movie => {
-                  let sampleNode = $('#fullSample')[0].cloneNode(true); // Create a clone to edit and append each time
-                  sampleNode.removeAttribute("id")
-                  sampleNode.removeAttribute("style")
+                  let posterImg = title_data.poster_path ?
+                     `https://image.tmdb.org/t/p/w300${title_data.poster_path}` : "./resources/images/imageNotFound.png";
+                  let titleType = isMovie ? "Movie" : "Series";
 
-                  sampleNode.querySelector("img.img-fluid").src = movie.poster_path ? `https://image.tmdb.org/t/p/w300${movie.poster_path}` : "#";
-                  sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
-                  sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-                  sampleNode.querySelector(".overlay > .movie > a")
-                     .setAttribute("onclick", `openMovieInfo('${movie.id}', 'movie')`);
+                  $sampleNode.find("img.img-fluid").attr("src", posterImg);
+                  $sampleNode.find("p.title-type").text(titleType);
+                  $sampleNode.find("p.title-type").css("background-color", `${isMovie ? "var(--primary)" : "#f5b50a"}`);
+                  $("#favourites_container").append($sampleNode.clone().get(0));
 
-                  $("#favourites_container")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
-
+                  $("#favourites_container div.favourite__item:last-of-type")
+                     .find("button.view-more-info__btn").attr("onclick", `openMovieInfo('${title_data.id}', '${
+                        isMovie ? "movie" : "tv"}')`);
                })
+
             });
          })
    } else {
@@ -77,7 +78,7 @@ async function loadUserData() {
       .then(res => {
          console.log('Retrieved userdata: '); console.log(res);
 
-         if (Array.isArray(res.favourites) && Array.isArray(res.watchedlist)) {
+         if (Array.isArray(res.favourites)) {
             localStorage.setItem("user_favourites", JSON.stringify(res.favourites));
             localStorage.setItem("user_watched", JSON.stringify(res.watchedlist));
          } else {
@@ -108,76 +109,6 @@ async function getResponse(request) {
       .catch(error => {
          console.error('Error:', error);
       });
-}
-
-async function toggleFavourite(event) {
-   let titleType = $(this).data("titleType")
-   let titleID = $(this).data("titleID")
-
-   console.log(titleType);
-   console.log(titleID);
-
-   // Get favourites from localstorage
-   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
-
-   // search for given title ID in localstorage
-   let title_local_index
-   if (titleType === "movie") {
-      title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
-   } else {
-      title_local_index = localFavourites.findIndex(fav => fav.tv === titleID)
-   }
-
-   // If it is already favourite
-   if (title_local_index > -1) {
-      console.log('Removing from favourites');
-
-      fetch('/.netlify/functions/firestore-data',
-         {
-            method: 'POST', body: JSON.stringify({
-               userID: netlifyIdentity.currentUser().id,
-               operation: "remove-from-favourites",
-               titleType: $(this).data("titleType"),
-               titleID: $(this).data("titleID")
-            })
-         }
-      )
-         .then($("#search-info #movie #add-to-favourites").text("Favourite"))
-
-         .catch(error => {
-            console.error('Error:', error);
-         });
-
-      localFavourites.splice(title_local_index, 1);
-
-      localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
-
-
-   } else {
-      console.log('Adding to favourites');
-
-      fetch('/.netlify/functions/firestore-data',
-         {
-            method: 'POST', body: JSON.stringify({
-               userID: netlifyIdentity.currentUser().id,
-               operation: "add-to-favourites",
-               titleType: $(this).data("titleType"),
-               titleID: $(this).data("titleID")
-            })
-         }
-      )
-         .then($("#search-info #movie #add-to-favourites").text("Added to favourites"))
-
-         .catch(error => {
-            console.error('Error:', error);
-         });
-
-      localFavourites.push({ [titleType]: titleID })
-
-      localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
-   }
-
-
 }
 
 function openMovieInfo(tmdbid, title_type) {
