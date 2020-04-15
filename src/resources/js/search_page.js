@@ -124,6 +124,7 @@ function showPartialResult(result) {
 
    } else {
       sampleNode.innerHTML = "No result found!";
+      $(sampleNode).css("color", "var(--dark)");
       $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
    }
 

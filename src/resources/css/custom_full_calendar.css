@@ -51,7 +51,7 @@
 }
 
 /* Style today's date */
-.fc-unthemed td.fc-today {
+td.fc-today .fc-day-number {
   color: var(--dark);
   background-color: var(--light);
 }

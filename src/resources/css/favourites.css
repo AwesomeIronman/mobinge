@@ -34,6 +34,7 @@
 }
 
 button.view-more-info__btn {
+  color: var(--light);
   position: absolute;
   bottom: 0;
   padding: 1rem 0;
@@ -41,6 +42,7 @@ button.view-more-info__btn {
 }
 
 button.view-more-info__btn:hover {
+  color: var(--light);
   font-size: large;
   text-decoration: underline;
 }

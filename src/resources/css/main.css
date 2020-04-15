@@ -4,7 +4,7 @@
 html *
 {
   font-family: 'Poppins', sans-serif;
-  color: var(--light) !important;
+  color: var(--light);
 }
 
 body {
