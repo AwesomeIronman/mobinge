@@ -110,9 +110,9 @@
                     <ul id="full-info" class="clearfix"></ul>
 
                     <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                    <div id="fullSample" class="col-md-3 col-6" style="display: none;">
+                    <template id="fullSample">
 
-                        <li class="scene">
+                        <li class="scene col-md-3 col-sm-6 col-xs-12">
                             <div class="movie" onclick="return true">
                                 <div class="poster"></div>
                                 <div class="info">
@@ -127,6 +127,15 @@
                                             <span class="rating"></span>/10 <i class="ml-1 fas fa-star"
                                                 style="color: #f5b50a;"></i>
                                         </p>
+                                        <div class="btn-container d-flex justify-content-around">
+                                            <button class="toggle-favourites-btn btn">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                        
+                                            <button class="toggle-watched-btn btn">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                     <button class="view-more-info__btn btn btn-block btn-transparent">View
                                         More</button>
@@ -134,7 +143,7 @@
                             </div>
                         </li>
 
-                    </div>
+                    </template>
 
                 </div>
                 <!-- CLOSE: full search results -->

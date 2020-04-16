@@ -10,7 +10,7 @@ $(document).ready(() => {
 });
 
 async function loadUserData() {
-   await fetch('/.netlify/functions/firestore-data',
+   fetch('/.netlify/functions/firestore-data',
       {
          method: 'POST', body: JSON.stringify({
             userID: netlifyIdentity.currentUser().id,

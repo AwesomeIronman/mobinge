@@ -9,7 +9,12 @@
   overflow-y: auto;
 }
 
-#partial-info .list-group-item:hover {
+#partial-info ul li * {
+  color: var(--dark);
+}
+
+#partial-info ul li:hover {
+  cursor: pointer;
   background-color: lightgray;
 }
 
@@ -42,6 +47,20 @@ ul#full-info {
 
 #root-div .row {
   margin-bottom: 5rem;
+}
+
+li .info p {
+  margin-bottom: 0.5rem;
+}
+
+div.btn-container > button {
+  padding: 5px 10px;
+  border: 1px solid skyblue;
+  border-radius: 100%;
+}
+
+div.btn-container > button > i {
+  color: darkgray;
 }
 
 /*************************************
@@ -110,7 +129,7 @@ Transform and style the two planes
 	-moz-transform: rotateY(90deg) translateZ(90px);
 	transform: rotateY(90deg) translateZ(90px);
 	border: 1px solid #B8B5B5;
-	font-size: 0.75em;
+	font-size: 0.8rem;
 }
 
 /*************************************
@@ -155,15 +174,15 @@ Movie information
 }
 
 button.view-more-info__btn {
+  font-size: 0.8rem;
   position: absolute;
   bottom: 0;
   padding: 1rem 0;
-  transition: all 0.2s ease-in-out;
+  transition: font 0.2s ease-in-out;
 }
 
 button.view-more-info__btn:hover {
-  font-size: large;
-  text-decoration: underline;
+  font-size: 0.9rem;
 }
 
 /*************************************
