@@ -10,13 +10,10 @@ $(document).ready(() => {
    $("#search-btn").on('click', event => fullSearch(event));
 
    // From full search result posters, open title info page on btn click
-   $("ul#full-info").on("click", ".movie", function (event) {
-      var target = $(event.target);
-      if (target.is("button.more_info") || target.parent().is("button.more_info")) {
-         let tmdbid = $(this).find("button.more_info").data("tmdbid")
-         let title_type = $(this).find("button.more_info").data("title_type")
-         openMovieInfo(tmdbid, title_type)
-      }
+   $("ul#full-info").on("click", "button.view-more-info__btn", function (event) {
+      let tmdbid = $(this).data("tmdbid")
+      let title_type = $(this).data("title_type")
+      openMovieInfo(tmdbid, title_type)
    });
    // Open title info page on carousel images click
    $(".carousel-container").on("click", function (event) {
@@ -186,9 +183,9 @@ function showFullResult(result) {
                `#full-info > li:nth-child(${index + 1})`).data("title_type", "movie");
             $(".toggle-watched-btn, .toggle-favourites-btn",
                `#full-info > li:nth-child(${index + 1})`).data("titleID", info.id);
-            $(".toggle-favourites-btn", 
+            $(".toggle-favourites-btn",
                `#full-info > li:nth-child(${index + 1})`).on('click', { event: event }, toggleFavourite)
-            $(".toggle-watched-btn", 
+            $(".toggle-watched-btn",
                `#full-info > li:nth-child(${index + 1})`).on('click', { event: event }, toggleWatched)
          }
       });

@@ -1,7 +1,7 @@
 $(document).ready(() => {
   let info_to_open = JSON.parse(localStorage.getItem("info_to_open"));
 
-  if (!(info_to_open.title_type === "movie")) {
+  if (!info_to_open || !(info_to_open.title_type === "movie")) {
     console.log("Unexpected title type found!");
     window.location.href = "/"
   }
@@ -64,6 +64,11 @@ async function getResponse(request) {
 }
 
 function showMovieInfo(movieData) {
+  if (movieData.constructor !== Object) {
+    console.log('Received invalid data: ', movieData);
+    return false;
+  }
+
   let cast = crew = []
 
   let backdropImg = `https://image.tmdb.org/t/p/w1280${movieData.backdrop_path}`
@@ -74,26 +79,22 @@ function showMovieInfo(movieData) {
 
   // For "Watch Trailer" button under movie poster
   let trailerVdIndex = movieData.videos.results.findIndex(vid => vid.type === "Trailer")
-  let sampleMediaVd = $("#sampleMovieMediaVd").clone();
   if (trailerVdIndex > -1) {
     let trailerYtKey = movieData.videos.results[trailerVdIndex].key;
     $(".trailer-btn").attr("data-fancybox", "")
     $(".trailer-btn").attr("data-src", `https://www.youtube.com/embed/${trailerYtKey}`)
     $('.trailer-btn').fancybox();
-
-    $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${movieData.videos.results[0].key}`)
-    $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${movieData.videos.results[0].key}/mqdefault.jpg`)
-    $(".movie-media").append($(sampleMediaVd).clone().find(".movie-media-item"))
   }
 
   // Show movie title/name
-  $(".main-content > .movie-title").html(`${movieData.title ? movieData.title : movieData.name}
-           <span class="release-year">
-            (${new Date(movieData.release_date).getFullYear()})
-            </span>`);
+  let movieName = movieData.title ? movieData.title : movieData.name;
+  let releaseYear = new Date(movieData.release_date).getFullYear();
+  $(".main-content > .movie-title > .name").text(movieName);
+  $(".main-content > .movie-title > .year").text(releaseYear);
 
   // Movie vote/rating
-  $("span.rate-text").text(`${movieData.vote_average}`);
+  let movieRating = movieData.vote_average;
+  $("span.rate-text").text(movieRating);
 
   // Draw the movie rating stars
   for (let i = 0; i < 10; i++) {
@@ -106,36 +107,50 @@ function showMovieInfo(movieData) {
   $(".overview-text").text(movieData.overview)
 
   // Add photos to the "Videos and Photos" line
-  let $sampleMediaImg = $("#sampleMovieMediaImg").clone();
+  let $sampleMediaImg = $($("#sampleMovieMediaImg").html());  // JQuery object of template to use
   let postersArr = movieData.images.posters;
   for (let index = 0; index < postersArr.length && index < 3; index++) {  // Add maximum of only 3 photos to the line
-    $($sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[index].file_path}`)
-    $($sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[index].file_path}`)
-    $(".movie-media").append($($sampleMediaImg).clone().find(".movie-media-item"))
+    $sampleMediaImg.find("a").attr("href", `https://image.tmdb.org/t/p/original${postersArr[index].file_path}`)
+    $sampleMediaImg.find("img").attr("src", `https://image.tmdb.org/t/p/w92${postersArr[index].file_path}`)
+    $(".movie-media").append($sampleMediaImg.clone())
+  }
+  if (movieData.videos.results && movieData.videos.results.length > 0) {
+    let $sampleMediaVd = $($("#sampleMovieMediaVd").html());
+    $sampleMediaVd.find("a").attr("href", `https://www.youtube.com/embed/${movieData.videos.results[0].key}`)
+    $sampleMediaVd.find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${movieData.videos.results[0].key}/mqdefault.jpg`)
+    $(".movie-media").append($sampleMediaVd.clone())
   }
 
 
-
   // Add Cast Info to the "Cast" line
-  let sampleCastItem = $("#sampleCastItem").clone();
+  let $sampleCastItem = $($("#sampleCastItem").html());
   cast = movieData.credits.cast.slice();
   let selectedCast = cast.filter(person => person.order <= 6)
   $.each(selectedCast, (index, person) => {
-    $(sampleCastItem).find(".person > .info > a").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
-    $(sampleCastItem).find(".person > .info > a > img").attr("src", `https://image.tmdb.org/t/p/w45${person.profile_path}`)
-    $(sampleCastItem).find(".person > .info > p").text(`${person.name}`)
-    $(sampleCastItem).find(".person > p").text(`As ${person.character}`)
+    let originalProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
 
-    $(".movie-cast").append($(sampleCastItem).clone().find(".cast-info"))
+    let thumbnailProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let name = person.name;
+    let character = person.character;
+
+    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
+    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
+    $sampleCastItem.find(".person .info p").text(name)
+    $sampleCastItem.find(".person .role").text(character)
+
+    $(".movie-cast").append($sampleCastItem.clone())
   })
 
   // Add to the "User Reviews" line
-  let sampleReview = $("#sampleReviewItem").clone();
+  let $sampleReview = $($("#sampleReviewItem").html());
   let reviewsArr = movieData.reviews.results;
   for (let index = 0; index < reviewsArr.length && index < 3; index++) {
-    $(sampleReview).find(".review-author").text(`By ${reviewsArr[index].author}`)
-    $(sampleReview).find(".review-content").text(`${reviewsArr[index].content}`)
-    $(".movie-reviews").append($(sampleReview).clone().find(".user-review"))
+    $sampleReview.find(".review-author").text(`By ${reviewsArr[index].author}`)
+    $sampleReview.find(".review-content").text(`${reviewsArr[index].content}`)
+    $(".movie-reviews").append($sampleReview.clone())
   }
 
   // To create release date string in format: April 30, 2008
@@ -181,22 +196,26 @@ function showMovieInfo(movieData) {
 
   // Set whether already favourite or not
   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
-  let favouritesIndex = localFavourites.findIndex(i => i.movie === movieData.id)
-  if (favouritesIndex !== -1) {
-    $(".toggle-favourites-btn").find("i").css("color", "var(--primary)");
+  if (localFavourites && localFavourites.length !== 0) {
+    let favouritesIndex = localFavourites.findIndex(i => i.movie === movieData.id)
+    if (favouritesIndex !== -1) {   // If movie is found in favourites array then,
+      $(".toggle-favourites-btn i", "div.btn-container").css("color", "var(--primary)");
+    }
   }
 
   // Add to watched movies list
   // Set movie ID as data attribute on the button (to be reused later)
   $(".toggle-watched-btn").data("title_type", "movie");
   $(".toggle-watched-btn").data("titleID", movieData.id);
-  $(".toggle-watched-btn", "div.main-content").on('click', { event: event }, toggleWatched)
+  $(".toggle-watched-btn", "div.movie_info").on('click', { event: event }, toggleWatched)
 
   // Set whether already watched or not
   let localWatched = JSON.parse(localStorage.getItem("user_watched"))
-  let watchedIndex = localWatched.findIndex(j => j.movie === movieData.id)
-  if (watchedIndex !== -1) {
-    $(".toggle-watched-btn").find("i").css("color", "#f5b50a");
+  if (localWatched && localWatched.length !== 0) {
+    let watchedIndex = localWatched.findIndex(j => j.movie === movieData.id)
+    if (watchedIndex !== -1) {
+      $(".toggle-watched-btn i", "div.main-content").css("color", "#f5b50a");
+    }
   }
 
   $(".movie-name").text(`${movieData.title ? movieData.title : movieData.name}`)
@@ -221,6 +240,10 @@ function showMovieInfo(movieData) {
 }
 
 async function toggleFavourite(event) {
+  if (netlifyIdentity.currentUser() === null) {
+    console.log("User not logged in");
+    return false;
+  }
   let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
   console.log(title_type);
   console.log(titleID);
@@ -290,6 +313,11 @@ async function toggleFavourite(event) {
 }
 
 async function toggleWatched(event) {
+  if (netlifyIdentity.currentUser() === null) {
+    console.log("User not logged in");
+    return false;
+  }
+
   let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
   console.log(title_type);
   console.log(titleID);
@@ -359,29 +387,38 @@ async function toggleWatched(event) {
 }
 
 function showReviews(reviewsArr) {
-  let sampleReview = $("#sampleReviewItem").clone();
+  let $sampleReview = $($("#sampleReviewItem").html());
 
   $.each(reviewsArr, (index, review) => {
-    $(sampleReview).find(".review-author").text(`By ${review.author}`)
-    $(sampleReview).find(".review-content").text(`${review.content}`)
+    $sampleReview.find(".review-author").text(`By ${review.author}`)
+    $sampleReview.find(".review-content").text(`${review.content}`)
 
-    $(".reviews-container").append($(sampleReview).clone().find(".user-review"))
+    $(".reviews-container").append($sampleReview.clone())
   })
 }
 
 function showCredits(creditsArr) {
-  let sampleCastItem = $("#sampleCastItem").clone();
+  let $sampleCastItem = $($("#sampleCastItem").html());
 
   $.each(creditsArr.cast, (index, person) => {
-    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
-    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
-    $(sampleCastItem).find(".person .info p").text(person.name)
-    $(sampleCastItem).find(".person .role").text(person.character)
+    let originalProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let thumbnailProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let name = person.name;
+    let character = person.character;
+
+    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
+    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
+    $sampleCastItem.find(".person .info p").text(name)
+    $sampleCastItem.find(".person .role").text(character)
 
     if (index >= 6) {
-      $(".extra-cast").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".extra-cast").append($sampleCastItem.clone())
     } else {
-      $(".start-cast").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".start-cast").append($sampleCastItem.clone())
     }
   })
 
@@ -389,43 +426,70 @@ function showCredits(creditsArr) {
 
   let selectedCrew = crewArrCopy.filter(person => person.department === "Directing")
   $.each(selectedCrew, (index, person) => {
-    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
-    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
-    $(sampleCastItem).find(".person .info p").text(person.name)
-    $(sampleCastItem).find(".person .role").text(person.job)
+    let originalProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let thumbnailProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let name = person.name;
+    let job = person.job;
+
+    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
+    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
+    $sampleCastItem.find(".person .info p").text(name)
+    $sampleCastItem.find(".person .role").text(job)
 
     if ($(".start-crew .cast-info").length >= 6) {
-      $(".extra-crew").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".extra-crew").append($sampleCastItem.clone())
     } else {
-      $(".start-crew").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".start-crew").append($sampleCastItem.clone())
     }
   })
 
   selectedCrew = crewArrCopy.filter(person => person.department === "Production")
   $.each(selectedCrew, (index, person) => {
-    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
-    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
-    $(sampleCastItem).find(".person .info p").text(person.name)
-    $(sampleCastItem).find(".person .role").text(person.job)
+    let originalProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let thumbnailProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let name = person.name;
+    let job = person.job;
+
+    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
+    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
+    $sampleCastItem.find(".person .info p").text(name)
+    $sampleCastItem.find(".person .role").text(job)
 
     if ($(".start-crew .cast-info").length >= 6) {
-      $(".extra-crew").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".extra-crew").append($sampleCastItem.clone())
     } else {
-      $(".start-crew").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".start-crew").append($sampleCastItem.clone())
     }
   })
 
   selectedCrew = crewArrCopy.filter(person => person.department === "Writing")
   $.each(selectedCrew, (index, person) => {
-    $(sampleCastItem).find(".person .info a.media-img").attr("href", `https://image.tmdb.org/t/p/original${person.profile_path}`)
-    $(sampleCastItem).find(".person .info a.media-img img").attr("src", `https://image.tmdb.org/t/p/w92${person.profile_path}`)
-    $(sampleCastItem).find(".person .info p").text(person.name)
-    $(sampleCastItem).find(".person .role").text(person.job)
+    let originalProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let thumbnailProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let name = person.name;
+    let job = person.job;
+
+    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
+    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
+    $sampleCastItem.find(".person .info p").text(name)
+    $sampleCastItem.find(".person .role").text(job)
 
     if ($(".start-crew .cast-info").length >= 6) {
-      $(".extra-crew").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".extra-crew").append($sampleCastItem.clone())
     } else {
-      $(".start-crew").append($(sampleCastItem).clone().find(".cast-info"))
+      $(".start-crew").append($sampleCastItem.clone())
     }
   })
 
@@ -443,47 +507,53 @@ function showMediaInfo(movieData) {
   $(".no-of-videos").text(`(${movieData.videos.results.length})`)
   $(".no-of-images").text(`(${movieData.images.backdrops.length})`)
 
-  let sampleMediaVd = $("#sampleMediaVd").clone();
+  let $sampleMediaVd = $($("#sampleMediaVd").html());
 
   $.each(movieData.videos.results, (index, yt_video) => {
-    $(sampleMediaVd).find("a").attr("href", `https://www.youtube.com/embed/${yt_video.key}`)
-    $(sampleMediaVd).find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${yt_video.key}/mqdefault.jpg`)
+    $sampleMediaVd.find("a").attr("href", `https://www.youtube.com/embed/${yt_video.key}`)
+    $sampleMediaVd.find("img.vd-thumb").attr("src", `https://i.ytimg.com/vi/${yt_video.key}/mqdefault.jpg`)
 
     if (yt_video.type === "Trailer") {
       if (!($(".trailer-container .vd-item").length > 0)) {
         $(".trailer-container").append(`<h5>Trailers: </h5>`)
       }
-      $(".trailer-container").append($(sampleMediaVd).clone().find(".vd-item"))
+      $(".trailer-container").append($sampleMediaVd.clone())
     } else if (yt_video.type === "Teaser") {
       if (!($(".teaser-container .vd-item").length > 0)) {
         $(".teaser-container").append(`<h5>Teasers: </h5>`)
       }
-      $(sampleMediaVd).find("a.media-vd").attr("title", `${yt_video.name}`)
-      $(".teaser-container").append($(sampleMediaVd).clone().find(".vd-item"))
+      $($sampleMediaVd).find("a.media-vd").attr("title", `${yt_video.name}`)
+      $(".teaser-container").append($sampleMediaVd.clone())
     }
   })
 
-  let sampleMediaImg = $("#sampleMediaImg").clone();
+  let $sampleMediaImg = $($("#sampleMediaImg").html());
   $.each(movieData.images.backdrops, (index, backdropImg) => {
-    $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${backdropImg.file_path}`)
-    $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w300${backdropImg.file_path}`)
+    $sampleMediaImg.find("a").attr("href", `https://image.tmdb.org/t/p/original${backdropImg.file_path}`)
+    $sampleMediaImg.find("img").attr("src", `https://image.tmdb.org/t/p/w300${backdropImg.file_path}`)
+
+    $sampleMediaImg.find("img").attr("width", "300px")   // Specify width and height for performant lazy loading
+    $sampleMediaImg.find("img").attr("height", "169px")
 
     if (!($(".backdrops-container .media-img").length > 0)) {
       $(".backdrops-container").append(`<h5>Backdrop images: </h5>`)
     }
 
-    $(".backdrops-container").append($(sampleMediaImg).clone().find("a"))
+    $(".backdrops-container").append($sampleMediaImg.clone())
   })
 
   $.each(movieData.images.posters, (index, posterImg) => {
-    $(sampleMediaImg).find("a").attr("href", `https://image.tmdb.org/t/p/original${posterImg.file_path}`)
-    $(sampleMediaImg).find("img").attr("src", `https://image.tmdb.org/t/p/w154${posterImg.file_path}`)
+    $sampleMediaImg.find("a").attr("href", `https://image.tmdb.org/t/p/original${posterImg.file_path}`)
+    $sampleMediaImg.find("img").attr("src", `https://image.tmdb.org/t/p/w154${posterImg.file_path}`)
+
+    $sampleMediaImg.find("img").attr("width", "154px")   // Specify width and height for performant lazy loading
+    $sampleMediaImg.find("img").attr("height", "231px")
 
     if (!($(".posters-container .media-img").length > 0)) {
       $(".posters-container").append(`<h5>Posters: </h5>`)
     }
 
-    $(".posters-container").append($(sampleMediaImg).clone().find("a"))
+    $(".posters-container").append($($sampleMediaImg).clone())
   })
 
   // Initialize bootstrap tooltips

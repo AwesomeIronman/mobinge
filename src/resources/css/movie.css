@@ -162,7 +162,12 @@ a.view-all:hover {
   justify-content: space-between;
 }
 
-.person .info img, .user-info img, .cast-info .left img {
+.person .info img {
+  width: 37px;
+  height: 57px;
+}
+
+.user-info img, .cast-info .left img {
   max-width: 50px;
   max-height: 50px;
 }
