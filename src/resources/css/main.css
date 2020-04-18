@@ -43,3 +43,12 @@ a.netlify-identity-button {
   text-decoration: none;
 }
 /* ------------ END: Login button ------------- */
+
+
+a.navbar-brand {
+  margin-right: 2rem;
+}
+
+a.navbar-brand > img {
+  margin-right: 0.5rem;
+}
