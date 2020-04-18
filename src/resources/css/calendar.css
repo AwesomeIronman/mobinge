@@ -12,8 +12,3 @@
 
    color: var(--light);
 }
-
-img#movie-poster-img {
-   max-width: 300px;
-   max-height: 450px;
-}
