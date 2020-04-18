@@ -364,20 +364,20 @@ async function loadAllCarousel() {
    getResponse({
       path: `trending/movie/week`,
       query_params: `language=en-US&region=IN&include_adult=true`
-   }).then(response => carouselLoader(response.results, "#trending-movies-carousel > .carousel-container"))
+   }).then(response => carouselLoader(response.results, "#trending-movies-carousel > .carousel-container", "movie"))
 
    getResponse({
       path: `trending/tv/week`,
       query_params: `language=en-US&region=IN&include_adult=true`
-   }).then(response => carouselLoader(response.results, "#trending-series-carousel > .carousel-container"))
+   }).then(response => carouselLoader(response.results, "#trending-series-carousel > .carousel-container", "tv"))
 
    getResponse({
       path: `movie/top_rated`,
       query_params: `language=en-US&region=IN&include_adult=true`
-   }).then(response => carouselLoader(response.results, "#rated-movies-carousel > .carousel-container"))
+   }).then(response => carouselLoader(response.results, "#rated-movies-carousel > .carousel-container", "movie"))
 }
 
-function carouselLoader(data, containerRef) {
+function carouselLoader(data, containerRef, title_type) {
    $.each(data, (index, title) => {
       $(containerRef + " .carousel .wrap ul").append($("#carousel-poster-template").html())
 
@@ -385,7 +385,7 @@ function carouselLoader(data, containerRef) {
          .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
 
       $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "movie")
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", title_type)
    })
 
    $(containerRef).parent().removeClass("d-none")
