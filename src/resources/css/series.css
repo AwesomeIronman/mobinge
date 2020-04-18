@@ -1,8 +1,216 @@
-#seriesInfoContainer div {
-   padding: 0;
+.hero-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../images/imageNotFound.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+
+  height: 598px;
 }
 
-#series_favourite > button, #series_watched > button {
-   border: none;
-   background: none;
+.series_info {
+  margin-top: -300px;
+}
+
+.series-poster {
+  position: sticky;
+  top: 3rem;
+
+  margin-right: 30px;
+  margin-bottom: 60px;
+  border: none;
+}
+@media (max-width: 767px) {
+  .series-poster {
+    margin-right: 0;
+  }
+}
+.series-poster .series-btn {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.series-btn > button {
+  margin: 1em;
+}
+
+.series-btn > button:first-child {
+  margin-bottom: 0;
+}
+
+.series-title span.year {
+   font-size: 1.5rem;
+   color: darkgray;
+}
+
+.btn-container button {
+  font-size: 1.1rem;
+  color: var(--light);
+}
+
+.btn-container button:hover {
+  color: var(--light);
+}
+
+.btn-container button i {
+  border: 1px solid skyblue;
+  border-radius: 1.5em;
+  padding: 0.75em;
+}
+
+.series-rate {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  border-top: 1px solid #405266;
+  border-bottom: 1px solid #405266;
+
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 67px;
+}
+
+.rate {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.series-rate .rate > i {
+  color: #f5b50a;
+}
+
+.series-rate {
+  font-size: large;
+}
+
+.rate-star {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid #405266;
+}
+
+.rate p, .rate-star p {
+  margin: 0;
+}
+
+.info-tabs > ul.nav {
+  padding: 10px 0 10px 0;
+  margin-bottom: 1em;
+  border: none;
+}
+
+.info-tabs > ul.nav > li > a {
+  color: var(--light);
+  text-decoration: none;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  transition: all 0.3s ease-out;
+}
+
+.info-tabs > ul.nav > li > a.active, .info-tabs > ul.nav > li:hover > a {
+  border-bottom: 3px solid var(--orange);
+  color: var(--orange);
+}
+
+a.view-all {
+  color: darkgray;
+}
+
+a.view-all:hover {
+  color: gray;
+}
+
+.hide-extra-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.series-media {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.vd-item > img {
+  width: 160px;
+}
+
+#cast-info-container, #crew-info-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  margin: 1rem 0 1rem;
+}
+
+.start-cast-info, .extra-cast, .start-crew-info, .extra-crew {
+  flex-grow: 1;
+}
+
+.cast-info .person {
+  display: flex;
+  justify-content: space-between;
+}
+
+.person .info img {
+  width: 37px;
+  height: 57px;
+}
+
+.user-info img, .cast-info .left img {
+  max-width: 50px;
+  max-height: 50px;
+}
+
+.vd-item {
+  position: relative;
+}
+
+.vd-item a {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trailer-container, .teaser-container, .backdrops-container, .posters-container {
+  display: flex;
+  flex-wrap: wrap;
+
+  max-height: 360px;
+  overflow-y: auto;
+}
+.trailer-container > h5, .teaser-container > h5, .backdrops-container h5, .posters-container > h5 {
+  flex-grow: 1;
+  flex-basis: 100%;
+}
+
+.media-img-container > a.media-img > img {
+  width: 150px;
+  height: 85px;
+}
+
+.user-review {
+  padding: 1em 0 1em;
+  border-bottom: 1px solid grey;
+}
+
+.user-review p {
+  margin-bottom: 0;
 }

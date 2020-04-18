@@ -17,9 +17,9 @@
 
 <body>
 
-    <div id="particles-js"></div>
-    
-    <div id="root-div" class="container-fluid">
+    <!-- <div id="particles-js"></div> -->
+
+    <div class="container-fluid">
 
         <!-- Navbar: -->
         <nav class="navbar navbar-dark navbar-expand-md">
@@ -57,107 +57,341 @@
 
         </nav>
 
-        <div class="row justify-content-md-center">
+    </div>
+    <!-- CLOSE: root div -->
 
-            <div id="seriesInfoContainer" class="col-md-9 rounded text-dark">
+    <div class="info_container">
+        <div class="hero-image"></div>
 
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="card">
-                            <img id="poster_image" class="img-fluid rounded" src="#" alt="Series Poster">
-
-                            <div class="card-body d-flex justify-content-center">
-                                <!-- Add to favourites button -->
-                                <h6 id="series_favourite" class="d-inline-block border-right">
-                                    <button class="rounded py-1">
-                                        <i class="fas fa-heart fa-2x" style="color:#6c757d;"></i>
-                                    </button>
-                                </h6>
-
-                                <!-- Add to Watched button -->
-                                <h6 id="series_watched" class="d-inline-block">
-                                    <button class="rounded py-1">
-                                        <i class="fas fa-eye fa-2x" style="color: #6c757d;"></i>
-                                    </button>
-                                </h6>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-9">
-                        <div class="card p-3">
-                            <div class="card-header">
-
-                                <div class="d-flex">
-                                    <!-- show series title/name -->
-                                    <h4 id="series_title">Loading...</h4>
-
-                                    <!-- show rating -->
-                                    <h4 id="series_rating" class="ml-3">
-                                        <i class="fas fa-star align-text-bottom" style="color: #FFCA28;"></i>
-                                        <span class="text-muted">Loading...</span>
-                                    </h4>
-                                </div>
-
-                                <div class="d-flex">
-                                    <!-- show release date -->
-                                    <h6 id="series_release_date">
-                                        <span id="release_status" class="text-muted mr-2">Loading...</span>
-                                        <i class="fas fa-calendar" style="color: #6c757d;"></i>
-                                        <span id="release_date" class="text-muted">Loading...</span>
-                                    </h6>
-
-                                    <!-- show release date -->
-                                    <h6 id="series_runtime" class="ml-3">
-                                        <span class="text-muted mr-2">Episode Runtime: </span>
-                                        <i class="fas fa-hourglass-end" style="color: #6c757d;"></i>
-                                        <span id="runtime" class="text-muted">Loading...</span>
-                                    </h6>
-                                </div>
-
-                                <div class="d-flex">
-                                    <!-- show series genres -->
-                                    <h6 id="series_genres">
-                                        <span class="text-muted mr-2">Genres: </span>
-                                        <span id="genres" class="text-muted">Loading...</span>
-                                    </h6>
-                                </div>
-
-                                <div class="d-flex">
-                                    <!-- show series tagline -->
-                                    <h6 id="series_tagline" class="text-muted"></h6>
-                                </div>
-
-                            </div>
-
-
-                            <div class="card-body">
-                                <!-- series brief overview text -->
-                                <div id="series_overview" class="card-text m-2">Loading...</div>
-
-                                <div class="trailers"></div>
-
-                                <div id="sample-embed-container" class="d-none embed-container">
-                                    <iframe width="500" height="450" src='' frameborder='0' allowfullscreen></iframe>
-                                </div>
-
-                                <!-- series IMDB link button -->
-                                <a id="imdb_button" href="#" target="_blank" class="btn btn-warning m-2">View More on
-                                    IMDB</a>
-                            </div>
-
+        <div class="container series_info">
+            <div class="row">
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="card series-poster">
+                        <img class="card-img-top" src="./resources/images/imageNotFound.png" alt="">
+                        <div class="series-btn">
+                            <button class="trailer-btn btn btn-primary" data-fancybox data-src="none">
+                                <i class="mr-2 fas fa-play"></i> <span> Watch Trailer</span>
+                            </button>
+                            <button class="toggle-watched-btn btn btn-secondary">
+                                <i class="mr-2 fas fa-eye"></i> <span> Add to Watchedlist</span>
+                            </button>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    <div class="main-content">
+
+                        <h1 class="series-title text-light mb-3">
+                            <span class="name"></span>
+                            <span class="year"></span>
+                        </h1>
+
+                        <div class="btn-container mb-2 d-flex align-items-center">
+                            <button class="toggle-favourites-btn btn btn-transparent">
+                                <i class="mr-2 fas fa-heart"></i> <span> Add to Favourites</span>
+                            </button>
+
+                            <button class="toggle-watched-btn btn">
+                                <i class="mr-2 fas fa-eye"></i> <span> Add to Watchedlist</span>
+                            </button>
+                        </div>
+                        <div class="series-rate text-light">
+                            <div class="rate">
+                                <i class="fas fa-star fa-2x"></i>
+                                <p class="ml-3"><span class="rate-text text-light"></span> / 10<br></p>
+                            </div>
+
+                            <div class="rate-star">
+                                <p class="mr-3">User Rating: </p>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                                <i class="fas fa-star fa-2x"></i>
+                            </div>
+                        </div>
+
+                        <div class="info-tabs">
+
+                            <ul class="nav nav-tabs">
+                                <li>
+                                    <a id="overview-tab" class="active" data-toggle="tab" href="#overview"
+                                        aria-controls="overview" aria-selected="true">Overview</a>
+                                </li>
+                                <li class="ml-5">
+                                    <a id="reviews-tab" data-toggle="tab" href="#reviews" aria-controls="reviews"
+                                        aria-selected="false">Reviews</a>
+                                </li>
+                                <li class="ml-5">
+                                    <a id="cast-tab" data-toggle="tab" href="#cast" aria-controls="cast"
+                                        aria-selected="false">Cast & Crew</a>
+                                </li>
+                                <li class="ml-5">
+                                    <a id="media-tab" data-toggle="tab" href="#media" aria-controls="media"
+                                        aria-selected="false">Media</a>
+                                </li>
+                                <li class="ml-5">
+                                    <a id="recommendations-tab" data-toggle="tab" href="#recommendations"
+                                        aria-controls="recommendations" aria-selected="false">Recommendations</a>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                        <div class="tab-content text-light">
+
+                            <div id="overview" class="tab-pane active" role="tabpanel" aria-labelledby="overview-tab">
+                                <div class="row">
+                                    <div class="col-md-8 col-sm-12 col-xs-12">
+                                        <p class="overview-text"></p>
+
+
+                                        <!-- Videos and Photos line -->
+                                        <div class="d-flex justify-content-between border-bottom">
+                                            <h5>Videos & Photos</h5>
+                                            <a href="#media" class="view-all btn btn-transparent" data-tab_type="media">
+                                                View all media</a>
+                                        </div>
+                                        <div class="series-media my-3"></div>
+
+                                        <!-- Samples -->
+                                        <template id="sampleSeriesMediaImg">
+                                            <div class="series-media-item">
+                                                <a class="media-img rounded mr-2 mb-2" data-fancybox="gallery" href="">
+                                                    <img src="">
+                                                </a>
+                                            </div>
+                                        </template>
+                                        <template id="sampleSeriesMediaVd">
+                                            <div class="series-media-item">
+                                                <div class="vd-item mr-2">
+                                                    <img class="vd-thumb" src="#" alt="">
+                                                    <a class="media-vd fancybox.iframe" href="#">
+                                                        <img src="./resources/images/play-vd.png" alt="play-icon">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <!-- END: Samples -->
+
+
+                                        <!-- Cast line -->
+                                        <div class="d-flex justify-content-between border-bottom">
+                                            <h5>Cast</h5>
+                                            <a href="#cast" class="view-all btn btn-transparent" data-tab_type="cast">
+                                                View whole cast</a>
+                                        </div>
+                                        <div class="series-cast my-3"></div>
+
+                                        <!-- Sample -->
+                                        <template id="sampleCastItem">
+                                            <div class="cast-info my-2">
+                                                <div class="person">
+                                                    <div class="info d-flex">
+                                                        <a class="media-img rounded mr-2 mb-2" data-fancybox="gallery"
+                                                            href="#">
+                                                            <img src="#" alt="Actor's Picture">
+                                                        </a>
+                                                        <p class="ml-2"></p>
+                                                    </div>
+                                                    <p class="role d-flex"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <!-- END: Sample -->
+
+                                        <!-- User Reviews Line -->
+                                        <div class="d-flex justify-content-between border-bottom">
+                                            <h5>User reviews</h5>
+                                            <a href="#reviews" class="view-all btn btn-transparent"
+                                                data-tab_type="reviews">
+                                                View all reviews</a>
+                                        </div>
+                                        <div class="series-reviews my-3"></div>
+
+                                        <!-- Sample -->
+                                        <template id="sampleReviewItem">
+                                            <div class="user-review">
+                                                <p class="review-content hide-extra-lines"></p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <button class="read-more-btn btn btn-transparent text-muted">
+                                                        Read more
+                                                    </button>
+                                                    <p class="review-author"></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <!-- END: Sample -->
+
+                                    </div>
+
+                                    <div class="col-md-4 col-xs-12 col-sm-12">
+                                        <div>
+                                            <h6>No of Seasons: </h6>
+                                            <p class="total-seasons-number"></p>
+                                        </div>
+                                        <div>
+                                            <h6>Total No of Episodes: </h6>
+                                            <p class="total-episodes-number"></p>
+                                        </div>
+                                        <div class="my-4">
+                                            <h6>Episode Run Time:</h6>
+                                            <p class="runtime"></p>
+                                        </div>
+                                        <div class="my-4">
+                                            <h6>Genres:</h6>
+                                            <p class="genre"></p>
+                                        </div>
+                                        <div>
+                                            <h6>Created By: </h6>
+                                            <p class="creators"></p>
+                                        </div>
+                                        <div class="my-4">
+                                            <h6>Writers: </h6>
+                                            <p class="writers"></p>
+                                        </div>
+                                        <div class="my-4">
+                                            <h6>Release Date:</h6>
+                                            <p class="release-date"></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="reviews" class="tab-pane fade" role="tabpanel" aria-labelledby="reviews-tab">
+                                <div class="row">
+
+                                    <div class="mb-2">
+                                        <h4>Reviews for series</h4>
+                                        <h2 class="series-name"></h2>
+                                    </div>
+
+                                    <div class="reviews-container"></div>
+                                </div>
+                            </div>
+                            <div id="cast" class="tab-pane fade" role="tabpanel" aria-labelledby="cast-tab">
+
+                                <div class="mb-2">
+                                    <h5>Cast & Crew of</h5>
+                                    <h2 class="series-name"></h2>
+                                </div>
+
+                                <div class="border-bottom">
+                                    <h5>Cast</h5>
+                                </div>
+                                <div id="cast-info-container">
+                                    <div class="start-cast"></div>
+                                    <div class="extra-cast d-none"></div>
+                                    <a href="#cast-info-container"
+                                        class="view-more-cast-btn btn btn-secondary mx-auto">View More</a>
+                                </div>
+
+                                <div class="border-bottom">
+                                    <h5>Directors & Other Crew</h5>
+                                </div>
+                                <div id="crew-info-container">
+                                    <div class="start-crew"></div>
+                                    <div class="extra-crew d-none"></div>
+                                    <a href="#crew-info-container"
+                                        class="view-more-cast-btn btn btn-secondary mx-auto">View More</a>
+                                </div>
+
+                            </div>
+                            <div id="media" class="tab-pane fade" role="tabpanel" aria-labelledby="media-tab">
+
+                                <div class="mb-2">
+                                    <h4>Videos & Photos of</h4>
+                                    <h2 class="series-name"></h2>
+                                </div>
+
+
+                                <div class="border-bottom mt-4 mb-2">
+                                    <h4>Videos</h4>
+                                </div>
+                                <div class="media-vd-container">
+                                    <div class="trailer-container pb-2"></div>
+                                    <div class="teaser-container pt-2"></div>
+                                </div>
+
+                                <template id="sampleMediaVd">
+                                    <div class="vd-item mr-2">
+                                        <img class="vd-thumb" src="#" alt="">
+                                        <a class="media-vd fancybox.iframe" href="#" data-toggle="tooltip"
+                                            data-placement="left" title="">
+                                            <img src="./resources/images/play-vd.png" alt="play-icon">
+                                        </a>
+                                    </div>
+                                </template>
+
+
+                                <div class="border-bottom mt-4 mb-2">
+                                    <h4>Photos</h4>
+                                </div>
+                                <div class="media-img-container">
+                                    <div class="backdrops-container pb-2"></div>
+                                    <div class="posters-container pt-2"></div>
+                                </div>
+
+                                <template id="sampleMediaImg">
+                                    <a class="media-img rounded mr-2 mb-2" data-fancybox="gallery" href="#">
+                                        <img src="#" loading="lazy">
+                                    </a>
+                                </template>
+
+
+                            </div>
+                            <div id="recommendations" class="tab-pane fade" role="tabpanel"
+                                aria-labelledby="recommendations-tab">
+                                <div class="mb-2">
+                                    <h4>Series recommendations for</h4>
+                                    <h2 class="series-name"></h2>
+                                </div>
+
+                                <div id="recommendations-container" class="d-flex flex-wrap border-bottom mt-4 mb-4">
+                                    <div class="carousel-container">
+                                        <div class="carousel right">
+                                            <div class="indicator"></div>
+                                            <div class="wrap">
+                                                <ul></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <h4>Similar Series: </h4>
+                                </div>
+
+                                <div id="similar-series-container" class="d-flex flex-wrap border-bottom mt-4 mb-4">
+                                    <div class="carousel-container">
+                                        <div class="carousel right">
+                                            <div class="indicator"></div>
+                                            <div class="wrap">
+                                                <ul></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Template of poster image to append to the carousels  -->
+                                <template id="carousel-poster-template">
+                                    <li><img src=""></li>
+                                </template>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
             </div>
-
         </div>
-
     </div>
-    <!-- CLOSE: row div -->
-
-    </div>
-    <!-- CLOSE: root div -->
 
 
     <link rel="stylesheet" href="./resources/fontawesome/css/all.css">
@@ -166,14 +400,20 @@
     <!-- netlify identity user login library: -->
     <script type="text/javascript" src="./resources/js/netlify-identity-widget.js"></script>
 
+    <link rel="stylesheet" href="./resources/fancybox/jquery.fancybox.min.css" />
+    <script src="./resources/fancybox/jquery.fancybox.min.js"></script>
+
+    <script type="text/javascript" src="./resources/js/jquery.hoverCarousel.js"></script>
+
     <!-- Custom CSS and JS: -->
     <link rel="stylesheet" href="./resources/css/main.css">
     <link rel="stylesheet" href="./resources/css/series.css">
+    <link rel="stylesheet" href="./resources/css/carousel.css">
     <script type="text/javascript" src="./resources/js/main.js"></script>
     <script type="text/javascript" src="./resources/js/series.js"></script>
     <script defer type="text/javascript" src="./resources/js/user_data.js"></script>
 
-    <script type="text/javascript" src="./resources/js/particles.js"></script>
+    <!-- <script type="text/javascript" src="./resources/js/particles.js"></script> -->
 </body>
 
 </html>

@@ -504,9 +504,6 @@ function showCredits(creditsArr) {
 }
 
 function showMediaInfo(movieData) {
-  $(".no-of-videos").text(`(${movieData.videos.results.length})`)
-  $(".no-of-images").text(`(${movieData.images.backdrops.length})`)
-
   let $sampleMediaVd = $($("#sampleMediaVd").html());
 
   $.each(movieData.videos.results, (index, yt_video) => {

@@ -39,8 +39,9 @@
   margin-bottom: 0;
 }
 
-h1.movie-title > .release-year {
-  color: darkgrey;
+.movie-title span.year {
+  font-size: 1.5rem;
+  color: darkgray;
 }
 
 .btn-container button {
