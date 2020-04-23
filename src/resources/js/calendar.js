@@ -1,5 +1,9 @@
-$(document).ready(() => {
-  initCalendar();
+$(document).ready(async () => {
+  const moviesArr = getInTheatorMovies();
+
+  let eventData = moviesArr.then(data => getReleaseEvents(data));
+
+  initCalendar(await eventData, await moviesArr);
 
   $("#event-info").on("click", "#backButton", function () {
     $(".calendar-container").toggleClass("flip");
@@ -20,56 +24,31 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-async function getResponse(request) {
-  return await fetch('/.netlify/functions/tmdb-data',
-    { method: 'POST', body: JSON.stringify(request) }
-  )
-    .then(res => res.json())
-
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}
-
 async function getInTheatorMovies() {
   // Get all upcoming, now-playing-in-theator movies from serverless function
-  return await fetch('/.netlify/functions/tmdb-all-in-theators', { method: 'POST' })
+  return await fetch('/.netlify/functions/tmdb-all-in-theators')
     .then(res => res.json())
-
-    .catch(err => {
-      console.log(err);
-      return err;
-    });
+    .catch(err => err);
 }
 
-async function filterTitles(data) {
-  // Remove regional movies
-  return data.filter(movie => movie.original_language === "en" || movie.original_language === "hi")
-}
-
-async function getReleaseEvents(filteredMovies) {
+async function getReleaseEvents(movies) {
   // Create an array of objects containing data for fullCalendar libraries event source
   let arr = []
 
-  Array.prototype.forEach.call(filteredMovies, movie => {
-    arr = [...arr, {
-      title: movie.title.substr(0, 32),
+  Array.prototype.forEach.call(movies, movie => {
+    arr.push({
+      title: movie.title,
       start: moment(movie.release_date).format("YYYY-MM-DD"),
       allDay: true,
       id: movie.id
-    }];
+    });
   });
 
   return arr;
 }
 
-async function initCalendar() {
+async function initCalendar(eventData, moviesInfo) {
   let calendarEl = document.getElementById("calendar");
-
-  let filteredMovies = await getInTheatorMovies()
-    .then(data => filterTitles(data))
-
-  let eventData = await getReleaseEvents(filteredMovies)
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
     plugins: ['interaction', 'dayGrid', 'list'],
@@ -78,64 +57,52 @@ async function initCalendar() {
       center: 'title',
       right: 'dayGridMonth,dayGridWeek,dayGridDay,listMonth'
     },
-    events: eventData, // Data to be sent which contains movie name along with its ID and release date
+    events: eventData,
     editable: false,
     eventStartEditable: false,
     showNonCurrentDates: false,
     fixedWeekCount: false,
-    eventLimit: true, // allow "more" link when too many events
-    dateClick: function (e) {
-      console.log(e);
-    },
+    eventLimit: true,
     eventClick: function (info) {
-      console.log(info.event.id, "movie");
+      let clickedMovieInfo = moviesInfo.find(movie => movie.id === Number(info.event.id));
       $(".calendar-container").toggleClass('flip');
-
       $(".front").fadeOut(900);
       $(".front").hide();
-
-      showTitleClickedInfo(info.event.id)
+      showTitleClickedInfo(clickedMovieInfo)
     }
   });
 
   calendar.render();
 }
 
-async function showTitleClickedInfo(tmdbid) {
-
+function showTitleClickedInfo(info) {
   $("#event-info.back").show();
 
-  await getResponse(
-    {
-      path: `movie/${tmdbid}`,
-      query_params: "language=en-US"
-    }
-  )
-    .then(res => { // Received Response
-      let $sampleNode = $($('#sampleTitleInfo').clone().html()); // Create a clone to edit and append each time
+  let $sampleNode = $($('#sampleTitleInfo').clone().html()); // Create a clone to edit and append each time
 
-      let posterImg = (res.poster_path) ?
-        "https://image.tmdb.org/t/p/w300" + res.poster_path : "/resources/images/imageNotFound.png";
-      let movieName = res.title ? res.title : res.name;
-      let rating = !(res.vote_average) ? "Unavailable" : res.vote_average + "/10";
-      let releaseDate = moment(res.release_date).format("DD MMMM YYYY");
-      let genres = commaSeparatedNames(res.genres);
+  let id = info.id;
+  let posterImg = (info.poster_path) ?
+    "https://image.tmdb.org/t/p/w300" + info.poster_path : "/resources/images/imageNotFound.png";
+  let movieName = info.title ? info.title : info.name;
+  let rating = !(info.vote_average) ? "Unavailable" : info.vote_average + "/10";
+  let releaseDate = moment(info.release_date).format("DD MMMM YYYY");
+  let genres = info.genres ? commaSeparatedNames(info.genres) : "";
 
-      $sampleNode.find("img").attr("src", posterImg);
+  $sampleNode.find("img").attr("src", posterImg);
 
-      $sampleNode.find(".movie-title > .title").text(movieName);
+  $sampleNode.find(".movie-title > .title").text(movieName);
 
-      $sampleNode.find(".movie-genre > .genre").text(genres);
+  $sampleNode.find(".movie-genre > .genre").text(genres);
 
-      $sampleNode.find(".movie-rating > .rating").text(rating);
+  $sampleNode.find(".movie-rating > .rating").text(rating);
 
-      $sampleNode.find(".movie-release-date > .release-date").text(releaseDate);
+  $sampleNode.find(".movie-release-date > .release-date").text(releaseDate);
 
-      $sampleNode.find("button#open-info-btn").data("tmdbid", res.id);
-      $sampleNode.find("button#open-info-btn").data("title_type", "movie");
+  $sampleNode.find("button#open-info-btn").data("tmdbid", id);
+  $sampleNode.find("button#open-info-btn").data("title_type", "movie");
 
-      $("#event-info.back").html($sampleNode); // Append edited
-    })
+  $("#event-info.back").html($sampleNode); // Append edited
+  // })
 
 }
 

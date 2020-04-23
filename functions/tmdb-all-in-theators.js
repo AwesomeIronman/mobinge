@@ -4,85 +4,63 @@ const fetch = require('node-fetch-npm');
 const { TMDB_API_KEY, TMDB_API_URL } = process.env
 
 exports.handler = async function (event, context) {
-    console.log('TMDB_ALL-MOVIES-IN-THEATORS: +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-');
+    var result = [], sub_urls = [];
 
-    var result = [];
-    var sub_urls = [];
+    var urls = [
+        `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=1`,
+        `${TMDB_API_URL}/movie/upcoming?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=1`
+    ];
 
-    if (event.httpMethod === 'POST') {
+    // map every url to the promise of the fetch
+    let requests = urls.map(url => fetch_data(url));
 
-        let urls = [
-            `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=1`,
-            `${TMDB_API_URL}/movie/upcoming?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=1`
-        ];
+    // Promise.all waits until all jobs are resolved
+    await Promise.all(requests)
+        .then(responses => {
 
-        // map every url to the promise of the fetch
-        let requests = urls.map(url => fetch_data(url));
-
-        // Promise.all waits until all jobs are resolved
-        await Promise.all(requests)
-            .then(responses => {
-
-                responses.forEach(response => {
-                    // If we received movies list/result add it to the final result array we would
-                    // be returning to the user
-                    result = [...result, ...response.results];
-
-                    console.log('No of movies added: ', response.results.length);
-
-                    for (let i = ++(response.page); i <= response.total_pages; i++) {
-                        sub_urls.push(
-                            `${TMDB_API_URL}/movie/now_playing?api_key=${TMDB_API_KEY}&language=en-US&region=IN&page=${i}`
-                        )
+            responses.forEach((response, index) => {
+                if (response && response.results) {
+                    result.push(...response.results);
+                    for (let i = (response.page + 1); i <= response.total_pages && i <= 5; i++) {
+                        // Access the url for which this response is received and request for its further pages
+                        sub_urls.push(`${urls[index]}&page=${i}`);
                     }
-                })
+                }
             })
 
-        // map every url to the promise of the fetch
-        let sub_requests = sub_urls.map(url => fetch_data(url));
+        })
+        .catch(error => console.log(error))
 
-        await Promise.all(sub_requests)
-            .then(responses => {
+    // map every url to the promise of the fetch
+    let sub_requests = sub_urls.map(url => fetch_data(url));
 
-                // If we received movies list/result add it to the final result array we would
-                // be returning to the user
-                responses.forEach(response => {
-                    result = [...result, ...response.results];
-                    console.log('No of movies added: ', response.results.length);
-                })
+    await Promise.all(sub_requests)
+        .then(responses => {
+            responses.forEach(response => {
+                if (response && response.results) {
+                    result.push(...response.results);
+                }
             })
+        })
+        .catch(error => console.log(error))
 
-        console.log('Total no movies with duplicates: ', result.length);
+    var seen = new Set();
 
-        var seen = new Set();
+    // Filter out duplicate and non-english-hindi movies
+    var filteredArr = result.filter(el => {
+        const duplicate = seen.has(el.id);
+        const isNonRegional = (el.original_language === "en" || el.original_language === "hi")
+        seen.add(el.id);
+        return (!duplicate && isNonRegional);
+    });
 
-        var filteredArr = result.filter(el => {
-            const duplicate = seen.has(el.id);
-            seen.add(el.id);
-            return !duplicate;
-        });
-
-        console.log('Without duplicates: ', filteredArr.length);
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify(filteredArr)
-        }
-
-
+    return {
+        statusCode: 200,
+        body: JSON.stringify(filteredArr)
     }
+
 }
 
 async function fetch_data(URL) {
-    return await fetch(URL, { timeout: 4500 })
-        .then((res) => {
-            if (!res.ok) {
-                console.log(res);
-            }
-
-            return res.json();
-        })
-        .catch((error) => {
-            return error;
-        })
+    return fetch(URL).then(res => res.json()).catch(error => error)
 }
