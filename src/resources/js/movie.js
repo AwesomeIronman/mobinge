@@ -6,9 +6,8 @@ $(document).ready(() => {
     window.location.href = "/"
   }
 
-  fetch_movie_info(info_to_open.tmdbid, "movie")
+  fetch_title_info(info_to_open.tmdbid, "movie")
     .then(data => {
-      console.log('Data: ', data);
       showMovieInfo(data);
     });
 
@@ -38,15 +37,8 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-async function fetch_movie_info(tmdbid, title_type) {
-  return await fetch('/.netlify/functions/tmdb-data',
-    {
-      method: "POST",
-      body: JSON.stringify({
-        path: `${title_type}/${tmdbid}`,
-        query_params: "language=en-US&append_to_response=videos,images,credits,reviews,recommendations,similar&include_image_language=en"
-      })
-    })
+async function fetch_title_info(tmdbid, title_type) {
+  return fetch(`/.netlify/functions/title-info?title_type=${title_type}&tmdbid=${tmdbid}`)
     .then(res => res.json())
     .catch(error => console.log(error))
 }

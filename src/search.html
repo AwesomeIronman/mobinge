@@ -99,11 +99,13 @@
                             </ul>
 
                             <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
-                            <li id="partialSample" class="list-group-item" style="display: none;">
-                                <span class="movie-title">Movie name</span>
-                                <span class="movie-release-year">Released Year</span>
-                                <span class="movie-rating">Rating</span>
-                            </li>
+                            <template id="partialSample">
+                                <li class="list-group-item">
+                                    <span class="movie-title">Movie name</span>
+                                    <span class="movie-release-year">Released Year</span>
+                                    <span class="movie-rating">Rating</span>
+                                </li>
+                            </template>
                         </div>
                     </div>
                     <!-- CLOSE: partial search results -->
@@ -111,12 +113,10 @@
 
                 <!-- SHOW: full search results -->
                 <div class="text-light my-4" id="full-search-result">
-
                     <ul id="full-info" class="clearfix"></ul>
 
                     <!-- Always hidden, only required as sample i.e. Edit and append to search result -->
                     <template id="fullSample">
-
                         <li class="scene col-md-3 col-sm-6 col-xs-12">
                             <div class="movie" onclick="return true">
                                 <div class="poster"></div>
@@ -147,9 +147,7 @@
                                 </div>
                             </div>
                         </li>
-
                     </template>
-
                 </div>
                 <!-- CLOSE: full search results -->
 

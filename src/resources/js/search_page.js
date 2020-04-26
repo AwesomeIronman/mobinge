@@ -10,11 +10,12 @@ $(document).ready(() => {
    $("#search-btn").on('click', event => fullSearch(event));
 
    // From full search result posters, open title info page on btn click
-   $("ul#full-info").on("click", "button.view-more-info__btn", function (event) {
+   $("#search-box").on("click", "button.view-more-info__btn, #partial-info li", function (event) {
       let tmdbid = $(this).data("tmdbid")
       let title_type = $(this).data("title_type")
       openMovieInfo(tmdbid, title_type)
    });
+   
    // Open title info page on carousel images click
    $(".carousel-container").on("click", function (event) {
       var target = $(event.target);
@@ -37,7 +38,7 @@ $(document).ready(() => {
 
    $("#search-box > .col").mouseleave(() => {
       $(".fancy_search_container").removeClass("open")
-      $("#partial-search-result").addClass("d-none")
+      $("#partial-search-result").css("display", "none")
    })
 
    $(".fancy_search_container").on("click", ".search", function (event) {
@@ -52,119 +53,112 @@ $(document).ready(() => {
 window.timer = 0  // Used to delay repititive keyboard searches
 
 async function partialSearch(event) {
-   event.preventDefault();
+   let search_query = $('#searchText').val()
+   let search_type = $('#searchType').val()
 
-   let search = $('#searchText').val()
-   let searchType = $('#searchType')[0].value
-
-   if (search !== "") {  // Search only if user had typed something
-      let response = await getResponse({
-         path: `search/${searchType}`,
-         query_params: `language=en-US&region=IN&include_adult=true&query=${search}&page=1`
-      })
-
+   if (search_query !== "") {  // Search only if user had typed something
+      let response = await search_title(search_query, search_type)
       if (Array.isArray(response.results)) {
-         let filteredResults = filterTitles(response.results);
-         showPartialResult(await filteredResults)
-      } else {
-         console.log(response);
+         showPartialResult(response.results)
       }
-
    }
 }
 
 async function fullSearch(event) {
    event.preventDefault();
-   clearTimeout(window.timer)
+   clearTimeout(window.timer)    // clear timeout for keyup search
 
    $("#searchText").blur()  // Lose search box focus to stop keypress events from getting triggered
 
-   let search = $('#searchText').val()
-   let searchType = $('#searchType')[0].value
+   let search_query = $('#searchText').val()
+   let search_type = $('#searchType').val()
 
-   if (search !== "") {  // Search only if user had typed something
-
-      let response = await getResponse({
-         path: `search/${searchType}`,
-         query_params: `language=en-US&region=IN&include_adult=true&query=${search}&page=1`
-      })
-
+   if (search_query !== "") {  // Search only if user had typed something
+      let response = await search_title(search_query, search_type)
       if (Array.isArray(response.results)) {
-         let filteredResult = filterTitles(response.results);
-         showFullResult(await filteredResult)
-      } else {
-         console.log(response);
+         showFullResult(response.results)
       }
    }
 }
 
-function showPartialResult(result) {
-   let sampleNode = $('#partialSample')[0].cloneNode(true); // Create a clone to edit and append each time
-   sampleNode.removeAttribute("id")
-   sampleNode.removeAttribute("style")
+function showPartialResult(searchResp) {
+   let $sampleNode = $($('#partialSample').html());
+   $('#partial-info .list-group').html("");     // Remove old search result
 
-   $('#partial-info .list-group')[0].innerHTML = ""; // Remove old search result
+   if (searchResp.length > 0) {
+      $.each(searchResp, (index, item) => {
+         if (item.media_type !== "person") {    // Show info only if result is not of a person/actor
+            let id = item.id;
+            let name = item.title ? item.title : item.name;
+            let releaseDate = item.release_date ? `(${new Date(item.release_date).getFullYear()})` : "";
+            if (item.media_type === "tv") {     // For Series release date property is different
+               releaseDate = item.first_air_date ? `(${new Date(item.first_air_date).getFullYear()})` : "";
+            }
+            let rating = item.vote_average ? `${item.vote_average}/10` : "";
+            let mediaType = item.media_type ? item.media_type : $("#searchType").val();
 
-   if (result !== undefined && result.length > 0) {
-      // Show basic information of each search result
-      $.each(result, (index, movie) => {
-         if (movie.media_type !== "person") { // Show info only if result is not of a person/actor
+            $sampleNode.find(".movie-title").text(name);
+            $sampleNode.find(".movie-release-year").text(releaseDate);
+            $sampleNode.find(".movie-rating").text(rating);
+            $("#partial-info .list-group").append($sampleNode.clone()); // Append edited sample node
 
-            sampleNode.querySelector(".movie-title").textContent = movie.title ? movie.title : movie.name;
-            sampleNode.querySelector(".movie-release-year").textContent = movie.release_date ? `(${new Date(movie.release_date).getFullYear()})` : "";
-            sampleNode.querySelector(".movie-rating").textContent = movie.vote_average ? `${movie.vote_average}/10` : "";
-            sampleNode.setAttribute("onclick", `openMovieInfo('${movie.id}', '${movie.media_type ? movie.media_type : $('#searchType')[0].value}')`);
-
-            $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
+            $(`#partial-info .list-group li:nth-child(${index + 1})`).data("tmdbid", id);
+            $(`#partial-info .list-group li:nth-child(${index + 1})`).data("title_type", mediaType);
+            $(`#partial-info .list-group li:nth-child(${index + 1})`).on('click', { event: event }, toggleFavourite)
          }
       });
-
    } else {
-      sampleNode.innerHTML = "No result found!";
-      $(sampleNode).css("color", "var(--dark)");
-      $("#partial-info .list-group")[0].innerHTML += sampleNode.outerHTML; // Append edited sample node
+      $sampleNode.html("No result found!");
+      $("#partial-info .list-group").html($sampleNode); // Append edited sample node
+      $("#partial-info .list-group li").css("color", "var(--dark)");
    }
 
    $("#full-search-result").css("display", "none");
    $("#partial-search-result").css("display", "block");
-   $("#partial-search-result").removeClass("d-none");
 }
 
-function showFullResult(result) {
-   let $sampleNode = $($('#fullSample').html()); // Create a clone to edit and append each time
-
+function showFullResult(searchResp) {
+   let $sampleNode = $($('#fullSample').html());
    $('#full-info').html(""); // Remove old search result
 
-   if (result !== undefined && result.length > 0) {
-      // Show basic information of each search result
+   if (searchResp.length > 0) {
       let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
       let localWatched = JSON.parse(localStorage.getItem("user_watched"))
 
-      $.each(result, (index, info) => {
-         if (info.media_type !== "person") { // Show info only if result is not of a person/actor
+      $.each(searchResp, (index, item) => {
+         if (item.media_type !== "person") { // Show info only if result is not of a person/actor
+            let id = item.id;
+            let mediaType = item.media_type ? item.media_type : $("#searchType").val();
+            let posterImg = item.poster_path;
+            let backdropImg = item.backdrop_path;
+            let name = item.title ? item.title : item.name;
+            let releaseDate = item.release_date ? `(${new Date(item.release_date).getFullYear()})` : "Unavailable";
+            if (mediaType === "tv") {
+               releaseDate = item.first_air_date ? `(${new Date(item.first_air_date).getFullYear()})` : "Unavailable";
+            }
+            let rating = item.vote_average ? `${item.vote_average}` : "Unavailable";
 
             $sampleNode.find(".poster").css({
                "background-image": `url(
-                  https://image.tmdb.org/t/p/w300${info.poster_path}
+                  https://image.tmdb.org/t/p/w300${posterImg}
                )`
             });
 
             $sampleNode.find("header").css({
                "background-image": `url(
-                  https://image.tmdb.org/t/p/w300${info.backdrop_path}
+                  https://image.tmdb.org/t/p/w300${backdropImg}
                )`
             });
 
-            $sampleNode.find(".info .name").text(info.title ? info.title : info.name);
+            $sampleNode.find(".info .name").text(name);
 
-            $sampleNode.find(".info .year").text(
-               info.release_date ? `(${new Date(info.release_date).getFullYear()})` : "Unavailable");
+            $sampleNode.find(".info .year").text(releaseDate)
 
-            $sampleNode.find(".info .rating").text(info.vote_average ? `${info.vote_average}` : "Unavailable");
+            $sampleNode.find(".info .rating").text(rating);
 
             // Set whether already favourite or not      
-            let favouritesIndex = localFavourites.findIndex(i => i.movie === info.id)
-            let watchedIndex = localWatched.findIndex(i => i.movie === info.id)
+            let favouritesIndex = localFavourites.findIndex(i => i.movie === id)
+            let watchedIndex = localWatched.findIndex(i => i.movie === id)
             if (favouritesIndex !== -1) {
                $sampleNode.find("button.toggle-favourites-btn i").css("color", "var(--primary)");
             }
@@ -175,174 +169,148 @@ function showFullResult(result) {
             $("#full-info").append($sampleNode.clone()); // Append edited sample node
 
             // Set id and type to use later for opening full title info page
-            $(`#full-info > li:nth-child(${index + 1}) button.view-more-info__btn`).data("tmdbid", `${info.id}`);
-            $(`#full-info > li:nth-child(${index + 1}) button.view-more-info__btn`).data("title_type", `${info.media_type}`);
+            $(`#full-info > li:nth-child(${index + 1}) button.view-more-info__btn`).data("tmdbid", `${id}`);
+            $(`#full-info > li:nth-child(${index + 1}) button.view-more-info__btn`).data("title_type", `${mediaType}`);
 
             // Set movie ID as data attribute on the button (to be reused later)
             $(".toggle-watched-btn, .toggle-favourites-btn",
-               `#full-info > li:nth-child(${index + 1})`).data("title_type", "movie");
+               `#full-info > li:nth-child(${index + 1})`).data("title_type", mediaType);
             $(".toggle-watched-btn, .toggle-favourites-btn",
-               `#full-info > li:nth-child(${index + 1})`).data("titleID", info.id);
-            $(".toggle-favourites-btn",
+               `#full-info > li:nth-child(${index + 1})`).data("titleID", id);
+            $("button.toggle-favourites-btn",
                `#full-info > li:nth-child(${index + 1})`).on('click', { event: event }, toggleFavourite)
-            $(".toggle-watched-btn",
+            $("button.toggle-watched-btn",
                `#full-info > li:nth-child(${index + 1})`).on('click', { event: event }, toggleWatched)
          }
       });
 
    } else {
-      $sampleNode.innerHTML = "No result found!";
-      $("#full-info")[0].innerHTML += $sampleNode.outerHTML; // Append edited sample node
+      $sampleNode.html("No result found!");
+      $("#full-info").html($sampleNode); // Append edited sample node
    }
 
    $("#partial-search-result").css("display", "none");
    $("#full-search-result").css("display", "block");
 }
 
-async function getResponse(request) {
-   return await fetch('/.netlify/functions/tmdb-data',
-      { method: 'POST', body: JSON.stringify(request) }
-   )
-      .then(res => res.json())
-
-      .catch(error => {
-         console.error('Error:', error);
-         return error;
-      });
-}
-
 async function toggleFavourite(event) {
    let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
-   console.log(title_type);
-   console.log(titleID);
 
    // Get favourites from localstorage
    let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
 
    // search for given title ID in localstorage
-   let title_local_index
-   if (title_type === "movie") {
-      title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
-   }
+   let title_local_index = (title_type === "movie") ? localFavourites.findIndex(fav => fav.movie === titleID) : -1;
 
    // Remove from favourites, if it is already favourite
    if (title_local_index > -1) {
-      console.log('Removing from favourites');
-
-      fetch('/.netlify/functions/firestore-data',
-         {
-            method: 'POST', body: JSON.stringify({
-               userID: netlifyIdentity.currentUser().id,
-               operation: "remove-from-favourites",
-               titleType: title_type,
-               titleID: titleID
-            })
-         }
-      )
-
+      firestore(title_type, titleID, "remove", "favourites")
          .then(res => {
+            console.log(res);
+            
             $(this).find("i").css("color", "inherit");
+            localFavourites.splice(title_local_index, 1);
+            localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
          })
-
-         .catch(error => {
-            console.error('Error:', error);
-         });
-
-      localFavourites.splice(title_local_index, 1);
-
-      localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
-
+         .catch(error => console.error('Error:', error));
 
    } else {
-      console.log('Adding to favourites');
-
-      fetch('/.netlify/functions/firestore-data',
-         {
-            method: 'POST', body: JSON.stringify({
-               userID: netlifyIdentity.currentUser().id,
-               operation: "add-to-favourites",
-               titleType: title_type,
-               titleID: titleID
-            })
-         }
-      )
+      firestore(title_type, titleID, "add", "favourites")
          .then(res => {
+            console.log(res);
+            
             $(this).find("i").css("color", "var(--primary)");
+            localFavourites.push({ [title_type]: titleID })
+            localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
          })
-
          .catch(error => { console.log('Error:'); console.error(error); });
-
-      localFavourites.push({ [title_type]: titleID })
-
-      localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
    }
 }
 
 async function toggleWatched(event) {
    let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
-   console.log(title_type);
-   console.log(titleID);
 
    // Get favourites from localstorage
    let watchedList = JSON.parse(localStorage.getItem("user_watched"))
 
    // search for given title ID in localstorage
-   let title_local_index
-   if (title_type === "movie") {
-      title_local_index = watchedList.findIndex(fav => fav.movie === titleID)
-   }
+   let title_local_index = (title_type === "movie") ? watchedList.findIndex(fav => fav.movie === titleID) : -1;
 
    // Remove from watched list, if it is already watched
    if (title_local_index > -1) {
-      console.log('Removing from watched list');
-
-      fetch('/.netlify/functions/firestore-data',
-         {
-            method: 'POST', body: JSON.stringify({
-               userID: netlifyIdentity.currentUser().id,
-               operation: "remove-from-watched-list",
-               titleType: title_type,
-               titleID: titleID
-            })
-         }
-      )
-
+      firestore(title_type, titleID, "remove", "watchedlist")
          .then(res => {
             $(this).find("i").css("color", "inherit");
+            watchedList.splice(title_local_index, 1);
+            localStorage.setItem("user_watched", JSON.stringify(watchedList));
          })
-
-         .catch(error => {
-            console.error('Error:', error);
-         });
-
-      watchedList.splice(title_local_index, 1);
-
-      localStorage.setItem("user_watched", JSON.stringify(watchedList));
-
-
-   } else {
-      console.log('Adding to watched list');
-
-      fetch('/.netlify/functions/firestore-data',
-         {
-            method: 'POST', body: JSON.stringify({
-               userID: netlifyIdentity.currentUser().id,
-               operation: "add-to-watched-list",
-               titleType: title_type,
-               titleID: titleID
-            })
-         }
-      )
-         .then(res => {
-            $(this).find("i").css("color", "#f5b50a");
-         })
-
          .catch(error => { console.log('Error:'); console.error(error); });
 
-      watchedList.push({ [title_type]: titleID })
+   } else {
+      firestore(title_type, titleID, "add", "watchedlist")
+         .then(res => {
+            console.log(res);
 
-      localStorage.setItem("user_watched", JSON.stringify(watchedList));
+            $(this).find("i").css("color", "#f5b50a");
+            watchedList.push({ [title_type]: titleID });
+            localStorage.setItem("user_watched", JSON.stringify(watchedList));
+         })
+         .catch(error => { console.log('Error:'); console.error(error); });
    }
+}
+
+async function loadAllCarousel() {
+   get_tmdb_list("movie", "", true, "week")
+      .then(response => carouselLoader(response.results, "#trending-movies-carousel > .carousel-container", "movie"))
+
+   get_tmdb_list("tv", "", true, "week")
+      .then(response => carouselLoader(response.results, "#trending-series-carousel > .carousel-container", "tv"))
+
+   get_tmdb_list("movie", "top_rated")
+      .then(response => carouselLoader(response.results, "#rated-movies-carousel > .carousel-container", "movie"))
+}
+
+function carouselLoader(data, containerRef, title_type) {
+   $.each(data, (index, title) => {
+      $(containerRef + " .carousel .wrap ul").append($("#carousel-poster-template").html())
+      console.log(title.name || title.title);
+      
+
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
+         .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
+
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
+      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", title_type)
+   })
+
+   $(containerRef).parent().removeClass("d-none")
+}
+
+async function search_title(query, type, page = 1) {
+   return fetch(`/.netlify/functions/search-title?query=${query}&type=${type}&page=${page}`)
+      .then(res => res.json())
+      .catch(error => console.log(error))
+}
+
+async function get_tmdb_list(mediaType, listType, isTrending = false, listTime = "", page = 1) {
+   return fetch(`/.netlify/functions/tmdb-lists?isTrending=${isTrending}&mediaType=${mediaType}&listType=${listType}&listTime=${listTime}&page=${page}`)
+      .then(res => res.json())
+      .catch(error => console.log(error))
+}
+
+async function firestore(title_type, title_id, action, list) {
+   return fetch('/.netlify/functions/firestore-data',
+      {
+         method: (action === "remove") ? "DELETE" : "POST",
+         body: JSON.stringify({
+            userID: netlifyIdentity.currentUser().id,
+            list: list,
+            titleType: title_type,
+            titleID: title_id
+         })
+      })
+      .then(data => data.json())
+      .catch(error => error);
 }
 
 async function openMovieInfo(tmdbid, title_type) {
@@ -360,46 +328,9 @@ async function openMovieInfo(tmdbid, title_type) {
    }
 }
 
-async function loadAllCarousel() {
-   getResponse({
-      path: `trending/movie/week`,
-      query_params: `language=en-US&region=IN&include_adult=true`
-   }).then(response => carouselLoader(response.results, "#trending-movies-carousel > .carousel-container", "movie"))
-
-   getResponse({
-      path: `trending/tv/week`,
-      query_params: `language=en-US&region=IN&include_adult=true`
-   }).then(response => carouselLoader(response.results, "#trending-series-carousel > .carousel-container", "tv"))
-
-   getResponse({
-      path: `movie/top_rated`,
-      query_params: `language=en-US&region=IN&include_adult=true`
-   }).then(response => carouselLoader(response.results, "#rated-movies-carousel > .carousel-container", "movie"))
-}
-
-function carouselLoader(data, containerRef, title_type) {
-   $.each(data, (index, title) => {
-      $(containerRef + " .carousel .wrap ul").append($("#carousel-poster-template").html())
-
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
-         .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
-
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", title_type)
-   })
-
-   $(containerRef).parent().removeClass("d-none")
-}
-
 function delay(fn, ms) {
-
    return function (...args) {
       clearTimeout(window.timer)
       window.timer = setTimeout(fn.bind(this, ...args), ms || 0)
    }
-}
-
-function filterTitles(data) {
-   // Remove regional movies
-   return data.filter(movie => movie.original_language === "en" || movie.original_language === "hi")
 }

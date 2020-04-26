@@ -1,106 +1,84 @@
-const admin = require('firebase-admin');
+const firebase = require('firebase-admin');
+var qs = require('querystring');
 
 exports.handler = async function (event, context) {
-
-    console.log('Testing:FIRESTORE: +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-');
 
     // Get env var values defined in our Netlify site UI
     const FIRESTORE_ADMIN_SDK = JSON.parse(process.env.FIRESTORE_ADMIN_SDK)
     const FIRESTORE_DB_URL = process.env.FIRESTORE_DB_URL
 
-    const { userID, operation, titleType, titleID } = JSON.parse(event.body)
+    const { userID, list, titleType, titleID } = qs.parse(event.body)
 
-    if (!admin.apps.length) {
-        admin.initializeApp({
-            credential: admin.credential.cert(FIRESTORE_ADMIN_SDK),
+    if (!firebase.apps.length) {
+        firebase.initializeApp({
+            credential: firebase.credential.cert(FIRESTORE_ADMIN_SDK),
             databaseURL: FIRESTORE_DB_URL
         });
     }
 
-    let db = admin.firestore();
+    let db = firebase.firestore();
 
-    if (event.httpMethod === 'POST') {
+    try {
+        let docRef = db.collection('users').doc(userID);
 
-        console.log('Operation: ', operation);
+        if (event.httpMethod === "GET") {
+            docRef.set({}, { merge: true });
 
-        try {
-            if (operation === "add-to-watched-list") {
-                let docRef = db.collection('users').doc(userID);
+            let data = await docRef.get()
+                .then(snapshot => snapshot.data());
 
-                let response = await docRef.update(
-                    {
-                        watchedlist: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
-                    }
-                );
-
-                console.log('add-to-watched-list: ', response);
-
-            } else if (operation === "remove-from-watched-list") {
-                let docRef = db.collection('users').doc(userID);
-
-                let response = await docRef.update(
-                    {
-                        watchedlist: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
-                    }
-                );
-                console.log('remove-from-watched-list: ', response);
-
-            } else if (operation === "add-to-favourites") {
-                let docRef = db.collection('users').doc(userID);
-
-                let response = await docRef.update(
-                    {
-                        favourites: admin.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
-                    }
-                );
-
-                console.log('add-to-favourites: ', response);
-
-            } else if (operation === "remove-from-favourites") {
-                let docRef = db.collection('users').doc(userID);
-
-                let response = await docRef.update(
-                    {
-                        favourites: admin.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
-                    }
-                );
-                console.log('remove-from-favourites: ', response);
-
-            } else if (operation === "get-data") {
-
-                let docRef = db.collection('users').doc(userID);
-                docRef.set({}, { merge: true });
-
-                let data = await docRef.get()
-                    .then(snapshot => snapshot.data());
-
-                console.log('get-data: ', data);
-
-                if (data) {
-                    return {
-                        statusCode: 200,
-                        body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
-                    }
-                } else {
-                    return {
-                        statusCode: 200,
-                        body: JSON.stringify({ favourites: [], watchedlist: [] })
-                    }
+            if (data) {
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
                 }
-
+            } else {
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify({ favourites: [], watchedlist: [] })
+                }
             }
-        } catch (error) {
-            console.log(error.errorType)
-            return {
-                statusCode: 500,
-                body: JSON.stringify('Error')
+        } else if (event.httpMethod === "POST") {
+            if (list === "watchedlist") {
+                await docRef.update(
+                    {
+                        watchedlist: firebase.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                    }
+                );
+            } else if (list === "favourites") {
+                await docRef.update(
+                    {
+                        favourites: firebase.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                    }
+                );
+            }
+        } else if (event.httpMethod === "DELETE") {
+            if (list === "watchedlist") {
+                await docRef.update(
+                    {
+                        watchedlist: firebase.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                    }
+                );
+            } else if (list === "favourites") {
+                await docRef.update(
+                    {
+                        favourites: firebase.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                    }
+                );
             }
         }
 
         return {
             statusCode: 200,
-            body: JSON.stringify('action complete')
+            body: JSON.stringify('Operation Successful')
         }
         
+    }
+    catch (error) {
+        console.log(error.errorType)
+        return {
+            statusCode: 500,
+            body: JSON.stringify('Error')
+        }
     }
 }

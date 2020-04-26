@@ -2,23 +2,18 @@ const fetch = require('node-fetch-npm');
 
 exports.handler = async function (event, context) {
 
-    console.log('Testing: +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-');
-
     // Get env var values defined in our Netlify site UI
     const { TMDB_API_KEY, TMDB_API_URL } = process.env
     const params = JSON.parse(event.body);
 
     if (event.httpMethod === 'POST') {
 
-        let URL = `${TMDB_API_URL}/${params.path}?api_key=${TMDB_API_KEY}&${params.query_params}`
-
-        var options = { timeout: 4500 };
+        let URL = `${TMDB_API_URL}/${params.path}?api_key=${TMDB_API_KEY}&${params.query_params}`;
 
         if (params.method && params.method !== "") {
 
             options = {
-                method: params.method,
-                timeout: 4500
+                method: params.method
             };
 
             if (params.body && Object.keys(params.body).length !== 0
@@ -27,16 +22,14 @@ exports.handler = async function (event, context) {
                 options = {
                     method: params.method,
                     headers: params.headers,
-                    body: JSON.stringify(params.body),
-                    timeout: 4500
+                    body: JSON.stringify(params.body)
                 }
 
             } else if (params.body && Object.keys(params.body).length !== 0) {
 
                 options = {
                     method: params.method,
-                    body: JSON.stringify(params.body),
-                    timeout: 4500
+                    body: JSON.stringify(params.body)
                 }
                 
             }
@@ -55,11 +48,6 @@ exports.handler = async function (event, context) {
 
         // if response received with ok status
         if (status === 200) {
-            // Sort search results according to their poularity
-            if (data.results) {
-                data.results.sort((a, b) => (a.popularity > b.popularity) ? -1 : 1)
-            }
-            
             return {
                 statusCode: 200,
                 body: JSON.stringify(data)

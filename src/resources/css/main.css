@@ -1,8 +1,7 @@
 /* Import Poppins font from google fonts CDN*/
 @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
 
-html *
-{
+html * {
   font-family: 'Poppins', sans-serif;
   color: var(--light);
 }
@@ -20,13 +19,9 @@ body {
   position: fixed;
 }
 
-ul > li.nav-item:hover {
+ul.nav > li.nav-item:hover {
   border-radius: 0.25rem;
   background-color: rgba(255,255,255,0.2);
-}
-
-#carousel-effect {
-  margin-bottom: 10vh;
 }
 
 
