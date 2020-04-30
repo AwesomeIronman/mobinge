@@ -581,31 +581,3 @@ function showRecommendations(data) {
     $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "tv")
   })
 }
-
-function commaSeparatedNames(params) {
-  var genString = ""
-
-  params.forEach(function (i, idx, array) {
-    if (idx === array.length - 1) {
-      genString += `${i.name}`;
-    } else {
-      genString += `${i.name}, `;
-    }
-  });
-  return genString;
-}
-
-function openTitleInfo(tmdbid, title_type) {
-  // Set the ID of the movie/series user clicked in localstorage to use it later
-  localStorage.setItem("info_to_open", JSON.stringify(
-    {
-      title_type: title_type,
-      tmdbid: tmdbid
-    }
-  ))
-  if (title_type === "tv") {
-    window.location.href = "/series"
-  } else {
-    window.location.href = "/movie"
-  }
-}

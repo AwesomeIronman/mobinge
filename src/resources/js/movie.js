@@ -2,14 +2,11 @@ $(document).ready(() => {
   let info_to_open = JSON.parse(localStorage.getItem("info_to_open"));
 
   if (!info_to_open || !(info_to_open.title_type === "movie")) {
-    console.log("Unexpected title type found!");
-    window.location.href = "/"
+    window.location.assign("/");
   }
 
-  fetch_title_info(info_to_open.tmdbid, "movie")
-    .then(data => {
-      showMovieInfo(data);
-    });
+  fetch_title_info(info_to_open.tmdbid, info_to_open.title_type)
+    .then(data => showMovieInfo(data, info_to_open.title_type));
 
   $().fancybox({
     selector: '.media-img a:visible'
@@ -17,16 +14,6 @@ $(document).ready(() => {
 
   $().fancybox({
     selector: 'a.media-vd:visible'
-  });
-
-  // Open title info page on carousel images click
-  $(".carousel-container").on("click", function (event) {
-    var target = $(event.target);
-    if (target.is("img")) {
-      let tmdbid = $(target).data("tmdbid")
-      let title_type = $(target).data("title_type")
-      openMovieInfo(tmdbid, title_type)
-    }
   });
 
   // Add view all info listener on various buttons
@@ -37,26 +24,9 @@ $(document).ready(() => {
 });
 // JQuery OnReady Close
 
-async function fetch_title_info(tmdbid, title_type) {
-  return fetch(`/.netlify/functions/title-info?title_type=${title_type}&tmdbid=${tmdbid}`)
-    .then(res => res.json())
-    .catch(error => console.log(error))
-}
 
-async function getResponse(request) {
-  return await fetch('/.netlify/functions/tmdb-data',
-    { method: 'POST', body: JSON.stringify(request) }
-  )
-    .then(res => res.json())
-
-    .catch(error => {
-      console.error('Error:', error);
-      return error;
-    });
-}
-
-function showMovieInfo(movieData) {
-  if (movieData.constructor !== Object) {
+function showMovieInfo(movieData, title_type) {
+  if (typeof(movieData) === "string" || movieData.constructor !== Object) {
     console.log('Received invalid data: ', movieData);
     return false;
   }
@@ -71,22 +41,23 @@ function showMovieInfo(movieData) {
 
   // For "Watch Trailer" button under movie poster
   let trailerVdIndex = movieData.videos.results.findIndex(vid => vid.type === "Trailer")
+  let trailerYtKey = movieData.videos.results[trailerVdIndex].key;
   if (trailerVdIndex > -1) {
-    let trailerYtKey = movieData.videos.results[trailerVdIndex].key;
     $(".trailer-btn").attr("data-fancybox", "")
     $(".trailer-btn").attr("data-src", `https://www.youtube.com/embed/${trailerYtKey}`)
     $('.trailer-btn').fancybox();
   }
 
   // Show movie title/name
-  let movieName = movieData.title ? movieData.title : movieData.name;
+  let movieName = movieData.title || movieData.name;
   let releaseYear = new Date(movieData.release_date).getFullYear();
+  let movieRating = movieData.vote_average;
+  let movieOverview = movieData.overview;
+
   $(".main-content > .movie-title > .name").text(movieName);
   $(".main-content > .movie-title > .year").text(releaseYear);
-
-  // Movie vote/rating
-  let movieRating = movieData.vote_average;
-  $("span.rate-text").text(movieRating);
+  $("span.rate-text").text(movieRating);  // Movie vote/rating
+  $(".overview-text").text(movieOverview);   // Add the movie overview/brief info text
 
   // Draw the movie rating stars
   for (let i = 0; i < 10; i++) {
@@ -94,9 +65,6 @@ function showMovieInfo(movieData) {
       $(".rate-star > i").eq(i).css("color", "#f5b50a")
     }
   }
-
-  // Add the movie overview/brief info text
-  $(".overview-text").text(movieData.overview)
 
   // Add photos to the "Videos and Photos" line
   let $sampleMediaImg = $($("#sampleMovieMediaImg").html());  // JQuery object of template to use
@@ -116,7 +84,7 @@ function showMovieInfo(movieData) {
 
   // Add Cast Info to the "Cast" line
   let $sampleCastItem = $($("#sampleCastItem").html());
-  cast = movieData.credits.cast.slice();
+  cast = movieData.credits.cast.slice();  // Make a copy of credits cast array
   let selectedCast = cast.filter(person => person.order <= 6)
   $.each(selectedCast, (index, person) => {
     let originalProfilePic = (person.profile_path !== null) ?
@@ -178,39 +146,32 @@ function showMovieInfo(movieData) {
   let genres = commaSeparatedNames(movieData.genres);
   $("p.genre").text(genres)
 
-  // $("#imdb_button")[0].href = `http://imdb.com/title/${movieData.imdb_id}`;
+  // Set title ID and type as data attribute on watchelist and add-to-favourite button
+  $(".toggle-favourites-btn, .toggle-watched-btn").data("title_type", title_type);
+  $(".toggle-favourites-btn, .toggle-watched-btn").data("titleID", movieData.id);
 
-  // Add to favourites movies list
-  // Set movie ID as data attribute on the button (to be reused later)
-  $(".toggle-favourites-btn").data("title_type", "movie");
-  $(".toggle-favourites-btn").data("titleID", movieData.id);
-  $(".toggle-favourites-btn").on('click', { event: event }, toggleFavourite)
+  $(".toggle-favourites-btn", "div.movie_info").on('click', { event: event }, toggleFavourite)
+  $(".toggle-watched-btn", "div.movie_info").on('click', { event: event }, toggleWatched)
 
   // Set whether already favourite or not
   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
   if (localFavourites && localFavourites.length !== 0) {
     let favouritesIndex = localFavourites.findIndex(i => i.movie === movieData.id)
-    if (favouritesIndex !== -1) {   // If movie is found in favourites array then,
+    if (favouritesIndex !== -1) {   // If movie/series is found in favourites array then,
       $(".toggle-favourites-btn i", "div.btn-container").css("color", "var(--primary)");
     }
   }
-
-  // Add to watched movies list
-  // Set movie ID as data attribute on the button (to be reused later)
-  $(".toggle-watched-btn").data("title_type", "movie");
-  $(".toggle-watched-btn").data("titleID", movieData.id);
-  $(".toggle-watched-btn", "div.movie_info").on('click', { event: event }, toggleWatched)
 
   // Set whether already watched or not
   let localWatched = JSON.parse(localStorage.getItem("user_watched"))
   if (localWatched && localWatched.length !== 0) {
     let watchedIndex = localWatched.findIndex(j => j.movie === movieData.id)
-    if (watchedIndex !== -1) {
+    if (watchedIndex !== -1) {   // If movie/series is found in favourites array then,
       $(".toggle-watched-btn i", "div.main-content").css("color", "#f5b50a");
     }
   }
 
-  $(".movie-name").text(`${movieData.title ? movieData.title : movieData.name}`)
+  $(".movie-name").text(`${movieData.title || movieData.name}`)
 
   showReviews(movieData.reviews.results.slice())
 
@@ -237,70 +198,42 @@ async function toggleFavourite(event) {
     return false;
   }
   let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
-  console.log(title_type);
-  console.log(titleID);
 
   // Get favourites from localstorage
   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
 
   // search for given title ID in localstorage
-  let title_local_index
+  let title_local_index = -1;
   if (title_type === "movie") {
     title_local_index = localFavourites.findIndex(fav => fav.movie === titleID)
+  } else {
+    title_local_index = localFavourites.findIndex(fav => fav.tv === titleID)
   }
 
   // Remove from favourites, if it is already favourite
   if (title_local_index > -1) {
-    console.log('Removing from favourites');
-
-    fetch('/.netlify/functions/firestore-data',
-      {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
-          operation: "remove-from-favourites",
-          titleType: title_type,
-          titleID: titleID
-        })
-      }
-    )
+    firestore(title_type, titleID, "remove", "favourites")
 
       .then(res => {
         $(".toggle-favourites-btn").find("i").css("color", "inherit");
         $(".toggle-favourites-btn").find("span").text("Add to Favourites");
+        localFavourites.splice(title_local_index, 1);
+        localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
       })
 
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
-    localFavourites.splice(title_local_index, 1);
-
-    localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
-
+      .catch(error => { console.error('Error:', error); });
 
   } else {
-    console.log('Adding to favourites');
+    firestore(title_type, titleID, "add", "favourites")
 
-    fetch('/.netlify/functions/firestore-data',
-      {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
-          operation: "add-to-favourites",
-          titleType: title_type,
-          titleID: titleID
-        })
-      }
-    )
       .then(res => {
         $(".toggle-favourites-btn").find("i").css("color", "var(--primary)");
         $(".toggle-favourites-btn").find("span").css("Added to Favourites");
+        localFavourites.push({ [title_type]: titleID })
+        localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
-
-    localFavourites.push({ [title_type]: titleID })
-
-    localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
   }
 }
 
@@ -309,72 +242,41 @@ async function toggleWatched(event) {
     console.log("User not logged in");
     return false;
   }
-
   let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
-  console.log(title_type);
-  console.log(titleID);
 
-  // Get favourites from localstorage
   let watchedList = JSON.parse(localStorage.getItem("user_watched"))
 
-  // search for given title ID in localstorage
-  let title_local_index
+  let title_local_index = -1;
   if (title_type === "movie") {
     title_local_index = watchedList.findIndex(fav => fav.movie === titleID)
+  } else {
+    title_local_index = watchedList.findIndex(fav => fav.tv === titleID)
   }
 
   // Remove from watched list, if it is already watched
   if (title_local_index > -1) {
-    console.log('Removing from watched list');
-
-    fetch('/.netlify/functions/firestore-data',
-      {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
-          operation: "remove-from-watched-list",
-          titleType: title_type,
-          titleID: titleID
-        })
-      }
-    )
+    firestore(title_type, titleID, "remove", "watchedlist")
 
       .then(res => {
         $(".toggle-watched-btn").find("i").css("color", "inherit");
         $(".toggle-watched-btn").find("span").text("Add to Watchedlist");
+        watchedList.splice(title_local_index, 1);
+        localStorage.setItem("user_watched", JSON.stringify(watchedList));
       })
 
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
-    watchedList.splice(title_local_index, 1);
-
-    localStorage.setItem("user_watched", JSON.stringify(watchedList));
-
+      .catch(error => { console.error('Error:', error); });
 
   } else {
-    console.log('Adding to watched list');
+    firestore(title_type, titleID, "add", "watchedlist")
 
-    fetch('/.netlify/functions/firestore-data',
-      {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
-          operation: "add-to-watched-list",
-          titleType: title_type,
-          titleID: titleID
-        })
-      }
-    )
       .then(res => {
         $(".toggle-watched-btn").find("i").css("color", "#f5b50a");
         $(".toggle-watched-btn").find("span").text("Added to Watchedlist");
+        watchedList.push({ [title_type]: titleID })
+        localStorage.setItem("user_watched", JSON.stringify(watchedList));
       })
 
       .catch(error => { console.log('Error:'); console.error(error); });
-
-    watchedList.push({ [title_type]: titleID })
-
-    localStorage.setItem("user_watched", JSON.stringify(watchedList));
   }
 }
 
@@ -414,76 +316,16 @@ function showCredits(creditsArr) {
     }
   })
 
-  let crewArrCopy = creditsArr.crew.slice()
+  let crewArrCopy = creditsArr.crew.slice();
 
-  let selectedCrew = crewArrCopy.filter(person => person.department === "Directing")
-  $.each(selectedCrew, (index, person) => {
-    let originalProfilePic = (person.profile_path !== null) ?
-      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
-
-    let thumbnailProfilePic = (person.profile_path !== null) ?
-      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
-
-    let name = person.name;
-    let job = person.job;
-
-    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
-    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
-    $sampleCastItem.find(".person .info p").text(name)
-    $sampleCastItem.find(".person .role").text(job)
-
-    if ($(".start-crew .cast-info").length >= 6) {
-      $(".extra-crew").append($sampleCastItem.clone())
-    } else {
-      $(".start-crew").append($sampleCastItem.clone())
-    }
-  })
-
-  selectedCrew = crewArrCopy.filter(person => person.department === "Production")
-  $.each(selectedCrew, (index, person) => {
-    let originalProfilePic = (person.profile_path !== null) ?
-      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
-
-    let thumbnailProfilePic = (person.profile_path !== null) ?
-      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
-
-    let name = person.name;
-    let job = person.job;
-
-    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
-    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
-    $sampleCastItem.find(".person .info p").text(name)
-    $sampleCastItem.find(".person .role").text(job)
-
-    if ($(".start-crew .cast-info").length >= 6) {
-      $(".extra-crew").append($sampleCastItem.clone())
-    } else {
-      $(".start-crew").append($sampleCastItem.clone())
-    }
-  })
-
-  selectedCrew = crewArrCopy.filter(person => person.department === "Writing")
-  $.each(selectedCrew, (index, person) => {
-    let originalProfilePic = (person.profile_path !== null) ?
-      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
-
-    let thumbnailProfilePic = (person.profile_path !== null) ?
-      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
-
-    let name = person.name;
-    let job = person.job;
-
-    $sampleCastItem.find(".person .info a.media-img").attr("href", originalProfilePic)
-    $sampleCastItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
-    $sampleCastItem.find(".person .info p").text(name)
-    $sampleCastItem.find(".person .role").text(job)
-
-    if ($(".start-crew .cast-info").length >= 6) {
-      $(".extra-crew").append($sampleCastItem.clone())
-    } else {
-      $(".start-crew").append($sampleCastItem.clone())
-    }
-  })
+  let selectedCrew = crewArrCopy.filter(person => person.department === "Directing");
+  appendCrew(selectedCrew, $sampleCastItem);
+  
+  selectedCrew = crewArrCopy.filter(person => person.department === "Production");
+  appendCrew(selectedCrew, $sampleCastItem);
+  
+  selectedCrew = crewArrCopy.filter(person => person.department === "Writing");
+  appendCrew(selectedCrew, $sampleCastItem);
 
   $(".view-more-cast-btn").on("click", function () {
     if ($(this).text() === "View More") {
@@ -553,52 +395,56 @@ function showMediaInfo(movieData) {
 
 function showRecommendations(data) {
   let containerRef = "#recommendations-container";
-  $.each(data.recommendations.results, (index, title) => {
-    $(`${containerRef} .carousel .wrap ul`).append($("#carousel-poster-template").html())
-
-    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
-      .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
-
-    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
-    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "movie")
-  })
+  populateCarousel(data.recommendations.results, "movie", containerRef)
 
   containerRef = "#similar-movies-container";
-  $.each(data.similar.results, (index, title) => {
+  populateCarousel(data.similar.results, "movie", containerRef)
+  
+  addCarouselClickListener();
+}
+
+function populateCarousel(data, title_type, containerRef) {
+  $.each(data, (index, title) => {
+    let { id, poster_path } = title;
+    let posterImg = "https://image.tmdb.org/t/p/w185" + poster_path;
+
     $(`${containerRef} .carousel .wrap ul`).append($("#carousel-poster-template").html())
 
-    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
-      .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
-
-    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
-    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", "movie")
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).attr("src", posterImg)
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", id)
+    $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", title_type)
   })
 }
 
-function commaSeparatedNames(params) {
-  var genString = ""
+function appendCrew(crew, $sampleCrewItem) {
+  $.each(crew, (index, person) => {
+    let originalProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/original${person.profile_path}` : `./resources/images/imageNotFound.png`;
 
-  params.forEach(function (i, idx, array) {
-    if (idx === array.length - 1) {
-      genString += `${i.name}`;
+    let thumbnailProfilePic = (person.profile_path !== null) ?
+      `https://image.tmdb.org/t/p/w92${person.profile_path}` : `./resources/images/imageNotFound.png`;
+
+    let name = person.name;
+    let job = person.job;
+
+    $sampleCrewItem.find(".person .info a.media-img").attr("href", originalProfilePic)
+    $sampleCrewItem.find(".person .info a.media-img img").attr("src", thumbnailProfilePic)
+    $sampleCrewItem.find(".person .info p").text(name)
+    $sampleCrewItem.find(".person .role").text(job)
+
+    if ($(".start-crew .cast-info").length >= 6) {
+      $(".extra-crew").append($sampleCrewItem.clone())
     } else {
-      genString += `${i.name}, `;
+      $(".start-crew").append($sampleCrewItem.clone())
     }
-  });
-  return genString;
+  })
 }
 
-function openMovieInfo(tmdbid, title_type) {
-  // Set the ID of the movie/series user clicked in localstorage to use it later
-  localStorage.setItem("info_to_open", JSON.stringify(
-    {
-      title_type: title_type,
-      tmdbid: tmdbid
-    }
-  ))
-  if (title_type === "tv") {
-    window.location.href = "/series"
-  } else {
-    window.location.href = "/movie"
-  }
+function addCarouselClickListener() {
+  // Open title info page on carousel images click
+  $(".carousel-container").on("click", "img", function () {
+    let tmdbid = $(this).data("tmdbid")
+    let title_type = $(this).data("title_type")
+    openMovieInfo(tmdbid, title_type)
+  });
 }

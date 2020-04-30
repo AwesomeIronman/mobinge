@@ -15,7 +15,7 @@ $(document).ready(() => {
       let title_type = $(this).data("title_type")
       openMovieInfo(tmdbid, title_type)
    });
-   
+
    // Open title info page on carousel images click
    $(".carousel-container").on("click", function (event) {
       var target = $(event.target);
@@ -89,13 +89,10 @@ function showPartialResult(searchResp) {
       $.each(searchResp, (index, item) => {
          if (item.media_type !== "person") {    // Show info only if result is not of a person/actor
             let id = item.id;
-            let name = item.title ? item.title : item.name;
-            let releaseDate = item.release_date ? `(${new Date(item.release_date).getFullYear()})` : "";
-            if (item.media_type === "tv") {     // For Series release date property is different
-               releaseDate = item.first_air_date ? `(${new Date(item.first_air_date).getFullYear()})` : "";
-            }
-            let rating = item.vote_average ? `${item.vote_average}/10` : "";
-            let mediaType = item.media_type ? item.media_type : $("#searchType").val();
+            let name = item.title || item.name || "";
+            let releaseDate = `(${new Date(item.release_date || item.first_air_date).getFullYear()})` || "";
+            let rating = (item.vote_average && item.vote_average > 0) ? `${item.vote_average}/10` : "";
+            let mediaType = item.media_type || $("#searchType").val();
 
             $sampleNode.find(".movie-title").text(name);
             $sampleNode.find(".movie-release-year").text(releaseDate);
@@ -128,15 +125,12 @@ function showFullResult(searchResp) {
       $.each(searchResp, (index, item) => {
          if (item.media_type !== "person") { // Show info only if result is not of a person/actor
             let id = item.id;
-            let mediaType = item.media_type ? item.media_type : $("#searchType").val();
+            let mediaType = item.media_type || $("#searchType").val();
             let posterImg = item.poster_path;
             let backdropImg = item.backdrop_path;
-            let name = item.title ? item.title : item.name;
-            let releaseDate = item.release_date ? `(${new Date(item.release_date).getFullYear()})` : "Unavailable";
-            if (mediaType === "tv") {
-               releaseDate = item.first_air_date ? `(${new Date(item.first_air_date).getFullYear()})` : "Unavailable";
-            }
-            let rating = item.vote_average ? `${item.vote_average}` : "Unavailable";
+            let name = item.title || item.name;
+            let releaseDate = `(${new Date(item.release_date || item.first_air_date).getFullYear()})` || ""
+            let rating = `${item.vote_average}` || "Unavailable";
 
             $sampleNode.find(".poster").css({
                "background-image": `url(
@@ -206,8 +200,6 @@ async function toggleFavourite(event) {
    if (title_local_index > -1) {
       firestore(title_type, titleID, "remove", "favourites")
          .then(res => {
-            console.log(res);
-            
             $(this).find("i").css("color", "inherit");
             localFavourites.splice(title_local_index, 1);
             localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
@@ -217,8 +209,6 @@ async function toggleFavourite(event) {
    } else {
       firestore(title_type, titleID, "add", "favourites")
          .then(res => {
-            console.log(res);
-            
             $(this).find("i").css("color", "var(--primary)");
             localFavourites.push({ [title_type]: titleID })
             localStorage.setItem("user_favourites", JSON.stringify(localFavourites));
@@ -273,8 +263,6 @@ async function loadAllCarousel() {
 function carouselLoader(data, containerRef, title_type) {
    $.each(data, (index, title) => {
       $(containerRef + " .carousel .wrap ul").append($("#carousel-poster-template").html())
-      console.log(title.name || title.title);
-      
 
       $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
          .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)

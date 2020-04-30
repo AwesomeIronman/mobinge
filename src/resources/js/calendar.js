@@ -38,7 +38,7 @@ async function getReleaseEvents(movies) {
   Array.prototype.forEach.call(movies, movie => {
     arr.push({
       title: movie.title,
-      start: moment(movie.release_date).format("YYYY-MM-DD"),
+      start: movie.release_date,
       allDay: true,
       id: movie.id
     });
@@ -85,7 +85,7 @@ function showTitleClickedInfo(info) {
     "https://image.tmdb.org/t/p/w300" + info.poster_path : "/resources/images/imageNotFound.png";
   let movieName = info.title ? info.title : info.name;
   let rating = !(info.vote_average) ? "Unavailable" : info.vote_average + "/10";
-  let releaseDate = moment(info.release_date).format("DD MMMM YYYY");
+  let releaseDate = info.release_date;
   let genres = info.genres ? commaSeparatedNames(info.genres) : "";
 
   $sampleNode.find("img").attr("src", posterImg);

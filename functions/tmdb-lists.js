@@ -18,8 +18,6 @@ exports.handler = async function (event, context) {
    request_params.set("page", page)
    url.search = request_params;     // add query parameters to the url
    
-   console.log(url);
-   
    data = await fetch(url)
       .then((res) => {
          status = res.status;

@@ -1,11 +1,6 @@
 $(document).ready(() => {
-   netlifyIdentity.on('login', () => {
-      loadUserData();
-   });
-
-   netlifyIdentity.on('logout', () => {
-      removeUserData();
-   });
+   netlifyIdentity.on('login', loadUserData);
+   netlifyIdentity.on('logout', removeUserData);
 });
 
 async function loadUserData() {

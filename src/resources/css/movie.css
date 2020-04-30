@@ -214,3 +214,7 @@ a.view-all:hover {
 .user-review p {
   margin-bottom: 0;
 }
+
+.carousel {
+  width: 100%;
+}
