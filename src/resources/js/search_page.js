@@ -264,11 +264,11 @@ function carouselLoader(data, containerRef, title_type) {
    $.each(data, (index, title) => {
       $(containerRef + " .carousel .wrap ul").append($("#carousel-poster-template").html())
 
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`)
+      $(`${containerRef} .carousel .wrap ul > li:last-child > img`)
          .attr("src", `https://image.tmdb.org/t/p/w185${title.poster_path}`)
 
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("tmdbid", title.id)
-      $(`${containerRef} .carousel .wrap ul > li:nth-child(${index}) > img`).data("title_type", title_type)
+      $(`${containerRef} .carousel .wrap ul > li:last-child > img`).data("tmdbid", title.id)
+      $(`${containerRef} .carousel .wrap ul > li:last-child > img`).data("title_type", title_type)
    })
 
    $(containerRef).parent().removeClass("d-none")
