@@ -9,7 +9,7 @@ $(document).ready(() => {
    // Add event listener to search on pressing search button
    $("#search-btn").on('click', event => fullSearch(event));
 
-   // From full search result posters, open title info page on btn click
+   // search result posters, open title info page on click
    $("#search-box").on("click", "button.view-more-info__btn, #partial-info li", function (event) {
       let tmdbid = $(this).data("tmdbid")
       let title_type = $(this).data("title_type")
@@ -119,9 +119,6 @@ function showFullResult(searchResp) {
    $('#full-info').html(""); // Remove old search result
 
    if (searchResp.length > 0) {
-      let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
-      let localWatched = JSON.parse(localStorage.getItem("user_watched"))
-
       $.each(searchResp, (index, item) => {
          if (item.media_type !== "person") { // Show info only if result is not of a person/actor
             let id = item.id;
@@ -131,6 +128,9 @@ function showFullResult(searchResp) {
             let name = item.title || item.name;
             let releaseDate = `(${new Date(item.release_date || item.first_air_date).getFullYear()})` || ""
             let rating = `${item.vote_average}` || "Unavailable";
+            
+            let localFavourites = JSON.parse(localStorage.getItem("user_favourites")) || []
+            let localWatched = JSON.parse(localStorage.getItem("user_watched")) || []
 
             $sampleNode.find(".poster").css({
                "background-image": `url(
@@ -151,8 +151,8 @@ function showFullResult(searchResp) {
             $sampleNode.find(".info .rating").text(rating);
 
             // Set whether already favourite or not      
-            let favouritesIndex = localFavourites.findIndex(i => i.movie === id)
-            let watchedIndex = localWatched.findIndex(i => i.movie === id)
+            let favouritesIndex = localFavourites.findIndex(i => i.movie === id);
+            let watchedIndex = localWatched.findIndex(i => i.movie === id);
             if (favouritesIndex !== -1) {
                $sampleNode.find("button.toggle-favourites-btn i").css("color", "var(--primary)");
             }
@@ -191,7 +191,7 @@ async function toggleFavourite(event) {
    let title_type = $(this).data("title_type"), titleID = $(this).data("titleID");
 
    // Get favourites from localstorage
-   let localFavourites = JSON.parse(localStorage.getItem("user_favourites"))
+   let localFavourites = JSON.parse(localStorage.getItem("user_favourites")) || []
 
    // search for given title ID in localstorage
    let title_local_index = (title_type === "movie") ? localFavourites.findIndex(fav => fav.movie === titleID) : -1;
@@ -284,36 +284,6 @@ async function get_tmdb_list(mediaType, listType, isTrending = false, listTime =
    return fetch(`/.netlify/functions/tmdb-lists?isTrending=${isTrending}&mediaType=${mediaType}&listType=${listType}&listTime=${listTime}&page=${page}`)
       .then(res => res.json())
       .catch(error => console.log(error))
-}
-
-async function firestore(title_type, title_id, action, list) {
-   return fetch('/.netlify/functions/firestore-data',
-      {
-         method: (action === "remove") ? "DELETE" : "POST",
-         body: JSON.stringify({
-            userID: netlifyIdentity.currentUser().id,
-            list: list,
-            titleType: title_type,
-            titleID: title_id
-         })
-      })
-      .then(data => data.json())
-      .catch(error => error);
-}
-
-async function openMovieInfo(tmdbid, title_type) {
-   // Set the ID of the movie/series user clicked in localstorage to use it later
-   localStorage.setItem("info_to_open", JSON.stringify(
-      {
-         title_type: title_type,
-         tmdbid: tmdbid
-      }
-   ))
-   if (title_type === "tv") {
-      window.location.href = "/series"
-   } else {
-      window.location.href = "/movie"
-   }
 }
 
 function delay(fn, ms) {

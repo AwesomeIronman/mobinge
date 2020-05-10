@@ -262,11 +262,14 @@ async function toggleFavourite(event) {
 
     fetch('/.netlify/functions/firestore-data',
       {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
+        method: 'POST',
+        body: JSON.stringify({
           operation: "remove-from-favourites",
           titleType: title_type,
           titleID: titleID
+        }),
+        headers: new Headers({
+          'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
         })
       }
     )
@@ -290,11 +293,14 @@ async function toggleFavourite(event) {
 
     fetch('/.netlify/functions/firestore-data',
       {
-        method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
+        method: 'POST',
+        body: JSON.stringify({
           operation: "add-to-favourites",
           titleType: title_type,
           titleID: titleID
+        }),
+        headers: new Headers({
+          'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
         })
       }
     )
@@ -337,10 +343,12 @@ async function toggleWatched(event) {
     fetch('/.netlify/functions/firestore-data',
       {
         method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
           operation: "remove-from-watched-list",
           titleType: title_type,
           titleID: titleID
+        }),
+        headers: new Headers({
+          'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
         })
       }
     )
@@ -365,10 +373,12 @@ async function toggleWatched(event) {
     fetch('/.netlify/functions/firestore-data',
       {
         method: 'POST', body: JSON.stringify({
-          userID: netlifyIdentity.currentUser().id,
           operation: "add-to-watched-list",
           titleType: title_type,
           titleID: titleID
+        }),
+        headers: new Headers({
+          'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
         })
       }
     )

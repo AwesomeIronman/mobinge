@@ -1,10 +1,17 @@
 scrollToTop()
 
 $(document).ready(() => {
-   /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
    particlesJS.load('particles-js', './resources/particlesjs-config.json', function () {
       console.log('callback - particles.js config loaded');
    });
+   netlifyIdentity.on('login', loadUserData);
+   netlifyIdentity.on('logout', removeUserData);
+   // If User has logged in and data is unavailable - load user data:
+   if (localStorage.getItem("user_favourites") === null ||
+       localStorage.getItem("user_watched") === null &&
+       netlifyIdentity.currentUser() !== null) {
+      loadUserData()
+   }
 })
 
 // *** Functions reusable across various pages: ***
@@ -50,10 +57,12 @@ async function firestore(title_type, title_id, action, list) {
       {
          method: (action === "remove") ? "DELETE" : "POST",
          body: JSON.stringify({
-            userID: netlifyIdentity.currentUser().id,
             list: list,
             titleType: title_type,
             titleID: title_id
+         }),
+         headers: new Headers({
+            'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
          })
       })
       .then(data => data.json())
@@ -64,4 +73,33 @@ async function fetch_title_info(tmdbid, title_type) {
    return fetch(`/.netlify/functions/title-info?title_type=${title_type}&tmdbid=${tmdbid}`)
       .then(res => res.json())
       .catch(error => console.error(error))
+}
+
+async function loadUserData() {
+   fetch('/.netlify/functions/firestore-data', {
+      method: 'GET',
+      headers: new Headers({
+         'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
+      })
+   })
+      .then(res => res.json())
+
+      .then(res => {
+         localStorage.setItem("user_favourites",
+            (Array.isArray(res.favourites)) ? JSON.stringify(res.favourites) : JSON.stringify([])
+         );
+
+         localStorage.setItem("user_watched",
+            (Array.isArray(res.watched)) ? JSON.stringify(res.watchedlist) : JSON.stringify([])
+         );
+      })
+
+      .catch(error => {
+         console.error('Error:'); console.error(error);
+      });
+}
+
+function removeUserData() {
+   localStorage.setItem("user_favourites", JSON.stringify([]))
+   localStorage.setItem("user_watched", JSON.stringify([]))
 }
