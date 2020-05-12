@@ -15,11 +15,8 @@
   "author": "Netlify",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.0",
     "firebase-admin": "^8.9.2",
-    "node-fetch": "^2.6.0",
-    "node-fetch-npm": "^2.0.3",
-    "qs": "^6.9.1"
+    "node-fetch": "^2.6.0"
   },
   "repository": {
     "type": "git",

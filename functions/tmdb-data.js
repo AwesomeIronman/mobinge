@@ -1,4 +1,4 @@
-const fetch = require('node-fetch-npm');
+const fetch = require('node-fetch');
 
 exports.handler = async function (event, context) {
 
@@ -31,20 +31,18 @@ exports.handler = async function (event, context) {
                     method: params.method,
                     body: JSON.stringify(params.body)
                 }
-                
+
             }
         }
 
         let status, data;
 
-        data = await fetch(URL, options)
-            .then((res) => {
-                status = res.status;
-                return res.json();
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+        data = await fetch(URL, options).then((res) => {
+            status = res.status;
+            return res.json();
+        }).catch((error) => {
+            console.log(error);
+        })
 
         // if response received with ok status
         if (status === 200) {

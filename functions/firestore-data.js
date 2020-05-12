@@ -1,5 +1,4 @@
 const firebase = require('firebase-admin');
-var qs = require('querystring');
 
 exports.handler = async function (event, context) {
 
@@ -7,7 +6,7 @@ exports.handler = async function (event, context) {
     const FIRESTORE_ADMIN_SDK = JSON.parse(process.env.FIRESTORE_ADMIN_SDK)
     const FIRESTORE_DB_URL = process.env.FIRESTORE_DB_URL
 
-    const { list, titleType, titleID } = qs.parse(event.body)
+    const { list, titleType, titleID } = JSON.parse(event.body)
     const userID = context.clientContext.user.sub;      // Get verified user ID provided by netlify identity
 
     if (!firebase.apps.length) {
@@ -24,33 +23,35 @@ exports.handler = async function (event, context) {
         // Create document (User Record) if it doesn't already exist:
         docRef.set({}, { merge: true });
 
-        if (event.httpMethod === "GET") {      // Get Firestored User Data
-            let data = await docRef.get()
-                .then(snapshot => snapshot.data());
+        switch (event.httpMethod) {
+            case "GET":
+                let data = await docRef.get()
+                    .then(snapshot => snapshot.data());
 
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
-            }
+                return {
+                    statusCode: 200,
+                    body: JSON.stringify({ favourites: data.favourites, watchedlist: data.watchedlist })
+                }
 
-        } else if (event.httpMethod === "POST") {
-            if (!validInput(list, titleType, titleID)) {
-                throw "Invalid Input Fields Detected!"
-            }
-            await docRef.update(
-                {
-                    [list]: firebase.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+            case "POST":
+                if (!validInput(list, titleType, titleID)) {
+                    throw "Invalid Input Fields Detected!"
                 }
-            );
-        } else if (event.httpMethod === "DELETE") {
-            if (!validInput(list, titleType, titleID)) {
-                throw "Invalid Input Fields Detected!"
-            }
-            await docRef.update(
-                {
-                    [list]: firebase.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                await docRef.update(
+                    {
+                        [list]: firebase.firestore.FieldValue.arrayUnion({ [titleType]: titleID })
+                    }
+                );
+
+            case "DELETE":
+                if (!validInput(list, titleType, titleID)) {
+                    throw "Invalid Input Fields Detected!"
                 }
-            );
+                await docRef.update(
+                    {
+                        [list]: firebase.firestore.FieldValue.arrayRemove({ [titleType]: titleID })
+                    }
+                );
         }
 
         return {
@@ -73,8 +74,6 @@ function validInput(list, titleType, titleID) {
         titleType === "movie" || titleType === "tv" &&
         titleID !== "" && typeof Number(titleID) === "number"
     ) {
-        console.log('Returning true');
-
         return true;
     }
     return false;

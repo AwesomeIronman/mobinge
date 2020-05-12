@@ -62,6 +62,7 @@ async function firestore(title_type, title_id, action, list) {
             titleID: title_id
          }),
          headers: new Headers({
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${netlifyIdentity.currentUser().token.access_token}`
          })
       })

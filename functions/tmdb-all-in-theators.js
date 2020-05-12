@@ -1,4 +1,4 @@
-const fetch = require('node-fetch-npm');
+const fetch = require('node-fetch');
 
 // Get env var values defined in our Netlify site UI
 const { TMDB_API_KEY, TMDB_API_URL } = process.env
